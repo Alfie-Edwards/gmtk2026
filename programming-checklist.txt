@@ -51,6 +51,7 @@ Town
 [ ] Planting spots
   - [ ] Buy seed to plant
   - [ ] Take 1 day to grow
+[ ] Roosters run around
 
 Enemies
 [ ] Configurable health

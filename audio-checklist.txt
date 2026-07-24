@@ -27,6 +27,7 @@ Player
 [ ] Slurp coffee
 [ ] Glug xxx bottle
 [ ] Sleep through the night (door of inn closing?)
+[ ] Rooster morning sound
 [ ] Horse sound for ending?
 
 MUSIC:
