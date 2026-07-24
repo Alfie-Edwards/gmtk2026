@@ -28,9 +28,13 @@ Wilderness
 [ ] Rock that drops money when destroyed
 [ ] Wall that opens when blown up
 [ ] Enemy spawn points (maybe just reload the prefab each day?)
+[ ] Spawn ghosts at night
 [ ] Make the map lol
+  - [ ] Setup a prefab
+  - [ ] Add terrain models to the game and define grid
 
 Town
+[ ] Make the area
 [ ] Inn
   - [ ] End the day, can only do at night
 [ ] General store
@@ -66,3 +70,8 @@ Enemies
   - [ ] Move fast, jump, try to get in front of player
 [ ] Ghost
   - [ ] Bounce around the map no collision but slightly biased direction towards the player
+
+Day night
+[ ] Make the map dark at night
+[ ] Display time remaining when in wilderness
+[ ] Set to night when you return from the wilderness
