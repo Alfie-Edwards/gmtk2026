@@ -4,20 +4,9 @@ using UnityEngine.InputSystem; // Required for the new Input System
 using System.Collections.Generic;
 
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(Bag))]
 public class Player : MonoBehaviour
 {
-
-    public class BagItem {
-        public ItemType type;
-        public int count;
-
-        public BagItem(ItemType type, int count)
-        {
-            this.type = type;
-            this.count = count;
-        }
-    }
-
     [Header("Keyboard")]
     public float moveSpeed = 5.0f;
     public float gravity = -9.81f * 2.0f;
@@ -35,10 +24,11 @@ public class Player : MonoBehaviour
     private CharacterController controller;
     private Vector3 velocity = Vector3.zero;
     private float cameraPitch = 0;
-    private List<BagItem> bag = new List<BagItem>();
+    private Bag bag;
 
     public void Start()
     {
+        bag = GetComponent<Bag>();
         controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -107,33 +97,10 @@ public class Player : MonoBehaviour
         Debug.Log($"Picked up item {item.type}");
         switch (item.type)
         {
-            case ItemType.RedKey:
-                AddItemToBag(item.type);
+            default:
+                bag.Add(item.type);
                 break;
         }
         Destroy(item.gameObject);
-    }
-
-    private void AddItemToBag(ItemType type, int count = 1) {
-        int i = 0;
-        while (i < bag.Count && bag[i].type != type) ++i;
-        if (i == bag.Count) bag.Add(new BagItem(type, 0));
-        bag[i].count += count;
-        Debug.Log($"Added item to bag {type} x {count} ({bag[i].count} total)");
-    }
-
-    private void RemoveItemFromBag(ItemType type, int count = 1) {
-        for (int i = 0; i != bag.Count; ++i)
-        {
-            if (bag[i].type == type)
-            {
-                bag[i].count -= count;
-                Debug.Log($"Removed item from bag {type} x {count} ({bag[i].count} remaining)");
-                if (bag[i].count <= 0) {
-                    bag.RemoveAt(i);
-                }
-                return;
-            }
-        }
     }
 }

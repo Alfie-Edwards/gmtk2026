@@ -2,6 +2,8 @@ using UnityEngine;
 
 public enum ItemType {
     RedKey,
+    BlueKey,
+    GreenKey,
     Unknown,
 }
 
