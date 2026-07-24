@@ -29,7 +29,7 @@ Potentially a character in camp like a tree (sorry massive pilot quest inspirati
 <strong>Note: Meat could be something different like a special plant, which means the camp building is has more of a farming type feel?</strong><br><br>
 
 <h2>Audio</h2>
-<strong>Wilderness:</strong> Cowboyey, Adventurous, zelda inspired -> https://www.youtube.com/watch?v=7G59rSdIKAs -> Potentially a variation with higher intensity after timer runs out and you need to run back to camp
+<strong>Wilderness:</strong> Cowboyey, Adventurous, zelda inspired -> https://www.youtube.com/watch?v=7G59rSdIKAs -> Potentially a variation with higher intensity after timer runs out and you need to run back to camp. <br>
 <strong>Camp:</strong> Cowboyey but more chill, almost a shop type theme
 
 <h2>Visuals</h2>
