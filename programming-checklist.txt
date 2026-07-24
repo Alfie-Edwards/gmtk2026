@@ -1,0 +1,67 @@
+Player
+[x] Item pickups
+[x] Inventory
+[ ] Item selection in inventory
+[ ] Nicer movement
+  - [ ] Bob when moving?
+[ ] Whip
+  - [ ] Animation
+  - [ ] Damage and knock back enemies that are hit
+[ ] Bow
+  - [ ] Ammo counter
+  - [ ] Spawn arrow on use
+  - [ ] Arrow hit detection
+    - [ ] Damage and knockback enemy hit
+    - [ ] Stick in wall
+[ ] Bomb
+  - [ ] Ammo counter
+  - [ ] Throw on use
+  - [ ] On hit, in radius, damage enemies, break rocks, break walls, scare ghosts
+[ ] Pickaxe
+  - [ ] Swing animation
+  - [ ] Detect rock or wall and break them
+[ ] Advance time when hit
+[ ] Drop gold when hit after dark
+
+Wilderness
+[ ] Door that opens when shot with the bow
+[ ] Rock that drops money when destroyed
+[ ] Wall that opens when blown up
+[ ] Enemy spawn points (maybe just reload the prefab each day?)
+[ ] Make the map lol
+
+Town
+[ ] Inn
+  - [ ] End the day, can only do at night
+[ ] General store
+  - [ ] Seeds
+    - [ ] Scaling prices / 8
+  - [ ] Arrows
+    - [ ] Enabled after bow
+  - [ ] Dynamite
+    - [ ] Enabled after bomb bag
+[ ] Equipment store
+  - [ ] Scaling prices / 3
+  - [ ] Rooster (+30s daytime)
+  - [ ] Whip upgrade (+ whip damage/range)
+  - [ ] Quiver upgrade (+1 max arrow)
+    - [ ] Enabled after bow
+  - [ ] Bomb bag upgrade (+1 max bomb)
+    - [ ] Enabled after bomb bag
+[ ] Planting spots
+  - [ ] Buy seed to plant
+  - [ ] Take 1 day to grow
+
+Enemies
+[ ] Configurable health
+[ ] Damage player on contact
+[ ] Drop coins and rarely xxx on death
+[ ] Skeleton
+  - [ ] Pathfind towards player
+[ ] Cactus
+  - [ ] Preiodically shoot spikes when player is near
+  - [ ] Spike hit detection, damage player on hit
+[ ] Frog
+  - [ ] Move fast, jump, try to get in front of player
+[ ] Ghost
+  - [ ] Bounce around the map no collision but slightly biased direction towards the player

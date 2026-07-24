@@ -22,7 +22,6 @@ Player
 [ ] Landing in sand after jump
 [ ] Make a purchase
 [ ] Pickup a coin
-[ ] Plant a seed
 [ ] Player gets hit
 [ ] Player gets hit and drops money like sonic
 [ ] Slurp coffee
