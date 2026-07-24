@@ -1,9 +1,23 @@
 using UnityEngine;
 using UnityEngine.InputSystem; // Required for the new Input System
 
+using System.Collections.Generic;
+
 [RequireComponent(typeof(CharacterController))]
 public class Player : MonoBehaviour
 {
+
+    public class BagItem {
+        public ItemType type;
+        public int count;
+
+        public BagItem(ItemType type, int count)
+        {
+            this.type = type;
+            this.count = count;
+        }
+    }
+
     [Header("Keyboard")]
     public float moveSpeed = 5.0f;
     public float gravity = -9.81f * 2.0f;
@@ -15,19 +29,28 @@ public class Player : MonoBehaviour
     public float cameraPitchMin = -45.0f;
     public float cameraPitchMax = 45.0f;
 
+    [Header("World")]
+    public float itemPickupRadius = 2.0f;
+
     private CharacterController controller;
     private Vector3 velocity = Vector3.zero;
     private float cameraPitch = 0;
+    private List<BagItem> bag = new List<BagItem>();
 
-    void Start()
+    public void Start()
     {
         controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
-    void Update()
+    public void Update()
     {
+        Move();
+        PickupItems();
+    }
+
+    private void Move() {
         if (camera != null && Mouse.current != null)
         {
             Vector2 mouseDelta = Mouse.current.delta.ReadValue() * mouseSensitivity;
@@ -68,5 +91,49 @@ public class Player : MonoBehaviour
 
         // 4. Move the Controller
         controller.Move((velocity + move) * Time.deltaTime);
+    }
+
+    private void PickupItems() {
+        foreach (Item item in FindObjectsByType<Item>()) {
+            float itemPickupRadiusSq = itemPickupRadius * itemPickupRadius;
+            if ((transform.position - item.transform.position).sqrMagnitude < itemPickupRadiusSq)
+            {
+                PickupItem(item);
+            }
+        }
+    }
+
+    private void PickupItem(Item item) {
+        Debug.Log($"Picked up item {item.type}");
+        switch (item.type)
+        {
+            case ItemType.RedKey:
+                AddItemToBag(item.type);
+                break;
+        }
+        Destroy(item.gameObject);
+    }
+
+    private void AddItemToBag(ItemType type, int count = 1) {
+        int i = 0;
+        while (i < bag.Count && bag[i].type != type) ++i;
+        if (i == bag.Count) bag.Add(new BagItem(type, 0));
+        bag[i].count += count;
+        Debug.Log($"Added item to bag {type} x {count} ({bag[i].count} total)");
+    }
+
+    private void RemoveItemFromBag(ItemType type, int count = 1) {
+        for (int i = 0; i != bag.Count; ++i)
+        {
+            if (bag[i].type == type)
+            {
+                bag[i].count -= count;
+                Debug.Log($"Removed item from bag {type} x {count} ({bag[i].count} remaining)");
+                if (bag[i].count <= 0) {
+                    bag.RemoveAt(i);
+                }
+                return;
+            }
+        }
     }
 }
