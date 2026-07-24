@@ -1,0 +1,39 @@
+SFX:
+
+Enemies
+[ ] Frog hit
+[ ] Frog hop
+[ ] Skeleton hit
+[ ] Cactus hit
+[ ] Cactus shoot spikes
+[ ] Cactus spike impact
+Weapons
+[ ] Whip crack
+[ ] Swing pickaxe
+[ ] Pickaxe clink
+[ ] Bow shoot
+[ ] Arrow hit wall
+[ ] Dynamite throw whoosh + fuse hiss
+[ ] Dynamite explosion
+[ ] Wall crumbling
+Player
+[ ] Clock chimes midnight
+[ ] Footstep in sand
+[ ] Landing in sand after jump
+[ ] Make a purchase
+[ ] Pickup a coin
+[ ] Plant a seed
+[ ] Player gets hit
+[ ] Player gets hit and drops money like sonic
+[ ] Slurp coffee
+[ ] Glug xxx bottle
+[ ] Sleep through the night (door of inn closing?)
+[ ] Horse sound for ending?
+
+MUSIC:
+
+[x] Town (spaghetti.mp3)
+[ ] Wilderness desert
+[ ] Wilderness frog oasis
+[ ] Wilderness lava mountains
+[ ] Victory song?
