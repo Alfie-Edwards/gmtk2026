@@ -12,8 +12,9 @@ There are keys, chests and doors which gate progression and are permanent change
 There are also items you unlock which are permanently added to your tools. Eg. bow, upgraded whip, pickaxe, tnt. <br><br>
 Monsters drop semi-randomised loot which can include gold as currency, or meat to increase time <br><br>
 Health is not a separate resource. Instead, taking damage lowers your timer by varying amounts based on monster 'damage'<br><br>
+Once main timer runs out, a 15 second timer appears and the player has to run back to camp OR if we have time, the game switches to night-time with ghosts that chase you and send you back to camp whilst taking a percentage of your resources (Percentage to be balanced) <br><br>
 
-OPTIONAL
+<strong>OPTIONAL</strong><br>
 There could be varying little found quests which give players new things to do each run, like finding a special seed, or an item which needs to be taken elsewhere and these actions lead to some sort of permanent progression.
 I also like the idea of bigger quests which require multiple runs to complete, like watering the planted seed 3 times with it growing a bit each time, to give a sense of progression and make the game feel more whole rather than separated runs.<br><br>
 Potentially a character in camp like a tree (sorry massive pilot quest inspiration but we can switch it up) who you interact with to spend gold to grow plants/ meat.
@@ -25,16 +26,16 @@ Potentially a character in camp like a tree (sorry massive pilot quest inspirati
   <li>Attacking monsters/ rocks and getting randomised rewards</li>
   <li>Spend gold on building the camp up, which allows the player to start with more meat/special plant</li>
 </ul>
-<br><br>
+<br>
 <strong>Note: Meat could be something different like a special plant, which means the camp building is has more of a farming type feel?</strong><br><br>
 
 <h2>Audio</h2>
-<strong>Wilderness:</strong> Cowboyey, Adventurous, zelda inspired -> https://www.youtube.com/watch?v=7G59rSdIKAs -> Potentially a variation with higher intensity after timer runs out and you need to run back to camp. <br>
+<strong>Wilderness:</strong> Cowboyey, Adventurous, zelda inspired -> https://www.youtube.com/watch?v=7G59rSdIKAs -> Potentially a variation with higher intensity after timer runs out and you need to run back to camp. <br><br>
 <strong>Camp:</strong> Cowboyey but more chill, almost a shop type theme
 
 <h2>Visuals</h2>
 Low poly, Zelda Links Awakening Remake inspired / Tunic. Something colourful and quick to make but styalised and a lil goofy cartoonish.<br><br>
-Basic / no animations. Bob character up and down when moving, attacks snap to position etc (just for time constraints and we have no 3D animator).
+Basic / no animations. Bob character up and down when moving, attacks snap to position etc (just for time constraints and we have no 3D animator).<br><br>
 Charming 2D UI in Harvey style<br><br>
 
 <h2>References</h2>
