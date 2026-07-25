@@ -7,6 +7,9 @@ Enemies
 [ ] Cactus hit
 [ ] Cactus shoot spikes
 [ ] Cactus spike impact
+[ ] Rock enemy hit
+[ ] lava squid hit
+[ ] lava pop up/down in lava
 Weapons
 [ ] Whip crack
 [ ] Swing pickaxe
@@ -32,8 +35,8 @@ Player
 
 MUSIC:
 
-[x] Town (spaghetti.mp3)
-[ ] Wilderness desert
-[ ] Wilderness frog oasis
-[ ] Wilderness lava mountains
+[x] Town
+[x] Wilderness desert
+[x] Wilderness frog oasis
+[x] Wilderness lava mountains
 [ ] Victory song?

@@ -70,8 +70,16 @@ Enemies
   - [ ] Move fast, jump, try to get in front of player
 [ ] Ghost
   - [ ] Bounce around the map no collision but slightly biased direction towards the player
+[ ] Lava
+  - [ ] Pop up when player is in range
+  - [ ] After a delay, shoot towards player and pop down, then cooldown
+[ ] Rock
+  - [ ] Take extra damage if hit by pickaxe
+  - [ ] Big health
+  - [ ] Same ai as skeleton
 
-Day night
+World
 [ ] Make the map dark at night
 [ ] Display time remaining when in wilderness
 [ ] Set to night when you return from the wilderness
+[ ] Fade between the 3 wilderness musics depending on area
