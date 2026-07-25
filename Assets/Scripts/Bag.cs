@@ -23,6 +23,8 @@ public class Bag : IEnumerable<BagItem>
 
     public int numUniqueItems { get => bag.Count; }
 
+    public bool persistItems = false;
+
     public ItemType AtIndex(int i)
     {
         if (i < 0 || i >= bag.Count ) {
@@ -50,7 +52,6 @@ public class Bag : IEnumerable<BagItem>
         while (i < bag.Count && bag[i].type != type) ++i;
         if (i == bag.Count) bag.Add(new BagItem(type, 0));
         bag[i].count += count;
-        Debug.Log($"Added item to bag {type} x {count} ({bag[i].count} total)");
         OnContentsChanged?.Invoke();
     }
 
@@ -61,9 +62,12 @@ public class Bag : IEnumerable<BagItem>
             if (bag[i].type == type)
             {
                 bag[i].count -= count;
-                Debug.Log($"Removed item from bag {type} x {count} ({bag[i].count} remaining)");
                 if (bag[i].count <= 0) {
-                    bag.RemoveAt(i);
+                    if (persistItems) {
+                        bag[i].count = 0;
+                    } else {
+                        bag.RemoveAt(i);
+                    }
                 }
                 OnContentsChanged?.Invoke();
                 return;
