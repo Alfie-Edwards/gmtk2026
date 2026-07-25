@@ -33,6 +33,9 @@ public class Player : MonoBehaviour
     [SerializeField] private int maxWhipLevel = 4;
     [SerializeField] private int maxRoosters = 3;
 
+    [Header("Weapons")]
+    [SerializeField] private Whip whip;
+
     private int quiverSize_;
     private int bombBagSize_;
 
@@ -86,11 +89,12 @@ public class Player : MonoBehaviour
         Move();
         PickupItems();
         HandleShops();
+        UseItems();
     }
 
     private void UseItems()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        if (Keyboard.current.tKey.wasPressedThisFrame)
         {
             Use(hotbar.Selected);
         }
@@ -323,6 +327,7 @@ public class Player : MonoBehaviour
         switch (type)
         {
             case ItemType.Whip:
+                whip.Attack();
                 break;
             case ItemType.Bow:
                 break;
