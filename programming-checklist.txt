@@ -30,10 +30,12 @@ Wilderness
 [ ] Enemy spawn points (maybe just reload the prefab each day?)
 [ ] Spawn ghosts at night
 [ ] Make the map lol
-  - [ ] Setup a prefab
+  - [x] Setup a prefab
+  - [ ] Lay out the area
   - [ ] Add terrain models to the game and define grid
 
 Town
+[x] Lay out the area
 [ ] Make the area
 [ ] Inn
   - [ ] End the day, can only do at night
