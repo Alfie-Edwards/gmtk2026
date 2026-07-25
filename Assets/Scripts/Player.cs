@@ -79,13 +79,13 @@ public class Player : MonoBehaviour
     {
         if (camera != null && Mouse.current != null)
         {
-            Vector2 mouseDelta = Mouse.current.delta.ReadValue() * mouseSensitivity;
+            //Vector2 mouseDelta = Mouse.current.delta.ReadValue() * mouseSensitivity;
 
-            cameraPitch += -mouseDelta.y;
-            cameraPitch = Mathf.Clamp(cameraPitch, cameraPitchMin, cameraPitchMax);
-            camera.localRotation = Quaternion.Euler(cameraPitch, 0, 0);
+            //cameraPitch += -mouseDelta.y;
+            //cameraPitch = Mathf.Clamp(cameraPitch, cameraPitchMin, cameraPitchMax);
+            //camera.localRotation = Quaternion.Euler(cameraPitch, 0, 0);
 
-            transform.rotation *= Quaternion.Euler(0, mouseDelta.x, 0);
+            //transform.rotation *= Quaternion.Euler(0, mouseDelta.x, 0);
         }
 
         float moveForwardAmount = 0;
