@@ -7,14 +7,11 @@ public class Whip : MonoBehaviour
     [SerializeField] private Rope rope;
     [SerializeField] private LineRenderer lineRenderer;
 
-    [Header("Attack Settings")]
     public float throwDuration = 0.5f;
     public float retractDuration = 0.1f;
-    public Vector3 localThrowDirection = new Vector3(0f, 1f, 1f);
+    public Vector3 localThrowDirection = new Vector3(0f, 0f, 1f);
     public float idleOffsetZ = 0.001f;
-
-    [Header("Combat Settings")]
-    public float hitRadius = 0.1f;
+    public float hitRadius = 0.5f;
     public float damage = 25f;
     public LayerMask enemyLayer;
 
@@ -32,35 +29,17 @@ public class Whip : MonoBehaviour
             SnapToStart();
         }
 
-        if (isAttacking && rope != null && rope.startTransform != null && rope.endTransform != null)
-        {
-            CheckHits();
-        }
-    }
-
-    void CheckHits()
-    {
-        Debug.Log("Check hits");
-        Vector3 startPos = rope.startTransform.position;
-        Vector3 endPos = rope.endTransform.position;
-        Vector3 hitDirection = (endPos - startPos).normalized;
-
-        Collider[] hits = Physics.OverlapSphere(endPos, hitRadius, enemyLayer);
-        foreach (Collider hit in hits)
-        {
-            Enemy enemy = hit.GetComponent<Enemy>();
-            if (enemy != null)
-            {
-                enemy.TakeDamage(damage, hitDirection);
-            }
-        }
+        // Optional: Keep continuous check if needed outside of attacks,
+        // though attack hits are now handled inside the coroutine.
     }
 
     void SnapToStart()
     {
         if (rope != null && rope.endTransform != null && rope.startTransform != null)
         {
-            rope.endTransform.position = rope.startTransform.position + new Vector3(0f, 0f, idleOffsetZ);
+            // Use TransformDirection so the idle offset respects the player's facing direction
+            Vector3 localIdleOffset = new Vector3(0f, 0f, idleOffsetZ);
+            rope.endTransform.position = rope.startTransform.position + transform.TransformDirection(localIdleOffset);
         }
     }
 
@@ -81,10 +60,16 @@ public class Whip : MonoBehaviour
 
         SnapToStart();
         Vector3 initialPos = rope.endTransform.position;
-        Vector3 localDirNormalized = localThrowDirection.normalized;
-        Vector3 worldPeakPos = transform.TransformPoint(localDirNormalized * rope.ropeLength);
 
         float elapsed = 0f;
+
+        Vector3 WorldPeakPos() {
+            Vector3 peak = rope.startTransform.position + transform.TransformDirection(localThrowDirection.normalized * rope.ropeLength);
+            peak.y = rope.startTransform.position.y; // Keep the end point flat
+            return peak;
+        }
+
+        bool hitEnemy = false;
 
         // 1. Throw out
         while (elapsed < throwDuration)
@@ -92,14 +77,28 @@ public class Whip : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / throwDuration);
 
-            worldPeakPos = transform.TransformPoint(localDirNormalized * rope.ropeLength);
-            rope.endTransform.position = Vector3.Lerp(initialPos, worldPeakPos, t);
+            rope.endTransform.position = Vector3.Lerp(initialPos, WorldPeakPos(), t);
+
+            // Check for hits during the throw; if an enemy is hit, break out early
+            if (CheckHitAndRegister())
+            {
+                hitEnemy = true;
+                break;
+            }
+
             yield return null;
         }
-        rope.endTransform.position = worldPeakPos;
+
+        // If we didn't break early, ensure it reaches the peak position
+        if (!hitEnemy)
+        {
+            rope.endTransform.position = WorldPeakPos();
+        }
+
+        // Save the current position where it stopped as the starting point for retraction
+        Vector3 currentPosAtRetract = rope.endTransform.position;
 
         elapsed = 0f;
-        Vector3 returnPos = rope.startTransform.position + new Vector3(0f, 0f, idleOffsetZ);
 
         // 2. Retract back
         while (elapsed < retractDuration)
@@ -107,12 +106,36 @@ public class Whip : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / retractDuration);
 
-            returnPos = rope.startTransform.position + new Vector3(0f, 0f, idleOffsetZ);
-            rope.endTransform.position = Vector3.Lerp(worldPeakPos, returnPos, t);
+            Vector3 localIdleOffset = new Vector3(0f, 0f, idleOffsetZ);
+            Vector3 returnPos = rope.startTransform.position + transform.TransformDirection(localIdleOffset);
+            returnPos.y = rope.startTransform.position.y;
+
+            // Retract from wherever the whip currently is
+            rope.endTransform.position = Vector3.Lerp(currentPosAtRetract, returnPos, t);
             yield return null;
         }
 
         SnapToStart();
         isAttacking = false;
+    }
+
+    private bool CheckHitAndRegister()
+    {
+        Vector3 endPos = rope.endTransform.position;
+        Vector3 startPos = rope.startTransform.position;
+        Vector3 hitDirection = (endPos - startPos).normalized;
+
+        Collider[] hits = Physics.OverlapSphere(endPos, hitRadius, enemyLayer);
+        bool anyHit = false;
+        foreach (Collider hit in hits)
+        {
+            Enemy enemy = hit.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(damage, hitDirection);
+            }
+            if (hit.name != "Player") anyHit = true;
+        }
+        return anyHit;
     }
 }

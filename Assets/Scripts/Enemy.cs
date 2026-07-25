@@ -125,6 +125,34 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        // Drop all embedded arrows before destroying or spawning loot
+        foreach (Transform child in transform)
+        {
+            // Only target objects that have the Arrow component attached
+            Arrow arrow = child.GetComponent<Arrow>();
+            if (arrow != null)
+            {
+                // 1. Unparent the arrow so it stays in the world
+                child.SetParent(null);
+
+                // 2. Re-enable physics and gravity via its Rigidbody
+                Rigidbody arrowRb = child.GetComponent<Rigidbody>();
+                if (arrowRb != null)
+                {
+                    arrowRb.isKinematic = false;
+                    arrowRb.useGravity = true;
+                    arrowRb.linearVelocity = Vector3.zero;
+                }
+
+                // 3. Re-enable the collider so it can hit the floor/ground
+                Collider arrowCol = child.GetComponent<Collider>();
+                if (arrowCol != null)
+                {
+                    arrowCol.enabled = true;
+                }
+            }
+        }
+
         SpawnCoins();
         Destroy(gameObject);
     }

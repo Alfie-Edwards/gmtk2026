@@ -12,17 +12,13 @@ public class Player : MonoBehaviour
     [SerializeField] public float gravity = -9.81f * 2.0f;
     [SerializeField] public float jumpHeight = 1.5f;
 
-    [Header("Mouse")]
-    [SerializeField] public Transform camera;
-    [SerializeField] public float mouseSensitivity = 20f;
-    [SerializeField] public float cameraPitchMin = -45.0f;
-    [SerializeField] public float cameraPitchMax = 45.0f;
-
     [Header("World")]
     [SerializeField] public float itemPickupRadius = 2.0f;
     [SerializeField] public DayNightCycle dayNightCycle;
     [SerializeField] public Hotbar hotbar;
     [SerializeField] public Hotbar ammoDisplay;
+    [SerializeField] public Transform camera;
+    [SerializeField] public Vector3 cameraOffset = new Vector3(1f, 6f, -4f);
 
     [Header("Upgrades")]
     [SerializeField] private int startQuiverSize = 0;
@@ -35,6 +31,9 @@ public class Player : MonoBehaviour
 
     [Header("Weapons")]
     [SerializeField] private Whip whip;
+    [SerializeField] private Bow bow;
+    [SerializeField] private BombBag bombBag;
+    [SerializeField] private Pickaxe pickaxe;
 
     private int quiverSize_;
     private int bombBagSize_;
@@ -57,6 +56,7 @@ public class Player : MonoBehaviour
 
     private CharacterController controller;
     private Vector3 velocity = Vector3.zero;
+    private Quaternion lookTarget;
     private float cameraPitch = 0;
     private Bag itemsBag;
     private Bag ammoBag;
@@ -76,6 +76,8 @@ public class Player : MonoBehaviour
         ammoDisplay.bag = ammoBag;
         controller = GetComponent<CharacterController>();
         PickupItem(ItemType.Whip);
+        camera.transform.position = transform.position + cameraOffset;
+        camera.transform.LookAt(transform);
 
         // init controls
         Cursor.lockState = CursorLockMode.Locked;
@@ -90,6 +92,7 @@ public class Player : MonoBehaviour
         PickupItems();
         HandleShops();
         UseItems();
+        UpdateWeapons();
     }
 
     private void UseItems()
@@ -102,17 +105,6 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        if (camera != null && Mouse.current != null)
-        {
-            //Vector2 mouseDelta = Mouse.current.delta.ReadValue() * mouseSensitivity;
-
-            //cameraPitch += -mouseDelta.y;
-            //cameraPitch = Mathf.Clamp(cameraPitch, cameraPitchMin, cameraPitchMax);
-            //camera.localRotation = Quaternion.Euler(cameraPitch, 0, 0);
-
-            //transform.rotation *= Quaternion.Euler(0, mouseDelta.x, 0);
-        }
-
         float moveForwardAmount = 0;
         float moveRightAmount = 0;
         if (Keyboard.current != null)
@@ -122,10 +114,7 @@ public class Player : MonoBehaviour
             if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) moveRightAmount += 1;
             if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) moveRightAmount -= 1;
         }
-
-        Vector3 forward = transform.TransformDirection(Vector3.forward);
-        Vector3 right = transform.TransformDirection(Vector3.right);
-        Vector3 move = ((forward * moveForwardAmount) + (right * moveRightAmount)).normalized * moveSpeed;
+        Vector3 move = ((Vector3.forward * moveForwardAmount) + (Vector3.right * moveRightAmount)).normalized * moveSpeed;
 
 
         // Jump
@@ -142,11 +131,26 @@ public class Player : MonoBehaviour
 
         // 4. Move the Controller
         controller.Move((velocity + move) * Time.deltaTime);
+        if (move != Vector3.zero)
+        {
+            lookTarget = Quaternion.LookRotation(move);
+        }
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookTarget, Mathf.Min(16f * Time.deltaTime, 1f));
+        camera.transform.position = Vector3.Lerp(camera.transform.position, transform.position + cameraOffset, Mathf.Min(3f * Time.deltaTime, 1f));
+    }
+
+    private void UpdateWeapons()
+    {
+        whip.gameObject.SetActive(hotbar.Selected == ItemType.Whip);
+        bow.gameObject.SetActive(hotbar.Selected == ItemType.Bow);
+        bombBag.gameObject.SetActive(hotbar.Selected == ItemType.BombBag);
+        pickaxe.gameObject.SetActive(hotbar.Selected == ItemType.Pickaxe);
     }
 
     private void PickupItems()
     {
         foreach (Item item in FindObjectsByType<Item>()) {
+            if (!item.enabled) continue;
             float itemPickupRadiusSq = itemPickupRadius * itemPickupRadius;
             if ((transform.position - item.transform.position).sqrMagnitude < itemPickupRadiusSq)
             {
@@ -291,7 +295,12 @@ public class Player : MonoBehaviour
                 List<PlantSpot> ungrown = FindObjectsByType<PlantSpot>()
                     .Where(x => !x.Growing)
                     .ToList();
-                if (ungrown.Count > 0) ungrown[Random.Range(0, ungrown.Count)].PlantSeed();
+                if (ungrown.Count > 0)
+                {
+                    int i = Random.Range(0, ungrown.Count);
+                    ungrown[i].PlantSeed();
+                    dayNightCycle.DayStart += ungrown[i].Sunrise;
+                }
                 break;
 
             case ItemType.QuiverUpgrade:
@@ -330,12 +339,21 @@ public class Player : MonoBehaviour
                 whip.Attack();
                 break;
             case ItemType.Bow:
+                if (ammoBag.Amount(ItemType.Arrow) > 0)
+                {
+                    ammoBag.Remove(ItemType.Arrow);
+                    bow.Fire(transform.forward);
+                }
                 break;
             case ItemType.BombBag:
+                if (ammoBag.Amount(ItemType.Dynamite) > 0)
+                {
+                    ammoBag.Remove(ItemType.Dynamite);
+                    bombBag.ThrowBomb(transform.forward);
+                }
                 break;
             case ItemType.Pickaxe:
-                break;
-            case ItemType.Gold:
+                pickaxe.Swing();
                 break;
         }
     }

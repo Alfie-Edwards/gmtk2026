@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 8410066040090384760}
   - component: {fileID: 5214895776626382962}
   m_Layer: 0
-  m_Name: Dynamite
+  m_Name: ArrowItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -159,4 +159,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1dc3984bfa0b47bab67ff353c6392a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
-  type: 9
+  type: 10

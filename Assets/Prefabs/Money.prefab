@@ -58,7 +58,7 @@ Rigidbody:
   m_GameObject: {fileID: 575649640322857749}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0
+  m_LinearDamping: 0.1
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -88,9 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e744b1a6f2fb5454bb2fc1827f832260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RandomFlingOnSpawn
-  minSpeed: 5
-  maxSpeed: 12
-  upwardBias: 1.5
+  radius: 2
 --- !u!1 &3744092964032137842
 GameObject:
   m_ObjectHideFlags: 0
@@ -189,7 +187,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3744092964032137842}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: d92deb2011a424afaa55209255cdb9c4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -303,7 +301,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7441090945746498209}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: d92deb2011a424afaa55209255cdb9c4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
