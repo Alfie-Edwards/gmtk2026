@@ -21,16 +21,17 @@ Weapons
 [ ] Wall crumbling
 Player
 [ ] Clock chimes midnight
-[ ] Footstep in sand
-[ ] Landing in sand after jump
-[ ] Make a purchase
+[ ] Pick up a major item
 [ ] Pickup a coin
 [ ] Player gets hit
-[ ] Player gets hit and drops money like sonic
+[ ] Make a purchase
+[ ] Rooster morning sound
+[ ] Sleep through the night (door of inn closing?)
 [ ] Slurp coffee
 [ ] Glug xxx bottle
-[ ] Sleep through the night (door of inn closing?)
-[ ] Rooster morning sound
+[ ] Footstep in sand
+[ ] Landing in sand after jump
+[ ] Player gets hit and drops money like sonic
 [ ] Horse sound for ending?
 
 MUSIC:
