@@ -19,7 +19,6 @@ public class Hotbar : MonoBehaviour
     [SerializeField] public GameObject itemTemplate;
 
     private Bag bag_;
-    private Transform container;
     private int iSelected;
     private Dictionary<ItemType, int> limits = new Dictionary<ItemType, int>();
 
@@ -37,7 +36,6 @@ public class Hotbar : MonoBehaviour
 
     void Start() {
         iSelected = -1;
-        container = GetComponent<Transform>();
     }
 
     public void SetLimit(ItemType type, int limit) {
@@ -84,7 +82,7 @@ public class Hotbar : MonoBehaviour
         if (enableSelection) iSelected = iSelected = Mathf.Clamp(iSelected, 0, bag.numUniqueItems - 1);
 
         // Clear
-        foreach (Transform child in container)
+        foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
         }
@@ -92,7 +90,7 @@ public class Hotbar : MonoBehaviour
         int i = 0;
         foreach (BagItem item in bag)
         {
-            GameObject uiItem = Instantiate(itemTemplate, container);
+            GameObject uiItem = Instantiate(itemTemplate, transform);
 
             if (enableSelection && i == iSelected)
             {
