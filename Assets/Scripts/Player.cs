@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
     [SerializeField] public float itemPickupRadius = 2.0f;
     [SerializeField] public DayNightCycle dayNightCycle;
     [SerializeField] public Hotbar hotbar;
+    [SerializeField] public Hotbar ammoDisplay;
 
     [Header("Upgrades")]
     [SerializeField] private int startQuiverSize = 0;
@@ -32,9 +33,24 @@ public class Player : MonoBehaviour
     [SerializeField] private int maxWhipLevel = 4;
     [SerializeField] private int maxRoosters = 3;
 
+    private int quiverSize_;
+    private int bombBagSize_;
+
     public int whipLevel { get; private set; }
-    public int quiverSize { get; private set; }
-    public int bombBagSize { get; private set; }
+    public int quiverSize {
+        get => quiverSize_;
+        set {
+            quiverSize_ = value;
+            ammoDisplay.SetLimit(ItemType.Arrow, value);
+        }
+    }
+    public int bombBagSize {
+        get => bombBagSize_;
+        set {
+            bombBagSize_ = value;
+            ammoDisplay.SetLimit(ItemType.Dynamite, value);
+        }
+    }
 
     private CharacterController controller;
     private Vector3 velocity = Vector3.zero;
@@ -48,23 +64,28 @@ public class Player : MonoBehaviour
         whipLevel = startWhipLevel;
         quiverSize = startQuiverSize;
         bombBagSize = startBombBagSize;
-        
+
         // init objects
         itemsBag = new Bag();
         ammoBag = new Bag();
+        ammoBag.persistItems = true;
         hotbar.bag = itemsBag;
+        ammoDisplay.bag = ammoBag;
         controller = GetComponent<CharacterController>();
         PickupItem(ItemType.Whip);
 
         // init controls
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        ammoBag.Add(ItemType.Gold, 100000);
     }
 
     void Update()
     {
         Move();
         PickupItems();
+        HandleShops();
     }
 
     private void UseItems()
@@ -134,6 +155,62 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void HandleShops() {
+        ShopCrate closest = null;
+        float closestSqDist = float.MaxValue;
+        float sqDistCutoff = 2f * 2f;
+
+        foreach (ShopCrate x in FindObjectsByType<ShopCrate>())
+        {
+            float sqDist = (x.transform.position - transform.position).sqrMagnitude;
+
+            if (sqDist <= sqDistCutoff && sqDist < closestSqDist)
+            {
+                closestSqDist = sqDist;
+                closest = x;
+            }
+        }
+
+        if (closest != null)
+        {
+            switch (closest.itemType) {
+                case ItemType.Arrow:
+                    closest.description = $"{ammoBag.Amount(ItemType.Arrow)} / {quiverSize}";
+                    break;
+
+                case ItemType.Dynamite:
+                    closest.description = $"{ammoBag.Amount(ItemType.Dynamite)} / {bombBagSize}";
+                    break;
+            }
+
+            // Buy from shop
+            closest.Show();
+
+            if (Keyboard.current.eKey.wasPressedThisFrame && closest.cost < ammoBag.Amount(ItemType.Gold) && CanPickupItem(closest.itemType)) {
+                ammoBag.Remove(ItemType.Gold, closest.cost);
+                PickupItem(closest.itemType);
+                switch (closest.itemType) {
+                    case ItemType.Seed:
+                        closest.cost *= 3;
+                        if (!CanPickupItem(closest.itemType)) {
+                            closest.SetSoldOut();
+                        }
+                        break;
+
+                    case ItemType.Rooster:
+                    case ItemType.QuiverUpgrade:
+                    case ItemType.BombBagUpgrade:
+                    case ItemType.WhipUpgrade:
+                        closest.cost *= 15;
+                        if (!CanPickupItem(closest.itemType)) {
+                            closest.SetSoldOut();
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
     private bool CanPickupItem(ItemType type)
     {
         switch (type)
@@ -153,7 +230,7 @@ public class Player : MonoBehaviour
 
             case ItemType.Arrow:
                 return itemsBag.Has(ItemType.Bow) && ammoBag.Amount(ItemType.Arrow) < quiverSize;
-                
+
             // Upgrades
             case ItemType.Seed:
                 return FindObjectsByType<PlantSpot>().Any(x => !x.Growing);
@@ -169,7 +246,7 @@ public class Player : MonoBehaviour
 
             case ItemType.Rooster:
                 return FindObjectsByType<Rooster>().Count() < maxRoosters;
-            
+
             default:
                 return false;
         }
@@ -215,10 +292,16 @@ public class Player : MonoBehaviour
 
             case ItemType.QuiverUpgrade:
                 quiverSize += 1;
+                if (CanPickupItem(ItemType.Arrow)) {
+                    PickupItem(ItemType.Arrow);
+                }
                 break;
 
             case ItemType.BombBagUpgrade:
                 bombBagSize += 1;
+                if (CanPickupItem(ItemType.Dynamite)) {
+                    PickupItem(ItemType.Dynamite);
+                }
                 break;
 
             case ItemType.WhipUpgrade:
