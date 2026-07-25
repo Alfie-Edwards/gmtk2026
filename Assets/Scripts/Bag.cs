@@ -15,13 +15,37 @@ public class BagItem {
     }
 }
 
-public class Bag : MonoBehaviour, IEnumerable<BagItem>
+public class Bag : IEnumerable<BagItem>
 {
     public event Action OnContentsChanged;
 
     private List<BagItem> bag = new List<BagItem>();
 
-    public void Add(ItemType type, int count = 1) {
+    public int numUniqueItems { get => bag.Count; }
+
+    public ItemType AtIndex(int i)
+    {
+        if (i < 0 || i >= bag.Count ) {
+            return ItemType.None;
+        }
+        return bag[i].type;
+    }
+
+    public int Amount(ItemType type)
+    {
+        foreach (BagItem item in bag)
+        {
+            if (item.type == type) {
+                return item.count;
+            }
+        }
+        return 0;
+    }
+
+    public bool Has(ItemType type) => Amount(type) > 0;
+
+    public void Add(ItemType type, int count = 1)
+    {
         int i = 0;
         while (i < bag.Count && bag[i].type != type) ++i;
         if (i == bag.Count) bag.Add(new BagItem(type, 0));
@@ -30,7 +54,8 @@ public class Bag : MonoBehaviour, IEnumerable<BagItem>
         OnContentsChanged?.Invoke();
     }
 
-    public void Remove(ItemType type, int count = 1) {
+    public void Remove(ItemType type, int count = 1)
+    {
         for (int i = 0; i != bag.Count; ++i)
         {
             if (bag[i].type == type)

@@ -1,11 +1,12 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Transform))]
-public class BagView : MonoBehaviour
+public class Hotbar : MonoBehaviour
 {
     [System.Serializable]
     public struct ItemSprite {
@@ -15,15 +16,45 @@ public class BagView : MonoBehaviour
 
     [SerializeField] public List<ItemSprite> sprites;
     [SerializeField] public GameObject itemTemplate;
-    public Bag bag;
-
+    
+    private Bag bag_;
     private Transform container;
+    private int iSelected;
 
-    public void Start()
-    {
+    public Bag bag {
+        get => bag_;
+        set {
+            bag_ = value;
+            if (bag_ != null) {
+                iSelected = 0;
+                bag.OnContentsChanged += Refresh;
+                Refresh();
+            }
+        }
+    }
+    
+    void Start() {
         container = GetComponent<Transform>();
-        bag.OnContentsChanged += Refresh;
-        Refresh();
+    }
+
+    public ItemType Selected
+    {
+        get => bag?.AtIndex(iSelected) ?? ItemType.None;
+    }
+
+    public void Update()
+    {
+        if (bag == null) return;
+        float scrollY = Mouse.current.scroll.ReadValue().y;
+
+        if (scrollY > 0f)
+        {
+            iSelected = Mathf.Clamp(0, bag.numUniqueItems - 1, iSelected + 1);
+        }
+        else if (scrollY < 0f)
+        {
+            iSelected = Mathf.Clamp(0, bag.numUniqueItems - 1, iSelected - 1);
+        }
     }
 
     private Sprite GetSprite(ItemType type)
@@ -40,6 +71,9 @@ public class BagView : MonoBehaviour
 
     private void Refresh()
     {
+        if (bag == null) return;
+
+        iSelected = Mathf.Clamp(0, bag.numUniqueItems - 1, iSelected);
 
         // Clear
         foreach (Transform child in container)

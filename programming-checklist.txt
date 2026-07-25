@@ -39,14 +39,14 @@ Town
 [ ] Make the area
 [ ] Inn
   - [ ] End the day, can only do at night
-[ ] General store
-  - [ ] Seeds
-    - [ ] Scaling prices / 8
+[ ] Sheriff
   - [ ] Arrows
     - [ ] Enabled after bow
   - [ ] Dynamite
     - [ ] Enabled after bomb bag
-[ ] Equipment store
+[ ] General store
+  - [ ] Seeds
+    - [ ] Scaling prices / 8
   - [ ] Scaling prices / 3
   - [ ] Rooster (+30s daytime)
   - [ ] Whip upgrade (+ whip damage/range)
