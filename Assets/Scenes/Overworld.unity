@@ -464,6 +464,10 @@ PrefabInstance:
       propertyPath: m_text
       value: +1 arrow capacity
       objectReference: {fileID: 0}
+    - target: {fileID: 1479015149511602999, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 1501801534330661733, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_Name
       value: Quiver upgrade shop
@@ -543,6 +547,10 @@ PrefabInstance:
     - target: {fileID: 4262343575721013540, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_text
       value: Upgraded quiver
+      objectReference: {fileID: 0}
+    - target: {fileID: 4652264094852551102, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: +1 arrow capacity
       objectReference: {fileID: 0}
     - target: {fileID: 5107454769585827947, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_text
@@ -639,6 +647,10 @@ PrefabInstance:
     - target: {fileID: 6956625846632234461, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7584402184721281656, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: Upgrade quiver
       objectReference: {fileID: 0}
     - target: {fileID: 8765123295239567058, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_AnchorMax.y
@@ -920,6 +932,10 @@ PrefabInstance:
       propertyPath: m_text
       value: Arrow
       objectReference: {fileID: 0}
+    - target: {fileID: 4652264094852551102, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5107454769585827947, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_text
       value: 50
@@ -1015,6 +1031,10 @@ PrefabInstance:
     - target: {fileID: 6956625846632234461, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7584402184721281656, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: Arrow
       objectReference: {fileID: 0}
     - target: {fileID: 8765123295239567058, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1476,6 +1496,10 @@ PrefabInstance:
       propertyPath: m_text
       value: Grow a friendly plant
       objectReference: {fileID: 0}
+    - target: {fileID: 1479015149511602999, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1501801534330661733, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_Name
       value: Seed shop
@@ -1555,6 +1579,10 @@ PrefabInstance:
     - target: {fileID: 4262343575721013540, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_text
       value: Seed
+      objectReference: {fileID: 0}
+    - target: {fileID: 4652264094852551102, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: grow a helpful plant
       objectReference: {fileID: 0}
     - target: {fileID: 5107454769585827947, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_text
@@ -1651,6 +1679,10 @@ PrefabInstance:
     - target: {fileID: 6956625846632234461, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7584402184721281656, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: Seed
       objectReference: {fileID: 0}
     - target: {fileID: 8765123295239567058, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2046,6 +2078,10 @@ PrefabInstance:
       propertyPath: m_text
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1479015149511602999, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 1501801534330661733, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_Name
       value: Dynamite shop
@@ -2125,6 +2161,10 @@ PrefabInstance:
     - target: {fileID: 4262343575721013540, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_text
       value: Dynamite
+      objectReference: {fileID: 0}
+    - target: {fileID: 4652264094852551102, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5107454769585827947, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_text
@@ -2842,63 +2882,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5377080173374210467, guid: 4b66eb974be1c6449a3795db615ed690, type: 3}
   m_PrefabInstance: {fileID: 1262896356}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &611268599
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 6432711429521597000, guid: 621dba03f139a014c96a480ef1464eb9, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -11.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6432711429521597000, guid: 621dba03f139a014c96a480ef1464eb9, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6432711429521597000, guid: 621dba03f139a014c96a480ef1464eb9, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6432711429521597000, guid: 621dba03f139a014c96a480ef1464eb9, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6432711429521597000, guid: 621dba03f139a014c96a480ef1464eb9, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6432711429521597000, guid: 621dba03f139a014c96a480ef1464eb9, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6432711429521597000, guid: 621dba03f139a014c96a480ef1464eb9, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6432711429521597000, guid: 621dba03f139a014c96a480ef1464eb9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6432711429521597000, guid: 621dba03f139a014c96a480ef1464eb9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6432711429521597000, guid: 621dba03f139a014c96a480ef1464eb9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6573984061244324518, guid: 621dba03f139a014c96a480ef1464eb9, type: 3}
-      propertyPath: m_Name
-      value: Wilderness
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 621dba03f139a014c96a480ef1464eb9, type: 3}
 --- !u!1001 &613694715
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4648,6 +4631,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -0.10000038
       objectReference: {fileID: 0}
+    - target: {fileID: 1479015149511602999, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 1501801534330661733, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_Name
       value: Whip upgrade shop
@@ -4950,6 +4937,10 @@ PrefabInstance:
       propertyPath: m_text
       value: +1 dynamite capacity
       objectReference: {fileID: 0}
+    - target: {fileID: 1479015149511602999, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 1501801534330661733, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_Name
       value: Dynamite bag upgrade shop
@@ -5029,6 +5020,10 @@ PrefabInstance:
     - target: {fileID: 4262343575721013540, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_text
       value: Upgraded dynamite bag
+      objectReference: {fileID: 0}
+    - target: {fileID: 4652264094852551102, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: +1 bomb capacity
       objectReference: {fileID: 0}
     - target: {fileID: 5107454769585827947, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_text
@@ -5125,6 +5120,10 @@ PrefabInstance:
     - target: {fileID: 6956625846632234461, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7584402184721281656, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: Upgrade bag
       objectReference: {fileID: 0}
     - target: {fileID: 8765123295239567058, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_AnchorMax.y
@@ -5321,6 +5320,10 @@ PrefabInstance:
       propertyPath: m_text
       value: +30s daylight
       objectReference: {fileID: 0}
+    - target: {fileID: 1479015149511602999, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 1501801534330661733, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_Name
       value: Rooster shop
@@ -5400,6 +5403,10 @@ PrefabInstance:
     - target: {fileID: 4262343575721013540, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_text
       value: Rooster
+      objectReference: {fileID: 0}
+    - target: {fileID: 4652264094852551102, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: +30 minutes daylight
       objectReference: {fileID: 0}
     - target: {fileID: 5107454769585827947, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_text
@@ -5496,6 +5503,10 @@ PrefabInstance:
     - target: {fileID: 6956625846632234461, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7584402184721281656, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: Rooster
       objectReference: {fileID: 0}
     - target: {fileID: 8765123295239567058, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_AnchorMax.y
@@ -6098,6 +6109,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2be1ca9581322a545864bb55913cc13a, type: 3}
+--- !u!1 &1253079320 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 579500444982961619, guid: 2be1ca9581322a545864bb55913cc13a, type: 3}
+  m_PrefabInstance: {fileID: 1253079319}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1256725540
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7957,6 +7973,8 @@ MonoBehaviour:
   sunriseTransitionDuration: 3
   sunsetTransitionDuration: 15
   trueNightTransitionDuration: 3
+  wildernessPrefab: {fileID: 579500444982961619, guid: 2be1ca9581322a545864bb55913cc13a, type: 3}
+  currentWilderness: {fileID: 1253079320}
   dayColor: {r: 1, g: 1, b: 1, a: 1}
   sunsetColor: {r: 1, g: 0.5, b: 0.2, a: 1}
   nightColor: {r: 0.2, g: 0.3, b: 0.5, a: 1}
@@ -9793,7 +9811,6 @@ SceneRoots:
   - {fileID: 729445509}
   - {fileID: 1978744998}
   - {fileID: 1630403141}
-  - {fileID: 611268599}
   - {fileID: 719293301}
   - {fileID: 1896201249}
   - {fileID: 193874015}

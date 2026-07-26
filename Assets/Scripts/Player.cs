@@ -121,7 +121,7 @@ public class Player : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        ammoBag.Add(ItemType.Gold, 100000);
+        ammoBag.Add(ItemType.Gold, 10);
 
         WildernessMusic = RuntimeManager.CreateInstance(wildernessMusicSource);
         TownMusic = RuntimeManager.CreateInstance(townMusicSource);

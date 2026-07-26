@@ -20,8 +20,6 @@ public class DayNightCycle : MonoBehaviour
     public float sunriseTransitionDuration = 3f; // Configurable duration for the start day transition
     public float sunsetTransitionDuration = 15f;  // Configurable duration for the gradual sunset transition
     public float trueNightTransitionDuration = 3f; // Configurable duration for the quick drop to true night
-    [SerializeField] private GameObject wildernessPrefab;
-    [SerializeField] private GameObject currentWilderness;
 
     [Header("Smooth Color Cycle")]
     public Color dayColor = Color.white;
@@ -51,20 +49,6 @@ public class DayNightCycle : MonoBehaviour
                 SetNight();
                 StartTrueNightTransition();
             }
-        }
-    }
-
-    public void ResetWilderness()
-    {
-        if (currentWilderness != null && wildernessPrefab != null)
-        {
-            Transform t = currentWilderness.transform;
-            Vector3 pos = t.position;
-            Quaternion rot = t.rotation;
-            Transform parent = t.parent;
-
-            Destroy(currentWilderness);
-            currentWilderness = Instantiate(wildernessPrefab, pos, rot, parent);
         }
     }
 
