@@ -82,7 +82,7 @@ Enemies
   - [x] Same ai as skeleton
 
 World
-[ ] Make the map dark at night
+[x] Make the map dark at night
 [ ] Display time remaining when in wilderness
 [ ] Set to night when you return from the wilderness
 [ ] Fade between the 3 wilderness musics depending on area
