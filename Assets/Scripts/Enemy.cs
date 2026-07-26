@@ -41,8 +41,10 @@ public class Enemy : MonoBehaviour
 
     [Header("Loot Settings")]
     public GameObject coinPrefab;
+    public GameObject xxxPrefab;
     public int minCoins = 1;
     public int maxCoins = 5;
+    public bool canDropXXX = true;
     public float coinSpawnSpread = 1f;
 
     void Start()
@@ -153,22 +155,29 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        SpawnCoins();
+        SpawnLoot();
         Destroy(gameObject);
     }
 
-    void SpawnCoins()
+    void SpawnLoot()
     {
-        if (coinPrefab == null) return;
-
-        int coinCount = Random.Range(minCoins, maxCoins + 1);
-
-        for (int i = 0; i < coinCount; i++)
+        if (coinPrefab != null)
         {
-            Vector2 randomCircle = Random.insideUnitCircle * coinSpawnSpread;
-            Vector3 spawnPosition = transform.position + new Vector3(randomCircle.x, 0f, randomCircle.y);
+            int coinCount = Random.Range(minCoins, maxCoins + 1);
 
-            Instantiate(coinPrefab, spawnPosition, Quaternion.identity);
+            for (int i = 0; i < coinCount; i++)
+            {
+                Vector2 randomCircle = Random.insideUnitCircle * coinSpawnSpread;
+                Vector3 spawnPosition = transform.position + new Vector3(randomCircle.x, 0f, randomCircle.y);
+
+                Instantiate(coinPrefab, spawnPosition, Quaternion.identity);
+            }
+        }
+        if (xxxPrefab != null && canDropXXX)
+        {
+            if (Random.Range(0, 8) == 0) {
+                Instantiate(xxxPrefab, transform.position, Quaternion.identity);
+            }
         }
     }
 

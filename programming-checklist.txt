@@ -16,7 +16,7 @@ Player
 [ ] Bomb
   - [x] Ammo counter
   - [x] Throw on use
-  - [ ] On hit, in radius, damage enemies, break rocks, break walls, scare ghosts
+  - [x] On hit, in radius, damage enemies, break rocks, break walls, scare ghosts
 [x] Pickaxe
   - [x] Swing animation
   - [x] Detect rock or wall and break them
@@ -32,7 +32,7 @@ Wilderness
 [ ] Make the map lol
   - [x] Setup a prefab
   - [ ] Lay out the area
-  - [ ] Add terrain models to the game and define grid
+  - [x] Add terrain models to the game and define grid
 
 Town
 [x] Lay out the area
@@ -40,9 +40,9 @@ Town
 [ ] Inn
   - [ ] End the day, can only do at night
 [ ] Sheriff
-  - [ ] Arrows
+  - [x] Arrows
     - [ ] Enabled after bow
-  - [ ] Dynamite
+  - [x] Dynamite
     - [ ] Enabled after bomb bag
 [x] General store
   - [x] Seeds
@@ -61,9 +61,9 @@ Town
 
 Enemies
 [x] Configurable health
-[ ] Damage player on contact
+[x] Damage player on contact
 [x] Drop coins on death
-[ ] Rarely xxx on death
+[x] Rarely xxx on death
 [ ] Skeleton
   - [x] Pathfind towards player
 [ ] Cactus
