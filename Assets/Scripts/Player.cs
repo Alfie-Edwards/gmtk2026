@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using FMODUnity;
+using FMOD.Studio;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +59,12 @@ public class Player : MonoBehaviour
     private int bombBagSize_;
     private MapArea mapArea;
 
+    public EventReference wildernessMusicSource;
+    public EventReference townMusicSource;
+
+    private EventInstance WildernessMusic;
+    private EventInstance TownMusic;
+
     public int whipLevel { get; private set; }
     public int quiverSize {
         get => quiverSize_;
@@ -107,6 +115,9 @@ public class Player : MonoBehaviour
         Cursor.visible = false;
 
         ammoBag.Add(ItemType.Gold, 100000);
+
+        WildernessMusic = RuntimeManager.CreateInstance(wildernessMusicSource);
+        TownMusic = RuntimeManager.CreateInstance(townMusicSource);
     }
 
     void Update()
@@ -158,6 +169,17 @@ public class Player : MonoBehaviour
                 if (!dayNightCycle.isNight) dayNightCycle.UnpauseTime();
                 break;
             case MapArea.Wilderness:
+                break;
+        }
+        switch (newArea)
+        {
+            case MapArea.Town:
+                TownMusic.start();
+                WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                break;
+            case MapArea.Wilderness:
+                WildernessMusic.start();
+                TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 break;
         }
     }
@@ -512,9 +534,14 @@ public class Player : MonoBehaviour
             amount = totalGold;
         }
         ammoBag.Remove(ItemType.Gold, amount);
-        for (int i = 0; i != amount; ++i)
+
+        if (FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length < 25)
         {
-            Instantiate(dummyGoldPrefab, transform.position, Random.rotation);
+            if (amount > 25) amount = 25;
+            for (int i = 0; i != amount; ++i)
+            {
+                Instantiate(dummyGoldPrefab, transform.position, Random.rotation);
+            }
         }
     }
 

@@ -193,6 +193,11 @@ public class DayNightCycle : MonoBehaviour
 
     public void SetDay()
     {
+        if (!isNight) return;
+        foreach (Enemy enemy in FindObjectsByType<Enemy>())
+        {
+            Destroy(enemy.gameObject);
+        }
         isNight = false;
         timeRemainingS = dayLengthS;
         sunriseTimer = 0f;

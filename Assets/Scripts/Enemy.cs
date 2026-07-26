@@ -60,11 +60,16 @@ public class Enemy : MonoBehaviour
 
         if (transform.position.z < 0)
         {
-            minCoins = 0;
-            maxCoins = 0;
-            canDropXXX = false;
-            Die();
+            Cull();
         }
+    }
+
+    void Cull()
+    {
+        minCoins = 0;
+        maxCoins = 0;
+        canDropXXX = false;
+        Die();
     }
 
     void HandleMovement()
@@ -179,7 +184,7 @@ public class Enemy : MonoBehaviour
                 Vector2 randomCircle = Random.insideUnitCircle * coinSpawnSpread;
                 Vector3 spawnPosition = transform.position + new Vector3(randomCircle.x, 0f, randomCircle.y);
 
-                Instantiate(coinPrefab, spawnPosition, Quaternion.identity);
+                Instantiate(coinPrefab, spawnPosition, Random.rotation);
             }
         }
         if (xxxPrefab != null && canDropXXX)
