@@ -56,7 +56,7 @@ public class Hotbar : MonoBehaviour
             iSelected = Mathf.Clamp(iSelected + 1, 0, bag.numUniqueItems - 1);
             Refresh();
         }
-        else if (scrollY < 0f || Keyboard.current.pKey.wasPressedThisFrame)
+        else if (scrollY < 0f || (Keyboard.current.cKey.wasPressedThisFrame || Keyboard.current.pKey.wasPressedThisFrame))
         {
             iSelected = Mathf.Clamp(iSelected - 1, 0, bag.numUniqueItems - 1);
             Refresh();

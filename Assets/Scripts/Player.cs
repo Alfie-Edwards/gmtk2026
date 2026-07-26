@@ -161,7 +161,7 @@ public class Player : MonoBehaviour
 
         if (Keyboard.current.gKey.wasPressedThisFrame)
         {
-            SpawnGhost();
+            //SpawnGhost();
         }
 
         if (dayNightCycle.timeRemainingS < 12f && (dayNightCycle.timeRemainingS + Time.deltaTime) >= 12f)
@@ -228,7 +228,7 @@ public class Player : MonoBehaviour
 
     private void UseItems()
     {
-        if (Keyboard.current.tKey.wasPressedThisFrame)
+        if (Keyboard.current.xKey.wasPressedThisFrame)
         {
             Use(hotbar.Selected);
         }
@@ -240,16 +240,16 @@ public class Player : MonoBehaviour
         float moveRightAmount = 0;
         if (Keyboard.current != null)
         {
-            if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed) moveForwardAmount += 1;
-            if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed) moveForwardAmount -= 1;
-            if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) moveRightAmount += 1;
-            if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) moveRightAmount -= 1;
+            if (Keyboard.current.upArrowKey.isPressed) moveForwardAmount += 1;
+            if (Keyboard.current.downArrowKey.isPressed) moveForwardAmount -= 1;
+            if (Keyboard.current.rightArrowKey.isPressed) moveRightAmount += 1;
+            if (Keyboard.current.leftArrowKey.isPressed) moveRightAmount -= 1;
         }
         Vector3 move = ((Vector3.forward * moveForwardAmount) + (Vector3.right * moveRightAmount)).normalized * moveSpeed;
 
 
         // Jump
-        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame && controller.isGrounded)
+        if (Keyboard.current != null && Keyboard.current.zKey.wasPressedThisFrame && controller.isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravity);
         }
@@ -308,7 +308,7 @@ public class Player : MonoBehaviour
                 if (dayNightCycle.isNight)
                 {
                     saloon.message = "go to bed?";
-                    if (Keyboard.current.eKey.wasPressedThisFrame) dayNightCycle.SetDay();
+                    if (Keyboard.current.zKey.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame || Keyboard.current.xKey.wasPressedThisFrame) dayNightCycle.SetDay();
                 }
                 else if (!dayNightCycle.timePaused)
                 {
@@ -350,7 +350,7 @@ public class Player : MonoBehaviour
             // Buy from shop
             closest.Show();
 
-            if (Keyboard.current.eKey.wasPressedThisFrame && closest.cost < ammoBag.Amount(ItemType.Gold) && CanPickupItem(closest.itemType)) {
+            if ((Keyboard.current.eKey.wasPressedThisFrame || Keyboard.current.zKey.wasPressedThisFrame || Keyboard.current.xKey.wasPressedThisFrame) && closest.cost < ammoBag.Amount(ItemType.Gold) && CanPickupItem(closest.itemType)) {
                 ammoBag.Remove(ItemType.Gold, closest.cost);
                 PickupItem(closest.itemType);
                 RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_Purchase");
