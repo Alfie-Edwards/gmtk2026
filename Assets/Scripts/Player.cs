@@ -350,7 +350,7 @@ public class Player : MonoBehaviour
             // Buy from shop
             closest.Show();
 
-            if ((Keyboard.current.eKey.wasPressedThisFrame || Keyboard.current.zKey.wasPressedThisFrame || Keyboard.current.xKey.wasPressedThisFrame) && closest.cost < ammoBag.Amount(ItemType.Gold) && CanPickupItem(closest.itemType)) {
+            if ((Keyboard.current.eKey.wasPressedThisFrame || Keyboard.current.zKey.wasPressedThisFrame || Keyboard.current.xKey.wasPressedThisFrame) && closest.cost <= ammoBag.Amount(ItemType.Gold) && CanPickupItem(closest.itemType)) {
                 ammoBag.Remove(ItemType.Gold, closest.cost);
                 PickupItem(closest.itemType);
                 RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_Purchase");
