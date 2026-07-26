@@ -110,7 +110,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: BombModel
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1549962385150425124, guid: fbd4ce8f80c8649148753352b5899744, type: 3}
+    - {fileID: 2167444116962727492, guid: fbd4ce8f80c8649148753352b5899744, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

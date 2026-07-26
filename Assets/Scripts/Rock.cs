@@ -2,20 +2,21 @@ using UnityEngine;
 
 public class Rock : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    public int coinCount = 500;
+    public GameObject coinPrefab;
 
     public void Break()
     {
+        if (coinPrefab != null)
+        {
+            for (int i = 0; i < coinCount; i++)
+            {
+                Vector2 randomCircle = Random.insideUnitCircle;
+                Vector3 spawnPosition = transform.position + new Vector3(randomCircle.x, 0f, randomCircle.y);
 
+                Instantiate(coinPrefab, spawnPosition, Random.rotation);
+            }
+        }
+        Destroy(gameObject);
     }
 }
