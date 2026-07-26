@@ -41,15 +41,12 @@ public class DayNightCycle : MonoBehaviour
 
     public float timeRemainingS
     {
-        get
-        {
-            if (isNight || isTransitioningTrueNight) return 0;
-            return timeRemainingS_;
-        }
+        get => timeRemainingS_;
         set
         {
-            timeRemainingS_ = value;
-            if (timeRemainingS <= 0 && !isNight && !isTransitioningTrueNight) {
+            timeRemainingS_ = Mathf.Clamp(value, 0f, dayLengthS);
+            if (timeRemainingS_ <= 0 && !isNight && !isTransitioningTrueNight) {
+                SetNight();
                 StartTrueNightTransition();
             }
         }
@@ -59,15 +56,15 @@ public class DayNightCycle : MonoBehaviour
     {
         dayLengthS = startDayLengthS;
         timeRemainingS = dayLengthS;
-        isNight = true; // Start at night so it properly waits for SetDay() to trigger sunrise
+        isNight = false;
         timePaused = true;
 
-        // Initialize lighting to night settings on start
+        // Initialize lighting to full day settings on start
         if (sunLight != null)
         {
-            sunLight.intensity = nightBrightness;
-            sunLight.transform.rotation = Quaternion.Euler(0f, compassHeading, 0f);
-            sunLight.color = nightColor;
+            sunLight.intensity = dayMaxIntensity;
+            sunLight.transform.rotation = Quaternion.Euler(daySunAngle, compassHeading, 0f);
+            sunLight.color = dayColor;
         }
     }
 
@@ -79,32 +76,31 @@ public class DayNightCycle : MonoBehaviour
             else UnpauseTime();
         }
 
-        // 1. Time Progression & Phase Handling
-        if (!isNight && !timePaused) {
-            if (isTransitioningDay)
+        // 1. Time Progression (Only count down daytime when unpaused and not transitioning)
+        if (!isNight && !timePaused && !isTransitioningDay && !isTransitioningTrueNight) {
+            timeRemainingS -= Time.deltaTime;
+        }
+
+        // 2. Sunrise & True Night Transitions (Happen regardless of pause state)
+        if (isTransitioningDay)
+        {
+            sunriseTimer += Time.deltaTime;
+            if (sunriseTimer >= sunriseTransitionDuration)
             {
-                sunriseTimer += Time.deltaTime;
-                if (sunriseTimer >= sunriseTransitionDuration)
-                {
-                    isTransitioningDay = false;
-                }
-            }
-            else if (isTransitioningTrueNight)
-            {
-                trueNightTimer += Time.deltaTime;
-                if (trueNightTimer >= trueNightTransitionDuration)
-                {
-                    isTransitioningTrueNight = false;
-                    SetNight();
-                }
-            }
-            else
-            {
-                timeRemainingS -= Time.deltaTime;
+                isTransitioningDay = false;
             }
         }
 
-        // 2. UI Clock Management
+        if (isTransitioningTrueNight)
+        {
+            trueNightTimer += Time.deltaTime;
+            if (trueNightTimer >= trueNightTransitionDuration)
+            {
+                isTransitioningTrueNight = false;
+            }
+        }
+
+        // 3. UI Clock Management
         if (timerText != null)
         {
             bool showTimer = !timePaused && !isNight && !isTransitioningTrueNight;
@@ -117,17 +113,10 @@ public class DayNightCycle : MonoBehaviour
             }
         }
 
-        // 3. Lighting & Sun Animation Management
+        // 4. Lighting & Sun Animation Management
         if (sunLight != null)
         {
-            if (isNight)
-            {
-                // Night time: Locked at true night settings
-                sunLight.intensity = nightBrightness;
-                sunLight.transform.rotation = Quaternion.Euler(0f, compassHeading, 0f);
-                sunLight.color = nightColor;
-            }
-            else if (isTransitioningTrueNight)
+            if (isTransitioningTrueNight)
             {
                 // True Night Phase: Smoothly transitions from sunset brightness/color to true night brightness/color
                 float t = Mathf.Clamp01(trueNightTimer / trueNightTransitionDuration);
@@ -138,14 +127,21 @@ public class DayNightCycle : MonoBehaviour
                 sunLight.intensity = currentIntensity;
                 sunLight.color = Color.Lerp(sunsetColor, nightColor, t);
             }
+            else if (isNight)
+            {
+                // Locked firmly at true night settings once transition is fully finished
+                sunLight.intensity = nightBrightness;
+                sunLight.transform.rotation = Quaternion.Euler(-10f, compassHeading, 0f);
+                sunLight.color = nightColor;
+            }
             else if (isTransitioningDay)
             {
-                // Sunrise Phase: Smoothly transitions directly from night color to day color
+                // Sunrise Phase (isNight is false): Smoothly transitions directly from night color to day color
                 float t = Mathf.Clamp01(sunriseTimer / sunriseTransitionDuration);
-                float currentAngle = Mathf.Lerp(-daySunAngle, daySunAngle, t);
+                float currentAngle = Mathf.Lerp(-10f, daySunAngle, t);
                 float currentIntensity = Mathf.Lerp(nightBrightness, dayMaxIntensity, t);
 
-                sunLight.transform.rotation = Quaternion.Euler(Mathf.Abs(currentAngle), compassHeading, 0f);
+                sunLight.transform.rotation = Quaternion.Euler(currentAngle, compassHeading, 0f);
                 sunLight.intensity = currentIntensity;
                 sunLight.color = Color.Lerp(nightColor, dayColor, t);
             }
@@ -189,7 +185,7 @@ public class DayNightCycle : MonoBehaviour
 
     public void StartTrueNightTransition()
     {
-        if (isNight || isTransitioningTrueNight) return;
+        if (isTransitioningTrueNight) return;
         isTransitioningTrueNight = true;
         trueNightTimer = 0f;
     }
@@ -198,18 +194,16 @@ public class DayNightCycle : MonoBehaviour
     {
         if (isNight) return;
         isNight = true;
-        isTransitioningTrueNight = false;
         NightStart?.Invoke();
     }
 
     public void SetDay()
     {
-        if (!isNight && !isTransitioningTrueNight) return;
         isNight = false;
-        isTransitioningTrueNight = false;
         timeRemainingS = dayLengthS;
         sunriseTimer = 0f;
         isTransitioningDay = true;
+        timePaused = true; // Pause time automatically when a new day starts
         DayStart?.Invoke();
     }
 }

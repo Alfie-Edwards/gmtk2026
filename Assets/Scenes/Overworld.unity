@@ -7322,7 +7322,7 @@ MonoBehaviour:
   daySunAngle: 50
   dayMaxIntensity: 1
   sunsetMinBrightness: 0.3
-  nightBrightness: 0.1
+  nightBrightness: 0.05
   compassHeading: 0
   sunriseTransitionDuration: 3
   sunsetTransitionDuration: 15

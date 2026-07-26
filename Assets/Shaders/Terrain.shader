@@ -22,9 +22,7 @@ Shader "Custom/TriplanarFloor"
             #pragma vertex vert
             #pragma fragment frag
 
-            // URP keywords for main light shadows
-            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
-            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _SHADOWS_SOFT
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
@@ -41,7 +39,10 @@ Shader "Custom/TriplanarFloor"
                 float4 positionCS   : SV_POSITION;
                 float3 worldPos     : TEXCOORD0;
                 float3 worldNormal  : TEXCOORD1;
+
+                #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
                 float4 shadowCoord  : TEXCOORD2;
+                #endif
             };
 
             TEXTURE2D(_MainTex);
@@ -58,10 +59,11 @@ Shader "Custom/TriplanarFloor"
 
                 output.positionCS = vertexInput.positionCS;
                 output.worldPos = vertexInput.positionWS;
-                output.worldNormal = normalInput.normalWS;
+                output.worldNormal = normalize(normalInput.normalWS);
 
-                // Calculate shadow coordinates for the main light
+                #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
                 output.shadowCoord = GetShadowCoord(vertexInput);
+                #endif
 
                 return output;
             }
@@ -86,8 +88,19 @@ Shader "Custom/TriplanarFloor"
                 float4 finalColor = colX * blend.x + colY * blend.y + colZ * blend.z;
                 finalColor *= _Color;
 
-                // --- LIGHTING & SHADOWS ---
-                Light mainLight = GetMainLight(input.shadowCoord);
+                // --- PROPER SHADOW COORDINATE RESOLUTION ---
+                VertexPositionInputs dripInput;
+                dripInput.positionWS = input.worldPos;
+
+                Light mainLight;
+                #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
+                mainLight = GetMainLight(input.shadowCoord);
+                #elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
+                float4 shadowCoord = TransformWorldToShadowCoord(input.worldPos);
+                mainLight = GetMainLight(shadowCoord);
+                #else
+                mainLight = GetMainLight();
+                #endif
 
                 float NdotL = saturate(dot(normalWS, mainLight.direction));
                 float3 lighting = mainLight.color * (NdotL * mainLight.shadowAttenuation);
@@ -101,7 +114,7 @@ Shader "Custom/TriplanarFloor"
             ENDHLSL
         }
 
-        // --- SHADOW CASTER PASS (Allows this material to cast shadows on other objects) ---
+        // --- SHADOW CASTER PASS ---
         Pass
         {
             Name "ShadowCaster"
@@ -134,7 +147,6 @@ Shader "Custom/TriplanarFloor"
                 Varyings output;
                 VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
 
-                // Apply URP shadow bias to avoid shadow acne/peter-panning
                 float3 positionWS = vertexInput.positionWS;
                 float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
                 output.positionCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, _LightDirection));
