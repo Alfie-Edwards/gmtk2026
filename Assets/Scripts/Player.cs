@@ -9,6 +9,7 @@ using System.Linq;
 public enum MapArea {
     Town,
     Wilderness,
+    None,
 }
 
 [RequireComponent(typeof(CharacterController))]
@@ -549,7 +550,7 @@ public class Player : MonoBehaviour
         }
         ammoBag.Remove(ItemType.Gold, amount);
 
-        if (FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length < 25)
+        if (FindObjectsByType<RandomFlingOnSpawn>().Length < 25)
         {
             if (amount > 25) amount = 25;
             for (int i = 0; i != amount; ++i)

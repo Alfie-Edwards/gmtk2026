@@ -4,7 +4,8 @@ using UnityEngine;
 public class Bridge : MonoBehaviour
 {
     [SerializeField] private float fallDuration = 1f;
-    [SerializeField] private Transform hingePoint;
+    [SerializeField] private Transform hingePoint; // The point/object in space to swing around
+    [SerializeField] private Vector3 rotationAxis = Vector3.right; // The axis to swing on (e.g., X, Y, or Z)
 
     private bool hasFallen = false;
 
@@ -18,24 +19,33 @@ public class Bridge : MonoBehaviour
 
     private IEnumerator AnimateFall()
     {
-        Transform targetTransform = hingePoint != null ? hingePoint : transform;
-
-        Quaternion startRotation = targetTransform.localRotation;
-        Quaternion endRotation = startRotation * Quaternion.Euler(-90f, 0f, 0f);
+        // Fallback to self position if no hinge is assigned
+        Vector3 pivot = hingePoint != null ? hingePoint.position : transform.position;
 
         float elapsed = 0f;
+        float totalAngleRotated = 0f;
+        float targetAngle = -90f;
+
         while (elapsed < fallDuration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / fallDuration);
 
-            // Quadratic ease-in: starts slow and accelerates over time like gravity
+            // Quadratic ease-in acceleration (starts slow, speeds up)
             t = t * t;
 
-            targetTransform.localRotation = Quaternion.Slerp(startRotation, endRotation, t);
+            // Calculate how much angle to cover this specific frame based on the curve
+            float targetTotalAngle = targetAngle * t;
+            float angleStep = targetTotalAngle - totalAngleRotated;
+
+            // Rotate around the external point in world space
+            transform.RotateAround(pivot, rotationAxis, angleStep);
+
+            totalAngleRotated = targetTotalAngle;
             yield return null;
         }
 
-        targetTransform.localRotation = endRotation;
+        // Ensure it lands precisely at the final -90 degrees
+        transform.RotateAround(pivot, rotationAxis, targetAngle - totalAngleRotated);
     }
 }
