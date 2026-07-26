@@ -51,12 +51,12 @@ public class Hotbar : MonoBehaviour
     {
         if (bag == null || !enableSelection) return;
         float scrollY = Mouse.current.scroll.ReadValue().y;
-        if (scrollY > 0f || Keyboard.current.oKey.wasPressedThisFrame)
+        if (scrollY > 0f || Keyboard.current.sKey.wasPressedThisFrame)
         {
             iSelected = Mathf.Clamp(iSelected + 1, 0, bag.numUniqueItems - 1);
             Refresh();
         }
-        else if (scrollY < 0f || (Keyboard.current.cKey.wasPressedThisFrame || Keyboard.current.pKey.wasPressedThisFrame))
+        else if (scrollY < 0f || (Keyboard.current.aKey.wasPressedThisFrame || Keyboard.current.aKey.wasPressedThisFrame))
         {
             iSelected = Mathf.Clamp(iSelected - 1, 0, bag.numUniqueItems - 1);
             Refresh();
