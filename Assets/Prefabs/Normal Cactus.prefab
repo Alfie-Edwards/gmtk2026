@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 3012192548096332907}
   - component: {fileID: 4490106116342746559}
   m_Layer: 0
-  m_Name: Cactus
+  m_Name: Normal Cactus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -174,15 +174,15 @@ MonoBehaviour:
   moveSpeed: 0
   gravity: 0
   maxHealth: 100
-  hitCooldown: 0.5
+  hitCooldown: 0
   knockbackMagnitude: 0
   knockbackDamping: 999
-  contactForce: 30
+  contactForce: 10
   coinPrefab: {fileID: 575649640322857749, guid: 447ae08732a2f564ab18fa5320338070, type: 3}
   xxxPrefab: {fileID: 8767786966827885196, guid: 76a24074ab89094458eb7abc38c1b344, type: 3}
-  minCoins: 15
-  maxCoins: 45
-  canDropXXX: 1
+  minCoins: 0
+  maxCoins: 0
+  canDropXXX: 0
   coinSpawnSpread: 1
 --- !u!143 &7886186494996032649
 CharacterController:
@@ -257,57 +257,57 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3150365934214766344}
     m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: d09ffc2c19ed1d14399e3c57a7d88bb1, type: 3}
+    - target: {fileID: -8679921383154817045, guid: a15b2451b65787e4885c1ad49377ed5a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.025
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d09ffc2c19ed1d14399e3c57a7d88bb1, type: 3}
+    - target: {fileID: -8679921383154817045, guid: a15b2451b65787e4885c1ad49377ed5a, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.189
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d09ffc2c19ed1d14399e3c57a7d88bb1, type: 3}
+    - target: {fileID: -8679921383154817045, guid: a15b2451b65787e4885c1ad49377ed5a, type: 3}
       propertyPath: m_LocalPosition.z
       value: -0.042
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d09ffc2c19ed1d14399e3c57a7d88bb1, type: 3}
+    - target: {fileID: -8679921383154817045, guid: a15b2451b65787e4885c1ad49377ed5a, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d09ffc2c19ed1d14399e3c57a7d88bb1, type: 3}
+    - target: {fileID: -8679921383154817045, guid: a15b2451b65787e4885c1ad49377ed5a, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d09ffc2c19ed1d14399e3c57a7d88bb1, type: 3}
+    - target: {fileID: -8679921383154817045, guid: a15b2451b65787e4885c1ad49377ed5a, type: 3}
       propertyPath: m_LocalRotation.y
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d09ffc2c19ed1d14399e3c57a7d88bb1, type: 3}
+    - target: {fileID: -8679921383154817045, guid: a15b2451b65787e4885c1ad49377ed5a, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d09ffc2c19ed1d14399e3c57a7d88bb1, type: 3}
+    - target: {fileID: -8679921383154817045, guid: a15b2451b65787e4885c1ad49377ed5a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d09ffc2c19ed1d14399e3c57a7d88bb1, type: 3}
+    - target: {fileID: -8679921383154817045, guid: a15b2451b65787e4885c1ad49377ed5a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d09ffc2c19ed1d14399e3c57a7d88bb1, type: 3}
+    - target: {fileID: -8679921383154817045, guid: a15b2451b65787e4885c1ad49377ed5a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: d09ffc2c19ed1d14399e3c57a7d88bb1, type: 3}
+    - target: {fileID: 919132149155446097, guid: a15b2451b65787e4885c1ad49377ed5a, type: 3}
       propertyPath: m_Name
-      value: evil_cactus
+      value: cactus
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d09ffc2c19ed1d14399e3c57a7d88bb1, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: a15b2451b65787e4885c1ad49377ed5a, type: 3}
 --- !u!4 &3190484426127092304 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d09ffc2c19ed1d14399e3c57a7d88bb1, type: 3}
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a15b2451b65787e4885c1ad49377ed5a, type: 3}
   m_PrefabInstance: {fileID: 3155996205914639803}
   m_PrefabAsset: {fileID: 0}
