@@ -176,6 +176,11 @@ public class Enemy : MonoBehaviour
 
         SpawnLoot();
         Destroy(gameObject);
+
+        if (GetComponent<EnemyRock>() != null)
+        {
+            Player.GetComponent<Player>().win = true;
+        }
     }
 
     void SpawnLoot()
@@ -205,6 +210,7 @@ public class Enemy : MonoBehaviour
         Player player = hit.collider.GetComponent<Player>();
         if (player != null)
         {
+            Debug.Log("HIT PLAYER");
             Vector3 knockbackDir = -hit.normal;
             knockbackDir.y *= 0.01f;
             knockbackDir.Normalize();

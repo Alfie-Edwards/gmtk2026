@@ -35,7 +35,7 @@ public class Hotbar : MonoBehaviour
     }
 
     void Start() {
-        iSelected = -1;
+        iSelected = 0;
     }
 
     public void SetLimit(ItemType type, int limit) {

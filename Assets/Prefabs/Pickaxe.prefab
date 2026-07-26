@@ -78,8 +78,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pickaxe
   swingDuration: 0.4
-  swingOffset: {x: 0, y: -0.5, z: 1.5}
-  swingRotationOffset: {x: 45, y: 0, z: 0}
+  swingOffset: {x: 0, y: 0, z: -0.8}
+  swingRotationOffset: {x: 80, y: 0, z: 0}
   hitRadius: 1
   hitPoint: {fileID: 7414474821479838494}
 --- !u!1001 &56270582937779719

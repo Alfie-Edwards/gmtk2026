@@ -39,7 +39,7 @@ public class EnemyCactus : MonoBehaviour
         // Check distance to the player
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
-        if (distanceToPlayer <= detectionRadius)
+        if (distanceToPlayer <= detectionRadius && Mathf.Abs(transform.position.y - 0.5f - player.transform.position.y) < 1f)
         {
             // Handle shooting cooldown
             fireTimer += Time.deltaTime;
@@ -48,11 +48,6 @@ public class EnemyCactus : MonoBehaviour
                 ShootSpikeRing();
                 fireTimer = 0f;
             }
-        }
-        else
-        {
-            // Reset timer so it shoots immediately when player re-enters range
-            fireTimer = fireCooldown;
         }
     }
 

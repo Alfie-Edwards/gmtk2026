@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using FMODUnity;
 using FMOD.Studio;
+using UnityEngine.SceneManagement;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,7 @@ public class Player : MonoBehaviour
     [Header("Combat")]
     [SerializeField] private float knockbackDamping = 10f;
     [SerializeField] private float hitCooldown = 0.5f;
+    public bool win = false;
 
 
     private float lastHitTime = -999f;
@@ -113,6 +115,7 @@ public class Player : MonoBehaviour
         quiverShop.SetActive(false);
         bombShop.SetActive(false);
         bombBagShop.SetActive(false);
+        Spawn();
 
         // init controls
         Cursor.lockState = CursorLockMode.Locked;
@@ -125,6 +128,25 @@ public class Player : MonoBehaviour
         TenSecondMusic =RuntimeManager.CreateInstance(tenSecondMusicSource);
 
         TownMusic.start();
+    }
+
+    void Spawn()
+    {
+        if (controller == null) controller = GetComponent<CharacterController>();
+
+        // 1. Temporarily disable the CharacterController so it releases control of the transform
+        if (controller != null) controller.enabled = false;
+
+        // 2. Set position and rotation
+        transform.position = new Vector3(13.89f, 0.5f, -8.35f);
+        transform.rotation = Quaternion.Euler(0f, -180f, 0f);
+        lookTarget = Quaternion.Euler(0f, -180f, 0f); // Keep if used in your script
+        camera.position = transform.position + cameraOffset;
+
+        dayNightCycle.SetDay();
+
+        // 3. Re-enable the CharacterController
+        if (controller != null) controller.enabled = true;
     }
 
     void Update()
@@ -191,6 +213,10 @@ public class Player : MonoBehaviour
                 TownMusic.start();
                 WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                if (win)
+                {
+                    SceneManager.LoadScene("WIN");
+                }
                 break;
             case MapArea.Wilderness:
                 WildernessMusic.start();
@@ -550,7 +576,14 @@ public class Player : MonoBehaviour
         knockbackVelocity += impulse;
         if (dayNightCycle.isNight)
         {
-            DropGold(10);
+            if (ammoBag.Amount(ItemType.Gold) > 0)
+            {
+                DropGold(10);
+            }
+            else
+            {
+                Spawn();
+            }
         }
         else
         {
@@ -580,6 +613,7 @@ public class Player : MonoBehaviour
         Enemy enemy = hit.collider.GetComponent<Enemy>();
         if (enemy != null)
         {
+            Debug.Log("HIT ENEMY");
             Vector3 knockbackDir = hit.normal;
             knockbackDir.y *= 0.01f;
             knockbackDir.Normalize();
