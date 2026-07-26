@@ -25,14 +25,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8767786966827885196}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.41268298, z: -0, w: 0.9108747}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8336628530147067279}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 48.747, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5214895776626382962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,9 +98,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: PickaxeModel
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 80445222413651086, guid: 746ccfc8662f049d08afb445b5a256df, type: 3}
-    - {fileID: 5448044788412813875, guid: 746ccfc8662f049d08afb445b5a256df, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

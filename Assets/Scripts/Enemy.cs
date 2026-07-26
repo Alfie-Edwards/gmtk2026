@@ -38,6 +38,7 @@ public class Enemy : MonoBehaviour
     public float knockbackMagnitude = 5f;
     private Vector3 knockbackVelocity;
     public float knockbackDamping = 5f;
+    public float contactForce = 10f;
 
     [Header("Loot Settings")]
     public GameObject coinPrefab;
@@ -56,6 +57,14 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         HandleMovement();
+
+        if (transform.position.z < 0)
+        {
+            minCoins = 0;
+            maxCoins = 0;
+            canDropXXX = false;
+            Die();
+        }
     }
 
     void HandleMovement()
@@ -186,7 +195,10 @@ public class Enemy : MonoBehaviour
         Player player = hit.collider.GetComponent<Player>();
         if (player != null)
         {
-            player.GetHit();
+            Vector3 knockbackDir = -hit.normal;
+            knockbackDir.y *= 0.01f;
+            knockbackDir.Normalize();
+            player.GetHit(knockbackDir * contactForce);
         }
     }
 }

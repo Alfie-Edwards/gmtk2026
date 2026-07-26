@@ -20,8 +20,8 @@ Player
 [x] Pickaxe
   - [x] Swing animation
   - [x] Detect rock or wall and break them
-[ ] Advance time when hit
-[ ] Drop gold when hit after dark
+[x] Advance time when hit
+[x] Drop gold when hit after dark
 
 Wilderness
 [ ] Door that opens when shot with the bow
@@ -37,23 +37,23 @@ Wilderness
 Town
 [x] Lay out the area
 [x] Make the area
-[ ] Inn
-  - [ ] End the day, can only do at night
+[x] Inn
+  - [x] End the day, can only do at night
 [ ] Sheriff
   - [x] Arrows
-    - [ ] Enabled after bow
+    - [x] Enabled after bow
   - [x] Dynamite
-    - [ ] Enabled after bomb bag
+    - [x] Enabled after bomb bag
 [x] General store
   - [x] Seeds
     - [x] Scaling prices / 8
   - [x] Scaling prices / 3
-  - [ ] Rooster (+30s daytime)
+  - [x] Rooster (+30s daytime)
   - [x] Whip upgrade (+ whip damage/range)
   - [x] Quiver upgrade (+1 max arrow)
-    - [ ] Enabled after bow
+    - [x] Enabled after bow
   - [x] Bomb bag upgrade (+1 max bomb)
-    - [ ] Enabled after bomb bag
+    - [x] Enabled after bomb bag
 [x] Planting spots
   - [x] Buy seed to plant
   - [x] Take 1 day to grow
@@ -83,6 +83,6 @@ Enemies
 
 World
 [x] Make the map dark at night
-[ ] Display time remaining when in wilderness
-[ ] Set to night when you return from the wilderness
+[x] Display time remaining when in wilderness
+[x] Set to night when you return from the wilderness
 [ ] Fade between the 3 wilderness musics depending on area

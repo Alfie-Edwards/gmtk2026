@@ -4,6 +4,11 @@ using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using System.Linq;
 
+public enum MapArea {
+    Town,
+    Wilderness,
+}
+
 [RequireComponent(typeof(CharacterController))]
 public class Player : MonoBehaviour
 {
@@ -20,6 +25,12 @@ public class Player : MonoBehaviour
     [SerializeField] public Transform camera;
     [SerializeField] public Vector3 cameraOffset = new Vector3(1f, 6f, -4f);
     [SerializeField] public GameObject ghostPrefab;
+    [SerializeField] public int ghostSpawnsPerSecond = 2;
+    [SerializeField] public GameObject arrowShop;
+    [SerializeField] public GameObject bombShop;
+    [SerializeField] public GameObject quiverShop;
+    [SerializeField] public GameObject bombBagShop;
+    [SerializeField] public GameObject dummyGoldPrefab;
 
     [Header("Upgrades")]
     [SerializeField] private int startQuiverSize = 0;
@@ -36,8 +47,15 @@ public class Player : MonoBehaviour
     [SerializeField] private BombBag bombBag;
     [SerializeField] private Pickaxe pickaxe;
 
+    [Header("Combat")]
+    [SerializeField] private float knockbackDamping = 10f;
+    [SerializeField] private float hitCooldown = 0.5f;
+
+
+    private float lastHitTime = -999f;
     private int quiverSize_;
     private int bombBagSize_;
+    private MapArea mapArea;
 
     public int whipLevel { get; private set; }
     public int quiverSize {
@@ -60,7 +78,7 @@ public class Player : MonoBehaviour
     private Quaternion lookTarget;
     private Bag itemsBag;
     private Bag ammoBag;
-
+    private Vector3 knockbackVelocity;
     void Start()
     {
         // init upgrades
@@ -78,6 +96,11 @@ public class Player : MonoBehaviour
         PickupItem(ItemType.Whip);
         camera.transform.position = transform.position + cameraOffset;
         camera.transform.LookAt(transform);
+        mapArea = MapArea.Town;
+        arrowShop.SetActive(false);
+        quiverShop.SetActive(false);
+        bombShop.SetActive(false);
+        bombBagShop.SetActive(false);
 
         // init controls
         Cursor.lockState = CursorLockMode.Locked;
@@ -91,12 +114,51 @@ public class Player : MonoBehaviour
         Move();
         PickupItems();
         HandleShops();
+        HandleSaloon();
         UseItems();
         UpdateWeapons();
+        MapAreaStuff();
 
         if (Keyboard.current.gKey.wasPressedThisFrame)
         {
             SpawnGhost();
+        }
+    }
+
+    private void MapAreaStuff() {
+        MapArea current = GetCurrentMapArea();
+        if (current != mapArea) {
+            OnChangeMapArea(mapArea, current);
+            mapArea = current;
+        }
+        DoMapAreaStuff(mapArea);
+    }
+
+    private MapArea GetCurrentMapArea() {
+        if (transform.position.z <= 0)
+        {
+            return MapArea.Town;
+        }
+        return MapArea.Wilderness;
+    }
+
+    private void DoMapAreaStuff(MapArea area) {
+        if (area != MapArea.Town && dayNightCycle.isNight)
+        {
+            if (Random.value < ghostSpawnsPerSecond * Time.deltaTime)
+            {
+                SpawnGhost();
+            }
+        }
+    }
+
+    private void OnChangeMapArea(MapArea prevArea, MapArea newArea) {
+        switch (prevArea) {
+            case MapArea.Town:
+                if (!dayNightCycle.isNight) dayNightCycle.UnpauseTime();
+                break;
+            case MapArea.Wilderness:
+                break;
         }
     }
 
@@ -134,8 +196,11 @@ public class Player : MonoBehaviour
             velocity.y += gravity * Time.deltaTime;
         }
 
+        knockbackVelocity = Vector3.Lerp(knockbackVelocity, Vector3.zero, knockbackDamping * Time.deltaTime);
+
         // 4. Move the Controller
-        controller.Move((velocity + move) * Time.deltaTime);
+        controller.Move((velocity + move + knockbackVelocity) * Time.deltaTime);
+
         if (move != Vector3.zero)
         {
             lookTarget = Quaternion.LookRotation(move);
@@ -164,6 +229,28 @@ public class Player : MonoBehaviour
                     PickupItem(item.type);
                     Destroy(item.gameObject);
                 }
+            }
+        }
+    }
+
+    private void HandleSaloon() {
+        float sqDistCutoff = 3f * 3f;
+        foreach (Saloon saloon in FindObjectsByType<Saloon>())
+        {
+            float sqDist = (saloon.transform.position - transform.position).sqrMagnitude;
+
+            if (sqDist <= sqDistCutoff)
+            {
+                if (dayNightCycle.isNight)
+                {
+                    saloon.message = "go to bed?";
+                    if (Keyboard.current.eKey.wasPressedThisFrame) dayNightCycle.SetDay();
+                }
+                else if (!dayNightCycle.timePaused)
+                {
+                    saloon.message = "come back at the end of the day";
+                }
+                saloon.Show();
             }
         }
     }
@@ -278,11 +365,21 @@ public class Player : MonoBehaviour
             case ItemType.Bow:
                 quiverSize += 1;
                 itemsBag.Add(type);
+                if (CanPickupItem(ItemType.Arrow)) {
+                    PickupItem(ItemType.Arrow);
+                }
+                arrowShop.SetActive(true);
+                quiverShop.SetActive(true);
                 break;
 
             case ItemType.BombBag:
                 bombBagSize += 1;
                 itemsBag.Add(type);
+                if (CanPickupItem(ItemType.Dynamite)) {
+                    PickupItem(ItemType.Dynamite);
+                }
+                bombShop.SetActive(true);
+                bombBagShop.SetActive(true);
                 break;
 
             case ItemType.Gold:
@@ -365,7 +462,7 @@ public class Player : MonoBehaviour
     }
 
     private void SpawnRooster() {
-        Debug.Log("Spawned rooster!!!");
+        dayNightCycle.IncreaseDayLength(30f);
     }
 
     private void Use(ItemType type) {
@@ -395,7 +492,41 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void GetHit() {
-        Debug.Log("Player got hit!");
+    public void GetHit(Vector3 impulse) {
+        if (Time.time < lastHitTime + hitCooldown) return;
+        lastHitTime = Time.time;
+        knockbackVelocity += impulse;
+        if (dayNightCycle.isNight)
+        {
+            DropGold(10);
+        }
+        else
+        {
+            dayNightCycle.timeRemainingS -= 5f;
+        }
+    }
+
+    private void DropGold(int amount) {
+        int totalGold = ammoBag.Amount(ItemType.Gold);
+        if (amount < totalGold) {
+            amount = totalGold;
+        }
+        ammoBag.Remove(ItemType.Gold, amount);
+        for (int i = 0; i != amount; ++i)
+        {
+            Instantiate(dummyGoldPrefab, transform.position, Random.rotation);
+        }
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Enemy enemy = hit.collider.GetComponent<Enemy>();
+        if (enemy != null)
+        {
+            Vector3 knockbackDir = hit.normal;
+            knockbackDir.y *= 0.01f;
+            knockbackDir.Normalize();
+            GetHit(knockbackDir * enemy.contactForce);
+        }
     }
 }

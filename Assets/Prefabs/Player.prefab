@@ -192,7 +192,7 @@ MonoBehaviour:
   moveSpeed: 5
   gravity: -19.62
   jumpHeight: 1.5
-  itemPickupRadius: 1
+  itemPickupRadius: 0.25
   dayNightCycle: {fileID: 0}
   hotbar: {fileID: 0}
   ammoDisplay: {fileID: 0}
