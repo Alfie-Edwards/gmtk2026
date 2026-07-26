@@ -534,9 +534,14 @@ public class Player : MonoBehaviour
             amount = totalGold;
         }
         ammoBag.Remove(ItemType.Gold, amount);
-        for (int i = 0; i != amount; ++i)
+
+        if (FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length < 25)
         {
-            Instantiate(dummyGoldPrefab, transform.position, Random.rotation);
+            if (amount > 25) amount = 25;
+            for (int i = 0; i != amount; ++i)
+            {
+                Instantiate(dummyGoldPrefab, transform.position, Random.rotation);
+            }
         }
     }
 

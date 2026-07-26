@@ -91,6 +91,13 @@ public class Arrow : MonoBehaviour
             GetComponent<Item>().enabled = true;
         }
 
+        // Activate target
+        Target target = hitCollider.GetComponent<Target>();
+        if (target != null)
+        {
+            target.Trigger();
+        }
+
         // 6. Parent itself to the hit object so it moves with it
         transform.SetParent(hitCollider.transform);
     }

@@ -1,16 +1,14 @@
 using UnityEngine;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class Target : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Bridge targetBridge;
 
-    // Update is called once per frame
-    void Update()
+    public void Trigger()
     {
-        
+        if (targetBridge != null)
+        {
+            targetBridge.Fall();
+        }
     }
 }
