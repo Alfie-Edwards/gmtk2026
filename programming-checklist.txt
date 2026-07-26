@@ -67,18 +67,18 @@ Enemies
 [ ] Skeleton
   - [x] Pathfind towards player
 [ ] Cactus
-  - [ ] Preiodically shoot spikes when player is near
-  - [ ] Spike hit detection, damage player on hit
+  - [x] Preiodically shoot spikes when player is near
+  - [x] Spike hit detection, damage player on hit
 [ ] Frog
   - [x] Move fast, jump, try to get in front of player
 [ ] Ghost
   - [ ] Bounce around the map no collision but slightly biased direction towards the player
 [ ] Lava
-  - [ ] Pop up when player is in range
-  - [ ] After a delay, shoot towards player and pop down, then cooldown
+  - [x] Pop up when player is in range
+  - [x] After a delay, shoot towards player and pop down, then cooldown
 [ ] Rock
-  - [ ] Take extra damage if hit by pickaxe
-  - [ ] Big health
+  - [x] Take extra damage if hit by pickaxe
+  - [x] Big health
   - [x] Same ai as skeleton
 
 World
