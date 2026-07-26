@@ -61,9 +61,11 @@ public class Player : MonoBehaviour
 
     public EventReference wildernessMusicSource;
     public EventReference townMusicSource;
+    public EventReference tenSecondMusicSource;
 
     private EventInstance WildernessMusic;
     private EventInstance TownMusic;
+    private EventInstance TenSecondMusic;
 
     public int whipLevel { get; private set; }
     public int quiverSize {
@@ -118,6 +120,9 @@ public class Player : MonoBehaviour
 
         WildernessMusic = RuntimeManager.CreateInstance(wildernessMusicSource);
         TownMusic = RuntimeManager.CreateInstance(townMusicSource);
+        TenSecondMusic =RuntimeManager.CreateInstance(tenSecondMusicSource);
+
+        TownMusic.start();
     }
 
     void Update()
@@ -133,6 +138,13 @@ public class Player : MonoBehaviour
         if (Keyboard.current.gKey.wasPressedThisFrame)
         {
             SpawnGhost();
+        }
+
+        if (dayNightCycle.timeRemainingS < 12f && (dayNightCycle.timeRemainingS + Time.deltaTime) >= 12f)
+        {
+            WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT); 
+            TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            TenSecondMusic.start();
         }
     }
 
@@ -311,6 +323,7 @@ public class Player : MonoBehaviour
             if (Keyboard.current.eKey.wasPressedThisFrame && closest.cost < ammoBag.Amount(ItemType.Gold) && CanPickupItem(closest.itemType)) {
                 ammoBag.Remove(ItemType.Gold, closest.cost);
                 PickupItem(closest.itemType);
+                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_Purchase");
                 switch (closest.itemType) {
                     case ItemType.Seed:
                         closest.cost *= 3;
@@ -339,6 +352,7 @@ public class Player : MonoBehaviour
         {
             case ItemType.Gold:
             case ItemType.Whisky:
+                TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 return true;
 
             case ItemType.Whip:
