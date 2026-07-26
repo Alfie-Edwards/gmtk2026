@@ -96,12 +96,12 @@ public class Hotbar : MonoBehaviour
             {
                 if (uiItem.GetComponent<RectTransform>() is RectTransform x)
                 {
-                    x.sizeDelta *= 1.1f;
+                    x.sizeDelta *= 1.3f;
                 }
             }
 
             // Set the icon
-            Image icon = uiItem.GetComponentInChildren<Image>();
+            Image icon = uiItem.GetComponentsInChildren<Image>()[1];
             icon.sprite = GetSprite(item.type);
             icon.SetAllDirty();
 

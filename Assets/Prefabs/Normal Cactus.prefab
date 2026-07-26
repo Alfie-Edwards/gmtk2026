@@ -173,6 +173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   moveSpeed: 0
   gravity: 0
+  detectionRadius: 0
   maxHealth: 100
   hitCooldown: 0
   knockbackMagnitude: 0

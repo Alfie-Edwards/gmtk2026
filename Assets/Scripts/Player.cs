@@ -107,6 +107,7 @@ public class Player : MonoBehaviour
         PickupItem(ItemType.Whip);
         camera.transform.position = transform.position + cameraOffset;
         camera.transform.LookAt(transform);
+        camera.transform.Rotate(-10f, 0f, 0f, Space.Self);
         mapArea = MapArea.Town;
         arrowShop.SetActive(false);
         quiverShop.SetActive(false);
@@ -143,7 +144,7 @@ public class Player : MonoBehaviour
 
         if (dayNightCycle.timeRemainingS < 12f && (dayNightCycle.timeRemainingS + Time.deltaTime) >= 12f)
         {
-            WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT); 
+            WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             TenSecondMusic.start();
         }

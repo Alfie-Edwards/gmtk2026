@@ -173,6 +173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   moveSpeed: 0
   gravity: 0
+  detectionRadius: 10
   maxHealth: 100
   hitCooldown: 0.5
   knockbackMagnitude: 0.05
@@ -246,7 +247,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyGhost
   detectionRadius: 30
   maxDistanceFromPlayer: 30
-  moveSpeed: 5
+  moveSpeed: 8
   verticalLerpSpeed: 0.5
   rotationSpeed: 5
   targetOpacity: 0.4
