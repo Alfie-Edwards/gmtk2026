@@ -97,14 +97,14 @@ public class Enemy : MonoBehaviour
         controller.Move(finalMovement * Time.deltaTime);
     }
 
-    public void TakeDamage(float damageAmount, Vector3 hitDirection)
+    public void TakeDamage(float damageAmount, Vector3 hitDirection, float knockbackModifier = 1.0f)
     {
         if (Time.time < lastHitTime + hitCooldown) return;
 
         lastHitTime = Time.time;
         currentHealth -= damageAmount;
 
-        ApplyKnockback(hitDirection);
+        ApplyKnockback(hitDirection, knockbackModifier);
 
         if (currentHealth <= 0f)
         {
@@ -112,10 +112,10 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void ApplyKnockback(Vector3 hitDirection)
+    void ApplyKnockback(Vector3 hitDirection, float knockbackModifier)
     {
         hitDirection.y = 0f;
-        knockbackVelocity = hitDirection.normalized * knockbackMagnitude;
+        knockbackVelocity = hitDirection.normalized * knockbackMagnitude * knockbackModifier;
     }
 
     public void Jump(float jumpForce)
@@ -169,6 +169,15 @@ public class Enemy : MonoBehaviour
             Vector3 spawnPosition = transform.position + new Vector3(randomCircle.x, 0f, randomCircle.y);
 
             Instantiate(coinPrefab, spawnPosition, Quaternion.identity);
+        }
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Player player = hit.collider.GetComponent<Player>();
+        if (player != null)
+        {
+            player.GetHit();
         }
     }
 }

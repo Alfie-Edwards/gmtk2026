@@ -57,7 +57,6 @@ public class Player : MonoBehaviour
     private CharacterController controller;
     private Vector3 velocity = Vector3.zero;
     private Quaternion lookTarget;
-    private float cameraPitch = 0;
     private Bag itemsBag;
     private Bag ammoBag;
 
@@ -356,5 +355,9 @@ public class Player : MonoBehaviour
                 pickaxe.Swing();
                 break;
         }
+    }
+
+    public void GetHit() {
+        Debug.Log("Player got hit!");
     }
 }

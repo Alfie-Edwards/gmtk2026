@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlantSpot : MonoBehaviour  
+public class PlantSpot : MonoBehaviour
 {
     public GameObject seedling;
     public GameObject plant;
@@ -14,7 +14,7 @@ public class PlantSpot : MonoBehaviour
         plant.SetActive(false);
     }
 
-    void Sunrise() {
+   public void Sunrise() {
         if (seedling.activeInHierarchy) {
             Grow();
         }

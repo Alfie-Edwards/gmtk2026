@@ -97,19 +97,20 @@ public class Pickaxe : MonoBehaviour
                 continue;
             }
 
-            // Check for RockEnemy component
-            EnemyRock rockEnemy = hit.GetComponent<EnemyRock>();
-            if (rockEnemy != null)
-            {
-                rockEnemy.Break();
-            }
-
             // Check for general Enemy to deal small damage after break
             Enemy enemy = hit.GetComponent<Enemy>();
             if (enemy != null)
             {
                 Vector3 hitDirection = (hit.transform.position - transform.position).normalized;
-                enemy.TakeDamage(10f, hitDirection); // Adjust damage amount as needed
+                EnemyRock rockEnemy = hit.GetComponent<EnemyRock>();
+                if (rockEnemy != null)
+                {
+                    enemy.TakeDamage(100f, hitDirection); // Adjust damage amount as needed
+                }
+                else
+                {
+                    enemy.TakeDamage(10f, hitDirection); // Adjust damage amount as needed
+                }
             }
         }
     }

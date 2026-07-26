@@ -92,17 +92,20 @@ public class Bomb : MonoBehaviour
                 continue;
             }
 
-            EnemyRock rockEnemy = hit.GetComponent<EnemyRock>();
-            if (rockEnemy != null)
-            {
-                rockEnemy.Break();
-            }
-
             Enemy enemy = hit.GetComponent<Enemy>();
             if (enemy != null)
             {
-                Vector3 hitDirection = (hit.transform.position - center).normalized;
-                enemy.TakeDamage(explosionDamage, hitDirection);
+                Vector3 hitVector = hit.transform.position - center;
+                float effectAmount = hitVector.sqrMagnitude / (explosionRadius * explosionRadius);
+                EnemyRock rockEnemy = hit.GetComponent<EnemyRock>();
+                if (rockEnemy != null)
+                {
+                    enemy.TakeDamage(explosionDamage * 2.5f * effectAmount, hitVector, 5 * effectAmount);
+                }
+                else
+                {
+                    enemy.TakeDamage(explosionDamage * effectAmount, hitVector, 5 * effectAmount);
+                }
             }
         }
 

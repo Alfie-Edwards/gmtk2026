@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3150365934214766344}
@@ -66,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a14f268ba183544b0a1b308558d682b4, type: 2}
+  - {fileID: 2100000, guid: ef1ee7bb4975c4af48b8271297ec0f9c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -90,7 +90,7 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &6663156513636740225
+--- !u!1 &7277840475913214039
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -98,9 +98,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6230941412980999407}
-  - component: {fileID: 6857567526739658709}
-  - component: {fileID: 3925839718085554160}
+  - component: {fileID: 7580735078994553579}
+  - component: {fileID: 3035246442623119226}
+  - component: {fileID: 3053091340286370487}
   m_Layer: 0
   m_Name: Cylinder (1)
   m_TagString: Untagged
@@ -108,36 +108,36 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6230941412980999407
+--- !u!4 &7580735078994553579
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6663156513636740225}
+  m_GameObject: {fileID: 7277840475913214039}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.589, z: 0.105}
+  m_LocalPosition: {x: 0, y: 0.096, z: 0.065}
   m_LocalScale: {x: 1, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3150365934214766344}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6857567526739658709
+--- !u!33 &3035246442623119226
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6663156513636740225}
+  m_GameObject: {fileID: 7277840475913214039}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &3925839718085554160
+--- !u!23 &3053091340286370487
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6663156513636740225}
+  m_GameObject: {fileID: 7277840475913214039}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -156,7 +156,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a14f268ba183544b0a1b308558d682b4, type: 2}
+  - {fileID: 2100000, guid: ef1ee7bb4975c4af48b8271297ec0f9c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -192,8 +192,9 @@ GameObject:
   - component: {fileID: 6066809270282683062}
   - component: {fileID: 7886186494996032649}
   - component: {fileID: 3012192548096332907}
+  - component: {fileID: -8660073734634861956}
   m_Layer: 0
-  m_Name: Skeleton
+  m_Name: Frog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -213,7 +214,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5665639638516379907}
-  - {fileID: 6230941412980999407}
+  - {fileID: 7580735078994553579}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6066809270282683062
@@ -228,15 +229,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c569da87f4ea416aa608cdf0211848e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
-  moveSpeed: 3
-  gravity: 9.81
-  maxHealth: 100
+  moveSpeed: 0
+  gravity: 0
+  maxHealth: 150
   hitCooldown: 0.5
-  knockbackMagnitude: 20
-  knockbackDamping: 5
+  knockbackMagnitude: 15
+  knockbackDamping: 7
   coinPrefab: {fileID: 575649640322857749, guid: 447ae08732a2f564ab18fa5320338070, type: 3}
-  minCoins: 5
-  maxCoins: 15
+  minCoins: 15
+  maxCoins: 45
   coinSpawnSpread: 1
 --- !u!143 &7886186494996032649
 CharacterController:
@@ -256,7 +257,7 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2
+  m_Height: 1
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
@@ -283,6 +284,25 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-8660073734634861956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9125636384562115356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a0c4412479e446fcbc3cfccc6b88633, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyFrog
+  detectionRadius: 12
+  minJumpInterval: 0.25
+  maxJumpInterval: 2
+  jumpHeight: 1.75
+  jumpDistance: 4
+  rotationSpeed: 10
+  gravity: 20
