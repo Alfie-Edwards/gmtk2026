@@ -70,12 +70,6 @@ public class DayNightCycle : MonoBehaviour
 
     void Update()
     {
-        if (Keyboard.current.mKey.wasPressedThisFrame)
-        {
-            if (isNight) SetDay();
-            else UnpauseTime();
-        }
-
         // 1. Time Progression (Only count down daytime when unpaused and not transitioning)
         if (!isNight && !timePaused && !isTransitioningDay && !isTransitioningTrueNight) {
             timeRemainingS -= Time.deltaTime;

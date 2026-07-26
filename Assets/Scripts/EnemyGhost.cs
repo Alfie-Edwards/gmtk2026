@@ -176,16 +176,6 @@ public class EnemyGhost : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        // Only collides with the player (ensure collider is set to IsTrigger)
-        Player player = other.GetComponent<Player>();
-        if (player != null)
-        {
-            player.GetHit();
-        }
-    }
-
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.magenta;

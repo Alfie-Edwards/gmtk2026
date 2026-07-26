@@ -55,7 +55,7 @@ public class CactusSpike : MonoBehaviour
         Player player = collision.collider.GetComponent<Player>();
         if (player != null)
         {
-            player.GetHit();
+            player.GetHit(moveDirection.normalized * 15);
         }
 
         BreakSpike();
