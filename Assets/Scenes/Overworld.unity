@@ -9293,6 +9293,46 @@ PrefabInstance:
       propertyPath: dayNightCycle
       value: 
       objectReference: {fileID: 1818425923}
+    - target: {fileID: 1992119046202100588, guid: ad99cc5ad44a44d058d72ed1a421e40f, type: 3}
+      propertyPath: townMusicSource.Path
+      value: event:/Music/MUS_Camp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1992119046202100588, guid: ad99cc5ad44a44d058d72ed1a421e40f, type: 3}
+      propertyPath: townMusicSource.Guid.Data1
+      value: 578253258
+      objectReference: {fileID: 0}
+    - target: {fileID: 1992119046202100588, guid: ad99cc5ad44a44d058d72ed1a421e40f, type: 3}
+      propertyPath: townMusicSource.Guid.Data2
+      value: 1161426029
+      objectReference: {fileID: 0}
+    - target: {fileID: 1992119046202100588, guid: ad99cc5ad44a44d058d72ed1a421e40f, type: 3}
+      propertyPath: townMusicSource.Guid.Data3
+      value: -2103881069
+      objectReference: {fileID: 0}
+    - target: {fileID: 1992119046202100588, guid: ad99cc5ad44a44d058d72ed1a421e40f, type: 3}
+      propertyPath: townMusicSource.Guid.Data4
+      value: 1556084770
+      objectReference: {fileID: 0}
+    - target: {fileID: 1992119046202100588, guid: ad99cc5ad44a44d058d72ed1a421e40f, type: 3}
+      propertyPath: wildernessMusicSource.Path
+      value: event:/Music/MUS_Wilderness
+      objectReference: {fileID: 0}
+    - target: {fileID: 1992119046202100588, guid: ad99cc5ad44a44d058d72ed1a421e40f, type: 3}
+      propertyPath: wildernessMusicSource.Guid.Data1
+      value: 1900355290
+      objectReference: {fileID: 0}
+    - target: {fileID: 1992119046202100588, guid: ad99cc5ad44a44d058d72ed1a421e40f, type: 3}
+      propertyPath: wildernessMusicSource.Guid.Data2
+      value: 1194366117
+      objectReference: {fileID: 0}
+    - target: {fileID: 1992119046202100588, guid: ad99cc5ad44a44d058d72ed1a421e40f, type: 3}
+      propertyPath: wildernessMusicSource.Guid.Data3
+      value: 223169155
+      objectReference: {fileID: 0}
+    - target: {fileID: 1992119046202100588, guid: ad99cc5ad44a44d058d72ed1a421e40f, type: 3}
+      propertyPath: wildernessMusicSource.Guid.Data4
+      value: -124098780
+      objectReference: {fileID: 0}
     - target: {fileID: 2478822749572158697, guid: ad99cc5ad44a44d058d72ed1a421e40f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -8.71
