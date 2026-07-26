@@ -1,25 +1,25 @@
 Player
 [x] Item pickups
 [x] Inventory
-[ ] Item selection in inventory
-[ ] Nicer movement
+[x] Item selection in inventory
+[x] Nicer movement
   - [ ] Bob when moving?
-[ ] Whip
-  - [ ] Animation
-  - [ ] Damage and knock back enemies that are hit
-[ ] Bow
-  - [ ] Ammo counter
-  - [ ] Spawn arrow on use
-  - [ ] Arrow hit detection
-    - [ ] Damage and knockback enemy hit
-    - [ ] Stick in wall
+[x] Whip
+  - [x] Animation
+  - [x] Damage and knock back enemies that are hit
+[x] Bow
+  - [x] Ammo counter
+  - [x] Spawn arrow on use
+  - [x] Arrow hit detection
+    - [x] Damage and knockback enemy hit
+    - [x] Stick in wall
 [ ] Bomb
-  - [ ] Ammo counter
-  - [ ] Throw on use
+  - [x] Ammo counter
+  - [x] Throw on use
   - [ ] On hit, in radius, damage enemies, break rocks, break walls, scare ghosts
-[ ] Pickaxe
-  - [ ] Swing animation
-  - [ ] Detect rock or wall and break them
+[x] Pickaxe
+  - [x] Swing animation
+  - [x] Detect rock or wall and break them
 [ ] Advance time when hit
 [ ] Drop gold when hit after dark
 
@@ -36,7 +36,7 @@ Wilderness
 
 Town
 [x] Lay out the area
-[ ] Make the area
+[x] Make the area
 [ ] Inn
   - [ ] End the day, can only do at night
 [ ] Sheriff
@@ -44,32 +44,33 @@ Town
     - [ ] Enabled after bow
   - [ ] Dynamite
     - [ ] Enabled after bomb bag
-[ ] General store
-  - [ ] Seeds
-    - [ ] Scaling prices / 8
-  - [ ] Scaling prices / 3
+[x] General store
+  - [x] Seeds
+    - [x] Scaling prices / 8
+  - [x] Scaling prices / 3
   - [ ] Rooster (+30s daytime)
-  - [ ] Whip upgrade (+ whip damage/range)
-  - [ ] Quiver upgrade (+1 max arrow)
+  - [x] Whip upgrade (+ whip damage/range)
+  - [x] Quiver upgrade (+1 max arrow)
     - [ ] Enabled after bow
-  - [ ] Bomb bag upgrade (+1 max bomb)
+  - [x] Bomb bag upgrade (+1 max bomb)
     - [ ] Enabled after bomb bag
-[ ] Planting spots
-  - [ ] Buy seed to plant
-  - [ ] Take 1 day to grow
+[x] Planting spots
+  - [x] Buy seed to plant
+  - [x] Take 1 day to grow
 [ ] Roosters run around
 
 Enemies
-[ ] Configurable health
+[x] Configurable health
 [ ] Damage player on contact
-[ ] Drop coins and rarely xxx on death
+[x] Drop coins on death
+[ ] Rarely xxx on death
 [ ] Skeleton
-  - [ ] Pathfind towards player
+  - [x] Pathfind towards player
 [ ] Cactus
   - [ ] Preiodically shoot spikes when player is near
   - [ ] Spike hit detection, damage player on hit
 [ ] Frog
-  - [ ] Move fast, jump, try to get in front of player
+  - [x] Move fast, jump, try to get in front of player
 [ ] Ghost
   - [ ] Bounce around the map no collision but slightly biased direction towards the player
 [ ] Lava
@@ -78,7 +79,7 @@ Enemies
 [ ] Rock
   - [ ] Take extra damage if hit by pickaxe
   - [ ] Big health
-  - [ ] Same ai as skeleton
+  - [x] Same ai as skeleton
 
 World
 [ ] Make the map dark at night
