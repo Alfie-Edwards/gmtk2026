@@ -19,7 +19,7 @@ public class PlantSpot : MonoBehaviour
             Grow();
         }
         if (Growing) {
-            for (int i = 0; i != 50; ++i)
+            for (int i = 0; i != 30; ++i)
             {
                 Instantiate(goldPrefab);
             }

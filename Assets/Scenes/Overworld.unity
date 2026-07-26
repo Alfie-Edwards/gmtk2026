@@ -2262,6 +2262,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7584402184721281656, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: Dynamite
+      objectReference: {fileID: 0}
     - target: {fileID: 8765123295239567058, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -9588,6 +9592,10 @@ PrefabInstance:
       propertyPath: cameraOffset.z
       value: -2.5
       objectReference: {fileID: 0}
+    - target: {fileID: 1992119046202100588, guid: ad99cc5ad44a44d058d72ed1a421e40f, type: 3}
+      propertyPath: dummyGoldPrefab
+      value: 
+      objectReference: {fileID: 575649640322857749, guid: ca4ffe134b4384d5a8891b2077eeafa3, type: 3}
     - target: {fileID: 1992119046202100588, guid: ad99cc5ad44a44d058d72ed1a421e40f, type: 3}
       propertyPath: itemPickupRadius
       value: 1
