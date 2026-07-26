@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 15819431353111755}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0.784}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -97,97 +97,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b2b57a14dbff70f4798222bf370c678d, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &8468680703512811652
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2013929954898708141}
-  - component: {fileID: 8062956305127479114}
-  - component: {fileID: 5382974821298644993}
-  m_Layer: 0
-  m_Name: Cylinder (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2013929954898708141
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8468680703512811652}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.655, z: 0.192}
-  m_LocalScale: {x: 1, y: 0.25, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3150365934214766344}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &8062956305127479114
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8468680703512811652}
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &5382974821298644993
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8468680703512811652}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: b2b57a14dbff70f4798222bf370c678d, type: 2}
+  - {fileID: 2100000, guid: 6d3717cbcf2e04f8eb4b55eda7bb601b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -223,9 +133,9 @@ GameObject:
   - component: {fileID: 6066809270282683062}
   - component: {fileID: 7886186494996032649}
   - component: {fileID: 3012192548096332907}
-  - component: {fileID: 1126484316350724812}
+  - component: {fileID: 8832342526095274451}
   m_Layer: 0
-  m_Name: Lava Guy
+  m_Name: Ghost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -245,7 +155,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5665639638516379907}
-  - {fileID: 2013929954898708141}
   - {fileID: 2105369562808805944}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -263,13 +172,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   moveSpeed: 0
   gravity: 0
-  maxHealth: 75
+  maxHealth: 100
   hitCooldown: 0.5
-  knockbackMagnitude: 0.1
-  knockbackDamping: 5
+  knockbackMagnitude: 0.05
+  knockbackDamping: 3
   coinPrefab: {fileID: 575649640322857749, guid: 447ae08732a2f564ab18fa5320338070, type: 3}
-  minCoins: 15
-  maxCoins: 45
+  minCoins: 0
+  maxCoins: 0
   coinSpawnSpread: 1
 --- !u!143 &7886186494996032649
 CharacterController:
@@ -319,7 +228,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1126484316350724812
+--- !u!114 &8832342526095274451
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -328,16 +237,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 9125636384562115356}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef910ac8550774116bb773ab3c8095db, type: 3}
+  m_Script: {fileID: 11500000, guid: ad73c58eb9c574c5f89a8b85027319c0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyLava
-  detectionRadius: 10
-  visualRoot: {fileID: 3150365934214766344}
-  hiddenYOffset: -2
-  poppedYOffset: 0
-  transitionSpeed: 50
-  rotationSpeed: 10
-  spikePrefab: {fileID: 9197701245545295047, guid: 7f8caf9960c1a43b48ac295276f1c5d3, type: 3}
-  firePoint: {fileID: 2105369562808805944}
-  popWaitTime: 0.5
-  duckWaitTime: 2
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyGhost
+  detectionRadius: 30
+  maxDistanceFromPlayer: 30
+  moveSpeed: 4
+  verticalLerpSpeed: 0.5
+  rotationSpeed: 5
+  targetOpacity: 0.4
+  fadeDuration: 10
+  minDashInterval: 4
+  maxDashInterval: 20
+  dashDistance: 16
+  dashDuration: 5
+  enemyRenderer: {fileID: 5749953476100193515}

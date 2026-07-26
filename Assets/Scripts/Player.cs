@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     [SerializeField] public Hotbar ammoDisplay;
     [SerializeField] public Transform camera;
     [SerializeField] public Vector3 cameraOffset = new Vector3(1f, 6f, -4f);
+    [SerializeField] public GameObject ghostPrefab;
 
     [Header("Upgrades")]
     [SerializeField] private int startQuiverSize = 0;
@@ -92,6 +93,11 @@ public class Player : MonoBehaviour
         HandleShops();
         UseItems();
         UpdateWeapons();
+
+        if (Keyboard.current.gKey.wasPressedThisFrame)
+        {
+            SpawnGhost();
+        }
     }
 
     private void UseItems()
@@ -323,6 +329,38 @@ public class Player : MonoBehaviour
             case ItemType.Rooster:
                 SpawnRooster();
                 break;
+        }
+    }
+
+    private void SpawnGhost()
+    {
+        if (ghostPrefab == null) return;
+
+        // Pick a random direction around the player, keeping it flat on the Y axis
+        Vector3 randomDirection = Random.insideUnitSphere;
+        randomDirection.y = 0f;
+        randomDirection.Normalize();
+
+        // If it ends up zero (e.g. random vector was straight up/down), fallback to forward
+        if (randomDirection == Vector3.zero)
+        {
+            randomDirection = transform.forward;
+        }
+
+        // Calculate spawn position at the fixed distance away
+        Vector3 spawnPosition = transform.position + (randomDirection * 15f);
+
+        // Optionally match the player's current Y level or keep the ghost's default
+        spawnPosition.y = transform.position.y;
+
+        // Instantiate the ghost
+        GameObject spawnedGhost = Instantiate(ghostPrefab, spawnPosition, Quaternion.identity);
+
+        // Automatically trigger its fade-in routine if it has the EnemyGhost script
+        EnemyGhost ghostScript = spawnedGhost.GetComponent<EnemyGhost>();
+        if (ghostScript != null)
+        {
+            StartCoroutine(ghostScript.FadeIn());
         }
     }
 

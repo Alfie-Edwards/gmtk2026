@@ -72,7 +72,7 @@ Enemies
 [ ] Frog
   - [x] Move fast, jump, try to get in front of player
 [ ] Ghost
-  - [ ] Bounce around the map no collision but slightly biased direction towards the player
+  - [x] Bounce around the map no collision but slightly biased direction towards the player
 [ ] Lava
   - [x] Pop up when player is in range
   - [x] After a delay, shoot towards player and pop down, then cooldown

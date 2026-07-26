@@ -198,6 +198,7 @@ MonoBehaviour:
   ammoDisplay: {fileID: 0}
   camera: {fileID: 0}
   cameraOffset: {x: 1, y: 6, z: -4}
+  ghostPrefab: {fileID: 9125636384562115356, guid: 491def86a2ed640219eea5d3704fba73, type: 3}
   startQuiverSize: 0
   maxQuiverSize: 4
   startBombBagSize: 0
