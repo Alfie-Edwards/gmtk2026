@@ -115,7 +115,10 @@ public class Player : MonoBehaviour
         quiverShop.SetActive(false);
         bombShop.SetActive(false);
         bombBagShop.SetActive(false);
-        Spawn();
+        // Spawn();
+        PickupItem(ItemType.BombBag);
+        PickupItem(ItemType.Pickaxe);
+        PickupItem(ItemType.Dynamite);
 
         // init controls
         Cursor.lockState = CursorLockMode.Locked;
