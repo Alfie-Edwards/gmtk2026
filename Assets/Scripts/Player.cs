@@ -107,6 +107,7 @@ public class Player : MonoBehaviour
         PickupItem(ItemType.Whip);
         camera.transform.position = transform.position + cameraOffset;
         camera.transform.LookAt(transform);
+        camera.transform.Rotate(-10f, 0f, 0f, Space.Self);
         mapArea = MapArea.Town;
         arrowShop.SetActive(false);
         quiverShop.SetActive(false);
@@ -143,7 +144,7 @@ public class Player : MonoBehaviour
 
         if (dayNightCycle.timeRemainingS < 12f && (dayNightCycle.timeRemainingS + Time.deltaTime) >= 12f)
         {
-            WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT); 
+            WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             TenSecondMusic.start();
         }
@@ -189,10 +190,12 @@ public class Player : MonoBehaviour
             case MapArea.Town:
                 TownMusic.start();
                 WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 break;
             case MapArea.Wilderness:
                 WildernessMusic.start();
                 TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 break;
         }
     }
@@ -352,17 +355,27 @@ public class Player : MonoBehaviour
         switch (type)
         {
             case ItemType.Gold:
+                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PickupCoin");
+                return true;
             case ItemType.Whisky:
+                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_SlurpCoffee");
                 TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 return true;
 
             case ItemType.Whip:
             case ItemType.Bow:
+                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PickupMajorItem");
+                return true;
             case ItemType.BombBag:
+                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PickupMajorItem");
+                return true;
             case ItemType.Pickaxe:
+                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PickupMajorItem");
                 return itemsBag.Amount(type) == 0;
 
             case ItemType.Dynamite:
+
+                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PickupMajorItem");
                 return itemsBag.Has(ItemType.BombBag) && ammoBag.Amount(ItemType.Dynamite) < bombBagSize;
 
             case ItemType.Arrow:
@@ -508,6 +521,7 @@ public class Player : MonoBehaviour
         {
             case ItemType.Whip:
                 whip.Attack();
+                RuntimeManager.PlayOneShot("event:/SFX/Weapons/SFX_WhipCrack");
                 break;
             case ItemType.Bow:
                 if (ammoBag.Amount(ItemType.Arrow) > 0)
@@ -530,6 +544,7 @@ public class Player : MonoBehaviour
     }
 
     public void GetHit(Vector3 impulse) {
+        RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PlayerGetsHit");
         if (Time.time < lastHitTime + hitCooldown) return;
         lastHitTime = Time.time;
         knockbackVelocity += impulse;

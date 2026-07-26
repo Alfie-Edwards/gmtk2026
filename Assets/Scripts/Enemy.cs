@@ -6,6 +6,7 @@ public class Enemy : MonoBehaviour
     [Header("Movement Settings")]
     public float moveSpeed = 3f;
     public float gravity = 9.81f;
+    [SerializeField] private float detectionRadius = 10f; // Radius within which the enemy moves towards the player
 
     // Property with a backing field to find the player via component
     private Transform playerTransform;
@@ -81,10 +82,14 @@ public class Enemy : MonoBehaviour
             Vector3 toPlayer = Player.position - transform.position;
             toPlayer.y = 0f; // Keep movement flat
 
-            if (toPlayer.magnitude > 0.1f)
+            // Check if player is within the detection radius
+            if (toPlayer.sqrMagnitude <= detectionRadius * detectionRadius)
             {
-                moveDir = toPlayer.normalized * moveSpeed;
-                transform.rotation = Quaternion.LookRotation(toPlayer);
+                if (toPlayer.magnitude > 0.1f)
+                {
+                    moveDir = toPlayer.normalized * moveSpeed;
+                    transform.rotation = Quaternion.LookRotation(toPlayer);
+                }
             }
         }
 
