@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc24ee5967b734da9ad0d8473d5594b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Arrow
-  flySpeed: 20
+  flySpeed: 15
   embedDepth: -0.2
 --- !u!54 &3795579663807638844
 Rigidbody:

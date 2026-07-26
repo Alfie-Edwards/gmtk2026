@@ -77,7 +77,8 @@ MonoBehaviour:
   totalDistance: 5
   flightDuration: 0.6
   explosionRadius: 4
-  explosionDamage: 100
+  explosionDamage: 250
+  explosionPrefab: {fileID: 6837697977218409677, guid: 0e071cc2df227498e8b80d09d47a262f, type: 3}
 --- !u!1001 &7603003552261348410
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -100,7 +101,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8392997701363428831, guid: fbd4ce8f80c8649148753352b5899744, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.6939336
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8392997701363428831, guid: fbd4ce8f80c8649148753352b5899744, type: 3}
       propertyPath: m_LocalPosition.y
@@ -108,7 +109,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8392997701363428831, guid: fbd4ce8f80c8649148753352b5899744, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.530646
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8392997701363428831, guid: fbd4ce8f80c8649148753352b5899744, type: 3}
       propertyPath: m_LocalRotation.w

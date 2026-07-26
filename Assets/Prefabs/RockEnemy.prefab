@@ -232,15 +232,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   moveSpeed: 2
   gravity: 9.81
-  maxHealth: 250
+  detectionRadius: 10
+  maxHealth: 1000
   hitCooldown: 0.5
-  knockbackMagnitude: 5
+  knockbackMagnitude: 3
   knockbackDamping: 4
   contactForce: 10
   coinPrefab: {fileID: 575649640322857749, guid: 447ae08732a2f564ab18fa5320338070, type: 3}
   xxxPrefab: {fileID: 8767786966827885196, guid: 76a24074ab89094458eb7abc38c1b344, type: 3}
-  minCoins: 25
-  maxCoins: 75
+  minCoins: 100
+  maxCoins: 100
   canDropXXX: 1
   coinSpawnSpread: 1
 --- !u!143 &7886186494996032649

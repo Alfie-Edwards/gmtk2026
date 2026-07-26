@@ -10,7 +10,8 @@ public class Bomb : MonoBehaviour
 
     [Header("Explosion Settings")]
     public float explosionRadius = 4f;
-    public float explosionDamage = 100f;
+    public float explosionDamage = 250f;
+    public GameObject explosionPrefab;
 
     private Vector3 startPosition;
     private Vector3 targetPosition;
@@ -72,6 +73,7 @@ public class Bomb : MonoBehaviour
     {
         if (hasExploded) return;
         hasExploded = true;
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
 
         Vector3 center = transform.position;
         Collider[] hits = Physics.OverlapSphere(center, explosionRadius);

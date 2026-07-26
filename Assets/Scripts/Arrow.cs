@@ -84,7 +84,7 @@ public class Arrow : MonoBehaviour
         Enemy enemy = hitCollider.GetComponent<Enemy>();
         if (enemy != null)
         {
-            enemy.TakeDamage(25f, moveDirection, 0.5f);
+            enemy.TakeDamage(75f, moveDirection, 0.5f);
         }
         else
         {

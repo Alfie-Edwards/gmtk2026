@@ -356,7 +356,7 @@ public class Player : MonoBehaviour
                 RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_Purchase");
                 switch (closest.itemType) {
                     case ItemType.Seed:
-                        closest.cost *= 3;
+                        closest.cost *= 2;
                         if (!CanPickupItem(closest.itemType)) {
                             closest.SetSoldOut();
                         }
@@ -366,7 +366,7 @@ public class Player : MonoBehaviour
                     case ItemType.QuiverUpgrade:
                     case ItemType.BombBagUpgrade:
                     case ItemType.WhipUpgrade:
-                        closest.cost *= 15;
+                        closest.cost *= 3;
                         if (!CanPickupItem(closest.itemType)) {
                             closest.SetSoldOut();
                         }
@@ -497,6 +497,7 @@ public class Player : MonoBehaviour
 
             case ItemType.WhipUpgrade:
                 whipLevel += 1;
+                whip.damage += 10;
                 break;
 
             case ItemType.Rooster:
@@ -542,7 +543,6 @@ public class Player : MonoBehaviour
     }
 
     private void Use(ItemType type) {
-        Debug.Log($"Used {type}");
         switch (type)
         {
             case ItemType.Whip:
