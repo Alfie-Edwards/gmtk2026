@@ -9,29 +9,45 @@ Shader "Custom/TriplanarFloor"
 
     SubShader
     {
-        Tags { "RenderType"="Opaque" "RenderPipeline"="UniversalPipeline" }
+        Tags 
+        { 
+            "RenderType" = "Opaque" 
+            "RenderPipeline" = "UniversalPipeline" 
+            "Queue" = "Geometry" 
+        }
         LOD 100
 
-        // --- FORWARD RENDERING PASS ---
+        // --- FORWARD PASS (Your custom triplanar look) ---
         Pass
         {
-            Name "TriplanarPass"
+            Name "UniversalForward"
             Tags { "LightMode" = "UniversalForward" }
+
+            ZWrite On
+            ZTest LEqual
+            Cull Back
 
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
 
+            #pragma multi_compile_instancing
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _SHADOWS_SOFT
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
+            CBUFFER_START(UnityPerMaterial)
+                float4 _Color;
+                float _Tiling;
+            CBUFFER_END
+
             struct Attributes
             {
                 float4 positionOS   : POSITION;
                 float3 normalOS     : NORMAL;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
             struct Varyings
@@ -43,17 +59,21 @@ Shader "Custom/TriplanarFloor"
                 #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
                 float4 shadowCoord  : TEXCOORD2;
                 #endif
+
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+                UNITY_VERTEX_OUTPUT_STEREO
             };
 
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
 
-            float4 _Color;
-            float _Tiling;
-
             Varyings vert(Attributes input)
             {
                 Varyings output;
+                UNITY_SETUP_INSTANCE_ID(input);
+                UNITY_TRANSFER_INSTANCE_ID(input, output);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
+
                 VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
                 VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS);
 
@@ -70,13 +90,13 @@ Shader "Custom/TriplanarFloor"
 
             float4 frag(Varyings input) : SV_Target
             {
-                float3 normalWS = normalize(input.worldNormal);
+                UNITY_SETUP_INSTANCE_ID(input);
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-                // Triplanar blending weights
+                float3 normalWS = normalize(input.worldNormal);
                 float3 blend = abs(normalWS);
                 blend /= (blend.x + blend.y + blend.z);
 
-                // Triplanar projections
                 float2 uvX = input.worldPos.zy * _Tiling;
                 float2 uvY = input.worldPos.xz * _Tiling;
                 float2 uvZ = input.worldPos.xy * _Tiling;
@@ -87,10 +107,6 @@ Shader "Custom/TriplanarFloor"
 
                 float4 finalColor = colX * blend.x + colY * blend.y + colZ * blend.z;
                 finalColor *= _Color;
-
-                // --- PROPER SHADOW COORDINATE RESOLUTION ---
-                VertexPositionInputs dripInput;
-                dripInput.positionWS = input.worldPos;
 
                 Light mainLight;
                 #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
@@ -104,7 +120,6 @@ Shader "Custom/TriplanarFloor"
 
                 float NdotL = saturate(dot(normalWS, mainLight.direction));
                 float3 lighting = mainLight.color * (NdotL * mainLight.shadowAttenuation);
-
                 float3 ambient = float3(0.2f, 0.2f, 0.2f);
 
                 finalColor.rgb *= (lighting + ambient);
@@ -114,51 +129,9 @@ Shader "Custom/TriplanarFloor"
             ENDHLSL
         }
 
-        // --- SHADOW CASTER PASS ---
-        Pass
-        {
-            Name "ShadowCaster"
-            Tags { "LightMode" = "ShadowCaster" }
-
-            ColorMask 0
-
-            HLSLPROGRAM
-            #pragma vertex vertShadow
-            #pragma fragment fragShadow
-
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-
-            float3 _LightDirection;
-
-            struct Attributes
-            {
-                float4 positionOS   : POSITION;
-                float3 normalOS     : NORMAL;
-            };
-
-            struct Varyings
-            {
-                float4 positionCS   : SV_POSITION;
-            };
-
-            Varyings vertShadow(Attributes input)
-            {
-                Varyings output;
-                VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
-
-                float3 positionWS = vertexInput.positionWS;
-                float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
-                output.positionCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, _LightDirection));
-
-                return output;
-            }
-
-            float4 fragShadow(Varyings input) : SV_Target
-            {
-                return 0;
-            }
-            ENDHLSL
-        }
+        // --- INHERITED URP PASSES (Guarantees exact native depth and shadow behavior) ---
+        UsePass "Universal Render Pipeline/Lit/ShadowCaster"
+        UsePass "Universal Render Pipeline/Lit/DepthOnly"
+        UsePass "Universal Render Pipeline/Lit/DepthNormals"
     }
 }

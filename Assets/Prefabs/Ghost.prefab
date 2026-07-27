@@ -102,7 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyGhost
   detectionRadius: 30
   maxDistanceFromPlayer: 30
-  moveSpeed: 6
+  moveSpeed: 1
   verticalLerpSpeed: 0.5
   rotationSpeed: 5
   targetOpacity: 0.4

@@ -27,7 +27,10 @@ public class Player : MonoBehaviour
     [SerializeField] public Hotbar hotbar;
     [SerializeField] public Hotbar ammoDisplay;
     [SerializeField] public Transform camera;
-    [SerializeField] public Vector3 cameraOffset = new Vector3(1f, 6f, -4f);
+    [SerializeField] public float cameraDist = 8f;
+    [SerializeField] public float cameraAngle = 45f;
+    [SerializeField] public float cameraUpTilt = 10f;
+    [SerializeField] public float cameraZOffset = 10f;
     [SerializeField] public GameObject ghostPrefab;
     [SerializeField] public int ghostSpawnsPerSecond = 2;
     [SerializeField] public GameObject arrowShop;
@@ -90,6 +93,7 @@ public class Player : MonoBehaviour
     private Bag itemsBag;
     private Bag ammoBag;
     private Vector3 knockbackVelocity;
+    private Vector3 cameraOffset;
     void Start()
     {
         // init upgrades
@@ -105,9 +109,9 @@ public class Player : MonoBehaviour
         ammoDisplay.bag = ammoBag;
         controller = GetComponent<CharacterController>();
         PickupItem(ItemType.Whip);
+        cameraOffset = new Vector3(0f, cameraDist * Mathf.Sin(cameraAngle * Mathf.Deg2Rad), cameraZOffset + cameraDist * -Mathf.Cos(cameraAngle * Mathf.Deg2Rad));
         camera.transform.position = transform.position + cameraOffset;
-        camera.transform.LookAt(transform);
-        camera.transform.Rotate(-10f, 0f, 0f, Space.Self);
+        camera.transform.rotation = Quaternion.Euler(cameraAngle - cameraUpTilt, 0f, 0f);
         mapArea = MapArea.Town;
         arrowShop.SetActive(false);
         quiverShop.SetActive(false);

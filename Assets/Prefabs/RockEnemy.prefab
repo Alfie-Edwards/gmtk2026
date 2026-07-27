@@ -193,6 +193,7 @@ GameObject:
   - component: {fileID: 7886186494996032649}
   - component: {fileID: 3012192548096332907}
   - component: {fileID: -9119061285827014766}
+  - component: {fileID: 6887386332173236453}
   m_Layer: 0
   m_Name: RockEnemy
   m_TagString: Untagged
@@ -304,6 +305,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 169f973b6bb3a4721923524031aaee97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyRock
+--- !u!114 &6887386332173236453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9125636384562115356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 750d3b9ff5d90f44db06712287929cb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ToyMovement
+  visualModel: {fileID: 5408628192674116615}
+  bobFrequency: 8
+  bobAmplitude: 0.1
+  tiltFrequency: 4
+  maxTiltAngle: 10
+  transitionSpeed: 10
 --- !u!1001 &5514085800574030828
 PrefabInstance:
   m_ObjectHideFlags: 0

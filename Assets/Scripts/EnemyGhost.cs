@@ -86,18 +86,8 @@ public class EnemyGhost : MonoBehaviour
 
     void MoveTowardsPlayer(Vector3 playerPosition)
     {
-        Vector3 currentPos = transform.position;
-        Vector3 targetPos = playerPosition;
-
-        // X and Z use standard move speed
         float step = moveSpeed * Time.deltaTime;
-        float newX = Mathf.MoveTowards(currentPos.x, targetPos.x, step);
-        float newZ = Mathf.MoveTowards(currentPos.z, targetPos.z, step);
-
-        // Y uses the configurable clamped lerp speed
-        float newY = Mathf.Lerp(currentPos.y, targetPos.y, Mathf.Min(1f, verticalLerpSpeed * Time.deltaTime));
-
-        transform.position = new Vector3(newX, newY, newZ);
+        transform.position += (playerPosition - transform.position).normalized * step;
     }
 
     IEnumerator DashRoutine()

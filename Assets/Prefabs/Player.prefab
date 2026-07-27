@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 4206865211183290909}
   - component: {fileID: 2451081031390624999}
   - component: {fileID: 1992119046202100588}
+  - component: {fileID: 5141431851728133588}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -198,7 +199,10 @@ MonoBehaviour:
   hotbar: {fileID: 0}
   ammoDisplay: {fileID: 0}
   camera: {fileID: 0}
-  cameraOffset: {x: 1, y: 12, z: -3}
+  cameraDist: 8
+  cameraAngle: 45
+  cameraUpTilt: 10
+  cameraZOffset: 10
   ghostPrefab: {fileID: 9125636384562115356, guid: 491def86a2ed640219eea5d3704fba73, type: 3}
   ghostSpawnsPerSecond: 2
   arrowShop: {fileID: 0}
@@ -234,6 +238,24 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
+--- !u!114 &5141431851728133588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8656154136139714796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 750d3b9ff5d90f44db06712287929cb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ToyMovement
+  visualModel: {fileID: 6014271630557280568}
+  bobFrequency: 8
+  bobAmplitude: 0.1
+  tiltFrequency: 4
+  maxTiltAngle: 10
+  transitionSpeed: 10
 --- !u!1001 &3446390920823139023
 PrefabInstance:
   m_ObjectHideFlags: 0
