@@ -198,7 +198,7 @@ MonoBehaviour:
   hotbar: {fileID: 0}
   ammoDisplay: {fileID: 0}
   camera: {fileID: 0}
-  cameraOffset: {x: 1, y: 6, z: -4}
+  cameraOffset: {x: 1, y: 12, z: -3}
   ghostPrefab: {fileID: 9125636384562115356, guid: 491def86a2ed640219eea5d3704fba73, type: 3}
   ghostSpawnsPerSecond: 2
   arrowShop: {fileID: 0}
@@ -206,19 +206,13 @@ MonoBehaviour:
   quiverShop: {fileID: 0}
   bombBagShop: {fileID: 0}
   dummyGoldPrefab: {fileID: 0}
-  startQuiverSize: 0
-  maxQuiverSize: 4
-  startBombBagSize: 0
-  maxBombBagSize: 4
-  startWhipLevel: 1
-  maxWhipLevel: 4
-  maxRoosters: 3
   whip: {fileID: 1802198996311432322}
   bow: {fileID: 1405018103507800851}
   bombBag: {fileID: 7209027456822695852}
   pickaxe: {fileID: 5722249334292348723}
   knockbackDamping: 10
   hitCooldown: 0.5
+  win: 0
   wildernessMusicSource:
     Guid:
       Data1: 0
