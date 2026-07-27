@@ -36,14 +36,13 @@ public class Player : MonoBehaviour
     [SerializeField] public GameObject bombBagShop;
     [SerializeField] public GameObject dummyGoldPrefab;
 
-    [Header("Upgrades")]
-    [SerializeField] private int startQuiverSize = 0;
-    [SerializeField] private int maxQuiverSize = 4;
-    [SerializeField] private int startBombBagSize = 0;
-    [SerializeField] private int maxBombBagSize = 4;
-    [SerializeField] private int startWhipLevel = 1;
-    [SerializeField] private int maxWhipLevel = 4;
-    [SerializeField] private int maxRoosters = 3;
+    private int startQuiverSize = 0;
+    private int maxQuiverSize = 4;
+    private int startBombBagSize = 0;
+    private int maxBombBagSize = 4;
+    private int startWhipLevel = 1;
+    private int maxWhipLevel = 4;
+    private int maxRoosters = 3;
 
     [Header("Weapons")]
     [SerializeField] private Whip whip;
@@ -55,7 +54,6 @@ public class Player : MonoBehaviour
     [SerializeField] private float knockbackDamping = 10f;
     [SerializeField] private float hitCooldown = 0.5f;
     public bool win = false;
-
 
     private float lastHitTime = -999f;
     private int quiverSize_;
@@ -115,7 +113,10 @@ public class Player : MonoBehaviour
         quiverShop.SetActive(false);
         bombShop.SetActive(false);
         bombBagShop.SetActive(false);
-        Spawn();
+        // Spawn();
+        PickupItem(ItemType.BombBag);
+        PickupItem(ItemType.Pickaxe);
+        PickupItem(ItemType.Dynamite);
 
         // init controls
         Cursor.lockState = CursorLockMode.Locked;
@@ -593,7 +594,7 @@ public class Player : MonoBehaviour
 
     private void DropGold(int amount) {
         int totalGold = ammoBag.Amount(ItemType.Gold);
-        if (amount < totalGold) {
+        if (amount > totalGold) {
             amount = totalGold;
         }
         ammoBag.Remove(ItemType.Gold, amount);

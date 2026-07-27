@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Rock : MonoBehaviour
 {
-    public int coinCount = 500;
+    public int coinCount = 25;
     public GameObject coinPrefab;
 
     public void Break()
@@ -11,7 +11,7 @@ public class Rock : MonoBehaviour
         {
             for (int i = 0; i < coinCount; i++)
             {
-                Vector2 randomCircle = Random.insideUnitCircle;
+                Vector2 randomCircle = Random.insideUnitCircle * 0.5f;
                 Vector3 spawnPosition = transform.position + new Vector3(randomCircle.x, 0f, randomCircle.y);
 
                 Instantiate(coinPrefab, spawnPosition, Random.rotation);

@@ -47,7 +47,7 @@ public class Enemy : MonoBehaviour
     public int minCoins = 1;
     public int maxCoins = 5;
     public bool canDropXXX = true;
-    public float coinSpawnSpread = 1f;
+    public float coinSpawnSpread = 0.5f;
 
     void Start()
     {

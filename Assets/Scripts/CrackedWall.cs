@@ -2,21 +2,23 @@ using UnityEngine;
 
 public class CrackedWall : MonoBehaviour
 {
-    [SerializeField] private GameObject intactModel;
-    [SerializeField] private GameObject brokenModel;
+    [SerializeField] private MeshFilter meshFilter;       
+    [SerializeField] private MeshCollider meshCollider;
+    [SerializeField] private Mesh intactMesh;       
+    [SerializeField] private Mesh brokenMesh;       
 
     private bool isBroken = false;
 
     private void Start()
     {
-        if (intactModel != null)
+        if (meshFilter != null && intactMesh != null)
         {
-            intactModel.SetActive(true);
+            meshFilter.sharedMesh = intactMesh;
         }
 
-        if (brokenModel != null)
+        if (meshCollider != null && intactMesh != null)
         {
-            brokenModel.SetActive(false);
+            meshCollider.sharedMesh = intactMesh;
         }
     }
 
@@ -25,14 +27,14 @@ public class CrackedWall : MonoBehaviour
         if (isBroken) return;
         isBroken = true;
 
-        if (intactModel != null)
+        if (meshFilter != null && brokenMesh != null)
         {
-            intactModel.SetActive(false);
+            meshFilter.sharedMesh = brokenMesh;
         }
 
-        if (brokenModel != null)
+        if (meshCollider != null && brokenMesh != null)
         {
-            brokenModel.SetActive(true);
+            meshCollider.sharedMesh = brokenMesh;
         }
     }
 }

@@ -46,7 +46,7 @@ public class DayNightCycle : MonoBehaviour
         get => timeRemainingS_;
         set
         {
-            timeRemainingS_ = Mathf.Clamp(value, 0f, dayLengthS);
+            timeRemainingS_ = value;
             if (timeRemainingS_ <= 0 && !isNight && !isTransitioningTrueNight) {
                 SetNight();
                 StartTrueNightTransition();
