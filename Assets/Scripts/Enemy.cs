@@ -6,6 +6,7 @@ public class Enemy : MonoBehaviour
     [Header("Movement Settings")]
     public float moveSpeed = 3f;
     public float gravity = 9.81f;
+    public float jumpForce = 3f;
     [SerializeField] private float detectionRadius = 10f;
 
     // Property with a backing field to find the player via component
@@ -49,6 +50,7 @@ public class Enemy : MonoBehaviour
     public int maxCoins = 5;
     public bool canDropXXX = true;
     public float coinSpawnSpread = 0.5f;
+    private bool aggro = false;
 
     void Start()
     {
@@ -87,9 +89,13 @@ public class Enemy : MonoBehaviour
         if (Player != null)
         {
             Vector3 toPlayer = Player.position - transform.position;
-            toPlayer.y = 0f; // Keep movement flat
+            toPlayer.y = 0f;
+            if (!aggro)
+            {
+                aggro = toPlayer.sqrMagnitude <= detectionRadius * detectionRadius;
+            }
 
-            if (toPlayer.sqrMagnitude <= detectionRadius * detectionRadius)
+            if (aggro)
             {
                 if (toPlayer.magnitude > 0.1f)
                 {
@@ -123,7 +129,7 @@ public class Enemy : MonoBehaviour
 
         if (controller.isGrounded && isTryingToMove && (controller.collisionFlags & CollisionFlags.Sides) != 0 && jumpCooldownTimer <= 0f)
         {
-            Jump(3.8f);
+            Jump(jumpForce);
             jumpCooldownTimer = 1.5f;
         }
     }

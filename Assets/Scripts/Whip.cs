@@ -6,6 +6,7 @@ public class Whip : MonoBehaviour
     [Header("References")]
     [SerializeField] private Rope rope;
     [SerializeField] private LineRenderer lineRenderer;
+    [SerializeField] private GameObject whipCrackPrefab; // Field for the whip crack prefab
 
     public float throwDuration = 0.5f;
     public float retractDuration = 0.1f;
@@ -28,16 +29,12 @@ public class Whip : MonoBehaviour
         {
             SnapToStart();
         }
-
-        // Optional: Keep continuous check if needed outside of attacks,
-        // though attack hits are now handled inside the coroutine.
     }
 
     void SnapToStart()
     {
         if (rope != null && rope.endTransform != null && rope.startTransform != null)
         {
-            // Use TransformDirection so the idle offset respects the player's facing direction
             Vector3 localIdleOffset = new Vector3(0f, 0f, idleOffsetZ);
             rope.endTransform.position = rope.startTransform.position + transform.TransformDirection(localIdleOffset);
         }
@@ -65,7 +62,7 @@ public class Whip : MonoBehaviour
 
         Vector3 WorldPeakPos() {
             Vector3 peak = rope.startTransform.position + transform.TransformDirection(localThrowDirection.normalized * rope.ropeLength);
-            peak.y = rope.startTransform.position.y; // Keep the end point flat
+            peak.y = rope.startTransform.position.y;
             return peak;
         }
 
@@ -79,10 +76,11 @@ public class Whip : MonoBehaviour
 
             rope.endTransform.position = Vector3.Lerp(initialPos, WorldPeakPos(), t);
 
-            // Check for hits during the throw; if an enemy is hit, break out early
+            // Check for hits during the throw; if something is hit, spawn prefab and break early
             if (CheckHitAndRegister())
             {
                 hitEnemy = true;
+                SpawnWhipCrack(rope.endTransform.position);
                 break;
             }
 
@@ -95,7 +93,6 @@ public class Whip : MonoBehaviour
             rope.endTransform.position = WorldPeakPos();
         }
 
-        // Save the current position where it stopped as the starting point for retraction
         Vector3 currentPosAtRetract = rope.endTransform.position;
 
         elapsed = 0f;
@@ -110,13 +107,20 @@ public class Whip : MonoBehaviour
             Vector3 returnPos = rope.startTransform.position + transform.TransformDirection(localIdleOffset);
             returnPos.y = rope.startTransform.position.y;
 
-            // Retract from wherever the whip currently is
             rope.endTransform.position = Vector3.Lerp(currentPosAtRetract, returnPos, t);
             yield return null;
         }
 
         SnapToStart();
         isAttacking = false;
+    }
+
+    private void SpawnWhipCrack(Vector3 spawnPosition)
+    {
+        if (whipCrackPrefab != null)
+        {
+            Instantiate(whipCrackPrefab, spawnPosition, Random.rotation);
+        }
     }
 
     private bool CheckHitAndRegister()

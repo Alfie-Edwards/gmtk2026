@@ -211,10 +211,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Whip
   rope: {fileID: 7793095966691314461}
   lineRenderer: {fileID: 7696652988658892329}
+  whipCrackPrefab: {fileID: 6837697977218409677, guid: cd92840852760ea44b056bc6adc07505, type: 3}
   throwDuration: 0.5
   retractDuration: 0.1
   localThrowDirection: {x: 0, y: 1, z: 1}
   idleOffsetZ: 0.001
+  hitRadius: 0.5
+  damage: 25
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &6800435133290883327
 GameObject:
   m_ObjectHideFlags: 0

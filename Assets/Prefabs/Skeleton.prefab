@@ -230,9 +230,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c569da87f4ea416aa608cdf0211848e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
-  moveSpeed: 3
+  moveSpeed: 2
   gravity: 9.81
-  detectionRadius: 10
+  jumpForce: 3
+  detectionRadius: 5
   maxHealth: 100
   hitCooldown: 0.5
   knockbackMagnitude: 14
@@ -262,13 +263,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
+  m_Height: 1.4
+  m_Radius: 0.25
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -0.3, z: 0}
 --- !u!136 &3012192548096332907
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -288,10 +289,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 0.25
+  m_Height: 1.4
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -0.3, z: 0}
 --- !u!114 &8817294760384369497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -320,7 +321,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 481fd7c3291a7e4459c93e796e717423, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.12616406
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 481fd7c3291a7e4459c93e796e717423, type: 3}
       propertyPath: m_LocalPosition.y
@@ -328,7 +329,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 481fd7c3291a7e4459c93e796e717423, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.023
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 481fd7c3291a7e4459c93e796e717423, type: 3}
       propertyPath: m_LocalRotation.w
