@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
     [Header("Movement Settings")]
     public float moveSpeed = 3f;
     public float gravity = 9.81f;
-    [SerializeField] private float detectionRadius = 10f; // Radius within which the enemy moves towards the player
+    [SerializeField] private float detectionRadius = 10f;
 
     // Property with a backing field to find the player via component
     private Transform playerTransform;
@@ -28,6 +28,7 @@ public class Enemy : MonoBehaviour
 
     private CharacterController controller;
     private Vector3 verticalVelocity;
+    private float jumpCooldownTimer = 0f; // Cooldown to prevent multi-jumping instantly
 
     [Header("Health & Combat")]
     public float maxHealth = 100f;
@@ -57,6 +58,11 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        if (jumpCooldownTimer > 0f)
+        {
+            jumpCooldownTimer -= Time.deltaTime;
+        }
+
         HandleMovement();
 
         if (transform.position.z < 0)
@@ -76,25 +82,25 @@ public class Enemy : MonoBehaviour
     void HandleMovement()
     {
         Vector3 moveDir = Vector3.zero;
+        bool isTryingToMove = false;
 
         if (Player != null)
         {
             Vector3 toPlayer = Player.position - transform.position;
             toPlayer.y = 0f; // Keep movement flat
 
-            // Check if player is within the detection radius
             if (toPlayer.sqrMagnitude <= detectionRadius * detectionRadius)
             {
                 if (toPlayer.magnitude > 0.1f)
                 {
                     moveDir = toPlayer.normalized * moveSpeed;
                     transform.rotation = Quaternion.LookRotation(toPlayer);
+                    isTryingToMove = true;
                 }
             }
         }
 
-        // Handle gravity / ground sticking
-        if (controller.isGrounded)
+        if (controller.isGrounded && verticalVelocity.y <= 0)
         {
             verticalVelocity.y = -2f;
         }
@@ -103,7 +109,6 @@ public class Enemy : MonoBehaviour
             verticalVelocity.y -= gravity * Time.deltaTime;
         }
 
-        // Decay knockback smoothly over time
         if (knockbackVelocity.magnitude > 0.1f)
         {
             knockbackVelocity = Vector3.Lerp(knockbackVelocity, Vector3.zero, knockbackDamping * Time.deltaTime);
@@ -113,9 +118,14 @@ public class Enemy : MonoBehaviour
             knockbackVelocity = Vector3.zero;
         }
 
-        // Execute movement via CharacterController exclusively
         Vector3 finalMovement = moveDir + verticalVelocity + knockbackVelocity;
         controller.Move(finalMovement * Time.deltaTime);
+
+        if (controller.isGrounded && isTryingToMove && (controller.collisionFlags & CollisionFlags.Sides) != 0 && jumpCooldownTimer <= 0f)
+        {
+            Jump(3.8f);
+            jumpCooldownTimer = 1.5f;
+        }
     }
 
     public void TakeDamage(float damageAmount, Vector3 hitDirection, float knockbackModifier = 1.0f)
@@ -149,23 +159,23 @@ public class Enemy : MonoBehaviour
         // Drop all embedded arrows before destroying or spawning loot
         foreach (Transform child in transform)
         {
-            // Only target objects that have the Arrow component attached
             Arrow arrow = child.GetComponent<Arrow>();
             if (arrow != null)
             {
-                // 1. Unparent the arrow so it stays in the world
                 child.SetParent(null);
 
-                // 2. Re-enable physics and gravity via its Rigidbody
                 Rigidbody arrowRb = child.GetComponent<Rigidbody>();
                 if (arrowRb != null)
                 {
                     arrowRb.isKinematic = false;
                     arrowRb.useGravity = true;
+#if UNITY_6000_0_OR_NEWER
                     arrowRb.linearVelocity = Vector3.zero;
+#else
+                    arrowRb.velocity = Vector3.zero;
+#endif
                 }
 
-                // 3. Re-enable the collider so it can hit the floor/ground
                 Collider arrowCol = child.GetComponent<Collider>();
                 if (arrowCol != null)
                 {
