@@ -33,6 +33,7 @@ public class CactusSpike : MonoBehaviour
 
         // 3. Apply velocity immediately here so it doesn't wait for FixedUpdate
         rb.linearVelocity = moveDirection * moveSpeed;
+        rb.angularVelocity = new Vector3(0, 10, 0);
 
         // Destroy the spike after a set time if it misses
         Destroy(gameObject, lifetime);
