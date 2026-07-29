@@ -46,6 +46,7 @@ public class Player : MonoBehaviour
     private int startWhipLevel = 1;
     private int maxWhipLevel = 4;
     private int maxRoosters = 3;
+    private int numSeeds = 0;
 
     [Header("Weapons")]
     [SerializeField] private Whip whip;
@@ -117,10 +118,7 @@ public class Player : MonoBehaviour
         quiverShop.SetActive(false);
         bombShop.SetActive(false);
         bombBagShop.SetActive(false);
-        // Spawn();
-        PickupItem(ItemType.BombBag);
-        PickupItem(ItemType.Pickaxe);
-        PickupItem(ItemType.Dynamite);
+        Spawn();
 
         // init controls
         Cursor.lockState = CursorLockMode.Locked;
@@ -360,7 +358,8 @@ public class Player : MonoBehaviour
                 RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_Purchase");
                 switch (closest.itemType) {
                     case ItemType.Seed:
-                        closest.cost *= 2;
+                        numSeeds += 1;
+                        closest.cost += 10 * numSeeds;
                         if (!CanPickupItem(closest.itemType)) {
                             closest.SetSoldOut();
                         }

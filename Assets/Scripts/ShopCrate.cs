@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,18 @@ public class ShopCrate : MonoBehaviour
 
     [Header("Timings")]
     [SerializeField] private float fadeSpeed = 5f;
+
+    // private static readonly Dictionary<ItemType, int> INTIIAL_PRICES = new Dictionary<ItemType, int>
+    // {
+    //     { ItemType.Seed, 10 },
+    //     { ItemType.Arrow, 10 },
+    //     { ItemType.Dynamite, 50 },
+    //     { ItemType.WhipUpgrade, 50 },
+    //     { ItemType.QuiverUpgrade, 50 },
+    //     { ItemType.BombBagUpgrade, 50 },
+    //     { ItemType.Rooster, 50 },
+    // };
+
 
     private bool wasReuppedThisFrame = false;
 

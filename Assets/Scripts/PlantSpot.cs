@@ -19,7 +19,7 @@ public class PlantSpot : MonoBehaviour
             Grow();
         }
         if (Growing) {
-            for (int i = 0; i != 20; ++i)
+            for (int i = 0; i != 10; ++i)
             {
                 Instantiate(goldPrefab, transform.position, Quaternion.identity);
             }
