@@ -536,6 +536,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 28d55e6c46bea4e64b5a781b4cc876b6, type: 3}
+    - target: {fileID: 7421631391347267860, guid: ff2b02f41cf8043aabc7873a642b6fb0, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 13995e5ae6c162d468aac55a34a9e7de, type: 2}
     - target: {fileID: 8354195630468810829, guid: ff2b02f41cf8043aabc7873a642b6fb0, type: 3}
       propertyPath: m_Name
       value: Billboard
