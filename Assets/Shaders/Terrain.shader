@@ -108,20 +108,24 @@ Shader "Custom/TriplanarFloor"
                 float4 finalColor = colX * blend.x + colY * blend.y + colZ * blend.z;
                 finalColor *= _Color;
 
-                Light mainLight;
+                // --- LIGHTING CALCULATION ---
                 #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-                mainLight = GetMainLight(input.shadowCoord);
+                Light mainLight = GetMainLight(input.shadowCoord);
                 #elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
                 float4 shadowCoord = TransformWorldToShadowCoord(input.worldPos);
-                mainLight = GetMainLight(shadowCoord);
+                Light mainLight = GetMainLight(shadowCoord);
                 #else
-                mainLight = GetMainLight();
+                Light mainLight = GetMainLight();
                 #endif
 
+                // Diffuse lighting (NdotL) combined with shadows
                 float NdotL = saturate(dot(normalWS, mainLight.direction));
                 float3 lighting = mainLight.color * (NdotL * mainLight.shadowAttenuation);
-                float3 ambient = float3(0.2f, 0.2f, 0.2f);
 
+                // Add ambient/global illumination so unlit areas aren't pitch black
+                float3 ambient = SampleSH(normalWS);
+
+                // Apply lighting to the final texture color
                 finalColor.rgb *= (lighting + ambient);
 
                 return finalColor;
@@ -129,7 +133,7 @@ Shader "Custom/TriplanarFloor"
             ENDHLSL
         }
 
-        // --- INHERITED URP PASSES (Guarantees exact native depth and shadow behavior) ---
+        // --- INHERITED URP PASSES ---
         UsePass "Universal Render Pipeline/Lit/ShadowCaster"
         UsePass "Universal Render Pipeline/Lit/DepthOnly"
         UsePass "Universal Render Pipeline/Lit/DepthNormals"

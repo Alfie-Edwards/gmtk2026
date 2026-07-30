@@ -341,7 +341,7 @@ MonoBehaviour:
   visualRoot: {fileID: 3150365934214766344}
   hiddenYOffset: -1
   poppedYOffset: 2
-  transitionSpeed: 50
+  transitionSpeed: 20
   rotationSpeed: 10
   spikePrefab: {fileID: 9197701245545295047, guid: 7f8caf9960c1a43b48ac295276f1c5d3, type: 3}
   firePoint: {fileID: 2105369562808805944}

@@ -20,12 +20,12 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 1
-  m_AmbientMode: 0
-  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
+  m_AmbientIntensity: 0.55
+  m_AmbientMode: 3
+  m_SubtractiveShadowColor: {r: 0.24563903, g: 0.30427802, b: 0.4528302, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
@@ -411,7 +411,7 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 5000
+  m_ColorTemperature: 7056
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -909,7 +909,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1665166357674558159, guid: 2be1ca9581322a545864bb55913cc13a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.07
       objectReference: {fileID: 0}
     - target: {fileID: 1665166357674558159, guid: 2be1ca9581322a545864bb55913cc13a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1360,19 +1360,23 @@ MonoBehaviour:
   startDayLengthS: 30
   timerText: {fileID: 1960720808}
   sunLight: {fileID: 410087040}
-  daySunAngle: 50
-  dayMaxIntensity: 1
-  sunsetMinBrightness: 0.3
-  nightBrightness: 0.03
-  compassHeading: 90
+  sunriseFadeCanvasGroup: {fileID: 0}
+  dayStartAngle: 15
+  dayEndAngle: 175
+  hoopTiltZ: 30
+  compassHeading: -90
+  middaySliceWidth: 30
+  maxSunIntensity: 1
+  middayAmbientColor: {r: 0.6784314, g: 0.72156864, b: 0.8117648, a: 1}
+  sunsetAmbientColor: {r: 0.32156864, g: 0.40000004, b: 0.52156866, a: 1}
+  nightAmbientColor: {r: 0.07450981, g: 0.09019608, b: 0.16078432, a: 1}
   sunriseTransitionDuration: 3
-  sunsetTransitionDuration: 15
+  sunriseFadeToBlackDuration: 1.5
   trueNightTransitionDuration: 3
   wildernessPrefab: {fileID: 579500444982961619, guid: 2be1ca9581322a545864bb55913cc13a, type: 3}
   currentWilderness: {fileID: 1253079320}
-  dayColor: {r: 1, g: 1, b: 1, a: 1}
-  sunsetColor: {r: 1, g: 0.5, b: 0.2, a: 1}
-  nightColor: {r: 0.2, g: 0.3, b: 0.5, a: 1}
+  dayTemperature: 5800
+  sunsetTemperature: 1500
 --- !u!4 &1818425924
 Transform:
   m_ObjectHideFlags: 0
@@ -1382,7 +1386,7 @@ Transform:
   m_GameObject: {fileID: 1818425922}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.13476, y: 0, z: -7.68179}
+  m_LocalPosition: {x: -0.14, y: 0, z: -7.68179}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

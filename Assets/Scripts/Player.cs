@@ -10,6 +10,8 @@ using System.Linq;
 public enum MapArea {
     Town,
     Wilderness,
+    Wilderness2,
+    Boss,
     None,
 }
 
@@ -135,13 +137,14 @@ public class Player : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        ammoBag.Add(ItemType.Gold, 10);
+        ammoBag.Add(ItemType.Gold, 1000);
 
         WildernessMusic = RuntimeManager.CreateInstance(wildernessMusicSource);
         TownMusic = RuntimeManager.CreateInstance(townMusicSource);
         TenSecondMusic =RuntimeManager.CreateInstance(tenSecondMusicSource);
 
         TownMusic.start();
+        PickupItem(ItemType.Pickaxe);
     }
 
     void Spawn()
@@ -174,7 +177,7 @@ public class Player : MonoBehaviour
         UpdateWeapons();
         MapAreaStuff();
 
-        if (dayNightCycle.timeRemainingS < 12f && (dayNightCycle.timeRemainingS + Time.deltaTime) >= 12f)
+        if (dayNightCycle.timeRemainingS < 12f && (dayNightCycle.timeRemainingS + Time.deltaTime) >= 12f && mapArea != MapArea.Town)
         {
             WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
@@ -192,11 +195,19 @@ public class Player : MonoBehaviour
     }
 
     private MapArea GetCurrentMapArea() {
-        if (transform.position.z <= 0)
+        if (transform.position.z < 0)
         {
             return MapArea.Town;
         }
-        return MapArea.Wilderness;
+        if (transform.position.z < 34)
+        {
+            return MapArea.Wilderness;
+        }
+        if (transform.position.z < 68)
+        {
+            return MapArea.Wilderness2;
+        }
+        return MapArea.Boss;
     }
 
     private void DoMapAreaStuff(MapArea area) {
@@ -210,11 +221,12 @@ public class Player : MonoBehaviour
     }
 
     private void OnChangeMapArea(MapArea prevArea, MapArea newArea) {
+        Debug.Log($"Entered {newArea}");
         switch (prevArea) {
             case MapArea.Town:
                 if (!dayNightCycle.isNight) dayNightCycle.UnpauseTime();
-                break;
-            case MapArea.Wilderness:
+                TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                WildernessMusic.start();
                 break;
         }
         switch (newArea)
@@ -230,9 +242,13 @@ public class Player : MonoBehaviour
                 }
                 break;
             case MapArea.Wilderness:
-                WildernessMusic.start();
-                TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                WildernessMusic.setParameterByNameWithLabel("Variation", "Desert");
+                break;
+            case MapArea.Wilderness2:
+                WildernessMusic.setParameterByNameWithLabel("Variation", "Frog Oasis");
+                break;
+            case MapArea.Boss:
+                WildernessMusic.setParameterByNameWithLabel("Variation", "Lava Mountains");
                 break;
         }
     }
@@ -572,6 +588,7 @@ public class Player : MonoBehaviour
     }
 
     private void SpawnRooster() {
+        dayNightCycle.dayStartAngle -= 5f;
         dayNightCycle.IncreaseDayLength(30f);
     }
 
@@ -603,25 +620,25 @@ public class Player : MonoBehaviour
     }
 
     public void GetHit(Vector3 impulse) {
-        RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PlayerGetsHit");
-        if (Time.time < lastHitTime + hitCooldown) return;
-        lastHitTime = Time.time;
-        knockbackVelocity += impulse;
-        if (dayNightCycle.isNight)
-        {
-            if (treasureBag.Amount(ItemType.Gold) > 0)
-            {
-                DropGold(10);
-            }
-            else
-            {
-                Spawn();
-            }
-        }
-        else
-        {
-            dayNightCycle.timeRemainingS -= 5f;
-        }
+        // RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PlayerGetsHit");
+        // if (Time.time < lastHitTime + hitCooldown) return;
+        // lastHitTime = Time.time;
+        // knockbackVelocity += impulse;
+        // if (dayNightCycle.isNight)
+        // {
+        //     if (treasureBag.Amount(ItemType.Gold) > 0)
+        //     {
+        //         DropGold(10);
+        //     }
+        //     else
+        //     {
+        //         Spawn();
+        //     }
+        // }
+        // else
+        // {
+        //     dayNightCycle.timeRemainingS -= 5f;
+        // }
     }
 
     private void DropGold(int amount) {

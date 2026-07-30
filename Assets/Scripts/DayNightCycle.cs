@@ -10,23 +10,35 @@ public class DayNightCycle : MonoBehaviour
     [Header("UI & Lighting References")]
     public TextMeshProUGUI timerText;         // Drag your UI Text here
     public Light sunLight;                    // Drag your directional light here
+    public CanvasGroup sunriseFadeCanvasGroup; // Drag a UI Panel covering the screen with a CanvasGroup component here
 
-    [Header("Lighting Settings")]
-    public float daySunAngle = 50f;           // Max height angle during the day
-    public float dayMaxIntensity = 1f;        // Intensity during the day
-    public float sunsetMinBrightness = 0.3f;   // Brightness at the end of the sunset phase
-    public float nightBrightness = 0.1f;       // Brightness during true night
-    public float compassHeading = 0f;         // Y rotation of the sun/sky direction
+    [Header("Clean Orbit Controls")]
+    [Range(0f, 180f)]
+    public float dayStartAngle = 0f;          // 1. Angle the sun settles at after sunrise
+    [Range(0f, 180f)]
+    public float dayEndAngle = 90f;           // 2. Angle the sun reaches when timer hits zero
+    public float hoopTiltZ = 0f;              // 3. Rotate the hoop sideways (Z-axis roll) about its path plane
+    public float compassHeading = 0f;         // 4. Rotate the whole system about the Y-axis (compass heading)
+
+    [Header("Midday Slice & Ambient Environment")]
+    [Range(0f, 180f)]
+    public float middaySliceWidth = 30f;      // Width of the peak midday zone centered between dayStartAngle and dayEndAngle
+    
+    [Header("Lighting Intensity & Ambient Colors")]
+    public float maxSunIntensity = 1f;        // Peak sun intensity during the day
+    public Color middayAmbientColor = new Color(0.8f, 0.9f, 1f);  // Ambient color during peak midday
+    public Color sunsetAmbientColor = new Color(1f, 0.6f, 0.3f);  // Ambient color at 0f and 180f horizons
+    public Color nightAmbientColor = new Color(0.05f, 0.05f, 0.1f); // Ambient color during true night
+
     public float sunriseTransitionDuration = 3f; // Configurable duration for the start day transition
-    public float sunsetTransitionDuration = 15f;  // Configurable duration for the gradual sunset transition
+    public float sunriseFadeToBlackDuration = 1.5f; // Duration of the absolute black hold/fade at sunrise start
     public float trueNightTransitionDuration = 3f; // Configurable duration for the quick drop to true night
     [SerializeField] private GameObject wildernessPrefab;
     [SerializeField] private GameObject currentWilderness;
 
-    [Header("Smooth Color Cycle")]
-    public Color dayColor = Color.white;
-    public Color sunsetColor = new Color(1f, 0.5f, 0.2f); // Warm sunset hue
-    public Color nightColor = new Color(0.2f, 0.3f, 0.5f);     // Cool blue night hue
+    [Header("Smooth Temperature Cycle (Kelvin)")]
+    public float dayTemperature = 6500f;      // Peak Daylight Kelvin (Cool/Neutral) inside the midday slice
+    public float sunsetTemperature = 3000f;   // Sunset/Sunrise Kelvin at 0f and 180f
 
     public event Action DayStart;
     public event Action NightStart;
@@ -75,29 +87,65 @@ public class DayNightCycle : MonoBehaviour
         isNight = false;
         timePaused = true;
 
-        // Initialize lighting to full day settings on start
         if (sunLight != null)
         {
-            sunLight.intensity = dayMaxIntensity;
-            sunLight.transform.rotation = Quaternion.Euler(daySunAngle, compassHeading, 0f);
-            sunLight.color = dayColor;
+            sunLight.useColorTemperature = true;
+            sunLight.colorTemperature = GetTemperatureForAngle(dayStartAngle);
+            sunLight.intensity = maxSunIntensity;
+            
+            Quaternion compassRot = Quaternion.Euler(0f, compassHeading, 0f);
+            Quaternion hoopTiltRot = Quaternion.Euler(0f, 0f, hoopTiltZ);
+            Quaternion orbitalRot = Quaternion.Euler(dayStartAngle, 0f, 0f);
+            
+            sunLight.transform.rotation = compassRot * hoopTiltRot * orbitalRot;
+        }
+
+        RenderSettings.ambientLight = GetAmbientColorForAngle(dayStartAngle);
+
+        if (sunriseFadeCanvasGroup != null)
+        {
+            sunriseFadeCanvasGroup.alpha = 0f;
+            sunriseFadeCanvasGroup.blocksRaycasts = false;
         }
     }
 
     void Update()
     {
-        // 1. Time Progression (Only count down daytime when unpaused and not transitioning)
         if (!isNight && !timePaused && !isTransitioningDay && !isTransitioningTrueNight) {
             timeRemainingS -= Time.deltaTime;
         }
 
-        // 2. Sunrise & True Night Transitions (Happen regardless of pause state)
         if (isTransitioningDay)
         {
             sunriseTimer += Time.deltaTime;
+            
+            if (sunriseFadeCanvasGroup != null)
+            {
+                if (sunriseTimer <= sunriseFadeToBlackDuration)
+                {
+                    float fadeProgress = Mathf.Clamp01(sunriseTimer / sunriseFadeToBlackDuration);
+                    sunriseFadeCanvasGroup.alpha = fadeProgress;
+                    sunriseFadeCanvasGroup.blocksRaycasts = true;
+                }
+                else
+                {
+                    float clearProgress = Mathf.Clamp01((sunriseTimer - sunriseFadeToBlackDuration) / (sunriseTransitionDuration - sunriseFadeToBlackDuration));
+                    sunriseFadeCanvasGroup.alpha = 1f - clearProgress;
+                    if (clearProgress >= 1f)
+                    {
+                        sunriseFadeCanvasGroup.blocksRaycasts = false;
+                    }
+                }
+            }
+
             if (sunriseTimer >= sunriseTransitionDuration)
             {
                 isTransitioningDay = false;
+                if (sunriseFadeCanvasGroup != null)
+                {
+                    sunriseFadeCanvasGroup.alpha = 0f;
+                    sunriseFadeCanvasGroup.blocksRaycasts = false;
+                }
             }
         }
 
@@ -110,7 +158,6 @@ public class DayNightCycle : MonoBehaviour
             }
         }
 
-        // 3. UI Clock Management
         if (timerText != null)
         {
             bool showTimer = !timePaused && !isNight && !isTransitioningTrueNight;
@@ -123,57 +170,108 @@ public class DayNightCycle : MonoBehaviour
             }
         }
 
-        // 4. Lighting & Sun Animation Management
         if (sunLight != null)
         {
+            sunLight.useColorTemperature = true;
+
+            Quaternion compassRot = Quaternion.Euler(0f, compassHeading, 0f);
+            Quaternion hoopTiltRot = Quaternion.Euler(0f, 0f, hoopTiltZ);
+
             if (isTransitioningTrueNight)
             {
-                // True Night Phase: Smoothly transitions from sunset brightness/color to true night brightness/color
                 float t = Mathf.Clamp01(trueNightTimer / trueNightTransitionDuration);
-                float currentAngle = Mathf.Lerp(0f, -10f, t);
-                float currentIntensity = Mathf.Lerp(sunsetMinBrightness, nightBrightness, t);
+                float currentAngle = Mathf.Lerp(dayEndAngle, 190f, t);
+                
+                sunLight.colorTemperature = Mathf.Lerp(GetTemperatureForAngle(dayEndAngle), sunsetTemperature, t);
+                sunLight.intensity = Mathf.Lerp(maxSunIntensity, 0f, t);
+                RenderSettings.ambientLight = Color.Lerp(GetAmbientColorForAngle(dayEndAngle), nightAmbientColor, t);
 
-                sunLight.transform.rotation = Quaternion.Euler(currentAngle, compassHeading, 0f);
-                sunLight.intensity = currentIntensity;
-                sunLight.color = Color.Lerp(sunsetColor, nightColor, t);
+                Quaternion orbitalRot = Quaternion.Euler(currentAngle, 0f, 0f);
+                sunLight.transform.rotation = compassRot * hoopTiltRot * orbitalRot;
             }
             else if (isNight)
             {
-                // Locked firmly at true night settings once transition is fully finished
-                sunLight.intensity = nightBrightness;
-                sunLight.transform.rotation = Quaternion.Euler(-10f, compassHeading, 0f);
-                sunLight.color = nightColor;
+                sunLight.colorTemperature = sunsetTemperature;
+                sunLight.intensity = 0f;
+                RenderSettings.ambientLight = nightAmbientColor;
+                Quaternion orbitalRot = Quaternion.Euler(190f, 0f, 0f);
+                sunLight.transform.rotation = compassRot * hoopTiltRot * orbitalRot;
             }
             else if (isTransitioningDay)
             {
-                // Sunrise Phase (isNight is false): Smoothly transitions directly from night color to day color
                 float t = Mathf.Clamp01(sunriseTimer / sunriseTransitionDuration);
-                float currentAngle = Mathf.Lerp(-10f, daySunAngle, t);
-                float currentIntensity = Mathf.Lerp(nightBrightness, dayMaxIntensity, t);
+                float currentAngle = Mathf.Lerp(0f, dayStartAngle, t); 
+                
+                sunLight.colorTemperature = GetTemperatureForAngle(currentAngle);
+                sunLight.intensity = Mathf.Lerp(0f, maxSunIntensity, t);
+                RenderSettings.ambientLight = Color.Lerp(nightAmbientColor, GetAmbientColorForAngle(currentAngle), t);
 
-                sunLight.transform.rotation = Quaternion.Euler(currentAngle, compassHeading, 0f);
-                sunLight.intensity = currentIntensity;
-                sunLight.color = Color.Lerp(nightColor, dayColor, t);
+                Quaternion orbitalRot = Quaternion.Euler(currentAngle, 0f, 0f);
+                sunLight.transform.rotation = compassRot * hoopTiltRot * orbitalRot;
             }
-            else if (timeRemainingS <= sunsetTransitionDuration)
+            else if (timePaused)
             {
-                // Sunset Phase: Smoothly transitions from day color/intensity to sunset color/brightness
-                float t = Mathf.InverseLerp(sunsetTransitionDuration, 0f, timeRemainingS);
+                sunLight.colorTemperature = GetTemperatureForAngle(dayStartAngle);
+                sunLight.intensity = maxSunIntensity;
+                RenderSettings.ambientLight = GetAmbientColorForAngle(dayStartAngle);
 
-                float currentAngle = Mathf.Lerp(daySunAngle, 0f, t);
-                float currentIntensity = Mathf.Lerp(dayMaxIntensity, sunsetMinBrightness, t);
-
-                sunLight.transform.rotation = Quaternion.Euler(currentAngle, compassHeading, 0f);
-                sunLight.intensity = currentIntensity;
-                sunLight.color = Color.Lerp(dayColor, sunsetColor, t);
+                Quaternion orbitalRot = Quaternion.Euler(dayStartAngle, 0f, 0f);
+                sunLight.transform.rotation = compassRot * hoopTiltRot * orbitalRot;
             }
             else
             {
-                // Normal daytime progression
-                sunLight.transform.rotation = Quaternion.Euler(daySunAngle, compassHeading, 0f);
-                sunLight.intensity = dayMaxIntensity;
-                sunLight.color = dayColor;
+                float dayProgress = Mathf.InverseLerp(dayLengthS, 0f, timeRemainingS);
+                float currentAngle = Mathf.Lerp(dayStartAngle, dayEndAngle, dayProgress);
+
+                sunLight.colorTemperature = GetTemperatureForAngle(currentAngle);
+                sunLight.intensity = maxSunIntensity;
+                RenderSettings.ambientLight = GetAmbientColorForAngle(currentAngle);
+
+                Quaternion orbitalRot = Quaternion.Euler(currentAngle, 0f, 0f);
+                sunLight.transform.rotation = compassRot * hoopTiltRot * orbitalRot;
             }
+        }
+    }
+
+    private float GetTemperatureForAngle(float angle)
+    {
+        float middayCenter = (dayStartAngle + dayEndAngle) * 0.5f;
+        float halfSlice = middaySliceWidth * 0.5f;
+        float sliceMin = middayCenter - halfSlice;
+        float sliceMax = middayCenter + halfSlice;
+
+        if (angle >= sliceMin && angle <= sliceMax)
+        {
+            return dayTemperature;
+        }
+        else if (angle < sliceMin)
+        {
+            return Mathf.Lerp(sunsetTemperature, dayTemperature, Mathf.InverseLerp(0f, sliceMin, angle));
+        }
+        else
+        {
+            return Mathf.Lerp(dayTemperature, sunsetTemperature, Mathf.InverseLerp(sliceMax, 180f, angle));
+        }
+    }
+
+    private Color GetAmbientColorForAngle(float angle)
+    {
+        float middayCenter = (dayStartAngle + dayEndAngle) * 0.5f;
+        float halfSlice = middaySliceWidth * 0.5f;
+        float sliceMin = middayCenter - halfSlice;
+        float sliceMax = middayCenter + halfSlice;
+
+        if (angle >= sliceMin && angle <= sliceMax)
+        {
+            return middayAmbientColor;
+        }
+        else if (angle < sliceMin)
+        {
+            return Color.Lerp(sunsetAmbientColor, middayAmbientColor, Mathf.InverseLerp(0f, sliceMin, angle));
+        }
+        else
+        {
+            return Color.Lerp(middayAmbientColor, sunsetAmbientColor, Mathf.InverseLerp(sliceMax, 180f, angle));
         }
     }
 
@@ -219,7 +317,22 @@ public class DayNightCycle : MonoBehaviour
         timeRemainingS = dayLengthS;
         sunriseTimer = 0f;
         isTransitioningDay = true;
-        timePaused = true; // Pause time automatically when a new day starts
+        timePaused = true; 
+
+        if (sunLight != null)
+        {
+            sunLight.useColorTemperature = true;
+            Quaternion compassRot = Quaternion.Euler(0f, compassHeading, 0f);
+            Quaternion hoopTiltRot = Quaternion.Euler(0f, 0f, hoopTiltZ);
+            Quaternion startRot = Quaternion.Euler(0f, 0f, 0f); 
+            sunLight.transform.rotation = compassRot * hoopTiltRot * startRot;
+
+            sunLight.colorTemperature = sunsetTemperature;
+            sunLight.intensity = 0f;
+        }
+
+        RenderSettings.ambientLight = nightAmbientColor;
+
         DayStart?.Invoke();
     }
 }
