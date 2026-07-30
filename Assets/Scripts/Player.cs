@@ -42,6 +42,9 @@ public class Player : MonoBehaviour
     [SerializeField] public GameObject bombBagShop;
     [SerializeField] public GameObject droppedGoldPrefab;
 
+    [SerializeField] public Transform roosterSpawnPoint;
+    [SerializeField] public GameObject roosterPrefab;
+
     private int startQuiverSize = 0;
     private int maxQuiverSize = 4;
     private int startBombBagSize = 0;
@@ -589,6 +592,7 @@ public class Player : MonoBehaviour
     private void SpawnRooster() {
         dayNightCycle.dayStartAngle -= 5f;
         dayNightCycle.IncreaseDayLength(30f);
+        Instantiate(roosterPrefab, roosterSpawnPoint.position, Quaternion.identity);
     }
 
     private void Use(ItemType type) {

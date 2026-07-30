@@ -205,12 +205,14 @@ MonoBehaviour:
   cameraUpTilt: 10
   cameraZOffset: 10
   ghostPrefab: {fileID: 9125636384562115356, guid: 491def86a2ed640219eea5d3704fba73, type: 3}
-  ghostSpawnsPerSecond: 3
+  ghostSpawnsPerSecond: 4
   arrowShop: {fileID: 0}
   bombShop: {fileID: 0}
   quiverShop: {fileID: 0}
   bombBagShop: {fileID: 0}
   droppedGoldPrefab: {fileID: 575649640322857749, guid: 447ae08732a2f564ab18fa5320338070, type: 3}
+  roosterSpawnPoint: {fileID: 0}
+  roosterPrefab: {fileID: 8203415952206793447, guid: 4b1c46cbd5e103f479fe5f7018548431, type: 3}
   whip: {fileID: 1802198996311432322}
   bow: {fileID: 1405018103507800851}
   bombBag: {fileID: 7209027456822695852}

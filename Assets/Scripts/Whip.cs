@@ -133,10 +133,13 @@ public class Whip : MonoBehaviour
         bool anyHit = false;
         foreach (Collider hit in hits)
         {
-            Enemy enemy = hit.GetComponent<Enemy>();
-            if (enemy != null)
+            if (hit.GetComponent<Enemy>() is Enemy enemy)
             {
                 enemy.TakeDamage(damage, hitDirection);
+            }
+            else if (hit.GetComponent<Rooster>() is Rooster rooster)
+            {
+                rooster.Hit();
             }
             if (hit.name != "Player") anyHit = true;
         }
