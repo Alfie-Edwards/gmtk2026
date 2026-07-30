@@ -4,12 +4,21 @@ public class Rock : MonoBehaviour
 {
     public int coinCount = 25;
     public GameObject coinPrefab;
+    public GameObject bigCoinPrefab;
 
     public void Break()
     {
         if (coinPrefab != null)
         {
-            for (int i = 0; i < coinCount; i++)
+            for (int i = 0; i < coinCount / 10; i++)
+            {
+                Vector2 randomCircle = Random.insideUnitCircle * 0.5f;
+                Vector3 spawnPosition = transform.position + new Vector3(randomCircle.x, 0f, randomCircle.y);
+
+                Instantiate(bigCoinPrefab, spawnPosition, Random.rotation);
+            }
+
+            for (int i = 0; i < coinCount % 10; i++)
             {
                 Vector2 randomCircle = Random.insideUnitCircle * 0.5f;
                 Vector3 spawnPosition = transform.position + new Vector3(randomCircle.x, 0f, randomCircle.y);

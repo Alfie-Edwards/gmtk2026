@@ -315,12 +315,12 @@ public class Player : MonoBehaviour
         foreach (Item item in FindObjectsByType<Item>()) {
             if (!item.enabled) continue;
             float itemPickupRadiusSq = itemPickupRadius * itemPickupRadius;
-            if (item.Age > 0.5f && (transform.position - item.transform.position).sqrMagnitude < itemPickupRadiusSq)
+            if (item.Age > 0.2f && (transform.position - item.transform.position).sqrMagnitude < itemPickupRadiusSq)
             {
-                if (CanPickupItem(item.type))
+                if (CanPickupItem(item.type, item.amount))
                 {
                     Debug.Log(item.Age);
-                    PickupItem(item.type);
+                    PickupItem(item.type, item.amount);
                     Destroy(item.gameObject);
                 }
             }
@@ -406,7 +406,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private bool CanPickupItem(ItemType type)
+    private bool CanPickupItem(ItemType type, int amount = 1)
     {
         switch (type)
         {
@@ -446,7 +446,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void PickupItem(ItemType type)
+    private void PickupItem(ItemType type, int amount = 1)
     {
         Debug.Log($"Picked up item {type}");
         switch (type)
@@ -479,11 +479,11 @@ public class Player : MonoBehaviour
             case ItemType.Gold:
                 if (mapArea == MapArea.Town)
                 {
-                    ammoBag.Add(type);
+                    ammoBag.Add(type, amount);
                 }
                 else
                 {
-                    treasureBag.Add(type);
+                    treasureBag.Add(type, amount);
                 }
                 break;
 

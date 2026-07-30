@@ -27,6 +27,7 @@ public enum ItemType {
 public class Item : MonoBehaviour
 {
     public ItemType type = ItemType.None;
+    public int amount = 1;
     private float tStart;
 
     void Awake()

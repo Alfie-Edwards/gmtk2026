@@ -7,7 +7,8 @@ public class Arrow : MonoBehaviour
     public float flySpeed = 20f;
 
     [Header("Embedding Settings")]
-    public float embedDepth = 0.2f;
+    [Tooltip("How far forward the arrow's tip should penetrate past the collision point.")]
+    public float embedDepth = 1f;
 
     private bool isEmbedded = false;
     private Rigidbody rb;
@@ -46,7 +47,7 @@ public class Arrow : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.name != "Player") Embed(collision.collider);
+        if (collision.collider.name != "Player") Embed(collision.collider, collision);
     }
 
     void OnTriggerEnter(Collider other)
@@ -54,51 +55,52 @@ public class Arrow : MonoBehaviour
         Embed(other);
     }
 
-    void Embed(Collider hitCollider)
+    void Embed(Collider hitCollider, Collision collision = null)
     {
         if (isEmbedded) return;
         isEmbedded = true;
+        Debug.Log("Embedding!");
 
-        // 1. Stop movement and make rigidBody kinematic so it stays put
-        rb.linearVelocity = Vector3.zero;
-        rb.isKinematic = true;
-
-        // 2. Since your collider is at the tip, use ClosestPoint to find where the tip touched
-        Vector3 tipHitPoint = hitCollider.ClosestPoint(col.bounds.center);
-
-        // 3. Move the arrow so that the tip stays right at the surface,
-        // plus your custom embedDepth to push the shaft in nicely.
-        // (Note: This assumes your arrow's transform/pivot is at its center or tail.
-        // If your pivot is at the tip, just use tipHitPoint + (moveDirection.normalized * embedDepth).)
-
-        transform.position = tipHitPoint + (moveDirection.normalized * embedDepth);
-
-        // 4. Disable hit detection (turn off collider)
-        Debug.Log(col);
-        if (col != null)
+        if (hitCollider.GetComponent<Enemy>() is Enemy enemy)
         {
-            col.enabled = false;
-        }
-
-        // 5. Deal damage if it hit an enemy
-        Enemy enemy = hitCollider.GetComponent<Enemy>();
-        if (enemy != null)
-        {
+            Debug.Log("Hit enemy with arrow!");
             enemy.TakeDamage(75f, moveDirection, 0.5f);
+            if (enemy.currentHealth <= 0f)
+            {
+                // Special case where arrow hits enemy and kills it.
+                rb.isKinematic = false;
+                rb.useGravity = true;
+                rb.linearVelocity = Vector3.zero;
+                GetComponent<Item>().enabled = true;
+                return;
+            }
         }
         else
         {
             GetComponent<Item>().enabled = true;
         }
 
-        // Activate target
-        Target target = hitCollider.GetComponent<Target>();
-        if (target != null)
+        if (hitCollider.GetComponent<Target>() is Target target)
         {
             target.Trigger();
+        }   
+
+        rb.linearVelocity = Vector3.zero;
+        rb.isKinematic = true;
+
+        // Use the actual contact point if available to avoid floating, falling back to ClosestPoint
+        Vector3 hitPoint = (collision != null && collision.contactCount > 0) 
+            ? collision.GetContact(0).point 
+            : hitCollider.ClosestPoint(transform.position);
+
+        // Push the arrow inward by the embed depth along its travel direction
+        transform.position = hitPoint + (moveDirection.normalized * embedDepth);
+
+        if (col != null)
+        {
+            col.enabled = false;
         }
 
-        // 6. Parent itself to the hit object so it moves with it
         transform.SetParent(hitCollider.transform);
     }
 }

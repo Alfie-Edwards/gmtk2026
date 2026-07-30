@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2724598610049928970}
   - component: {fileID: -7680322994478928639}
   - component: {fileID: -3393588014482720206}
+  - component: {fileID: 8963342932580542214}
   m_Layer: 0
   m_Name: Bomb
   m_TagString: Untagged
@@ -50,7 +51,7 @@ Rigidbody:
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -60,7 +61,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &-3393588014482720206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,6 +80,29 @@ MonoBehaviour:
   explosionRadius: 4
   explosionDamage: 250
   explosionPrefab: {fileID: 6837697977218409677, guid: 0e071cc2df227498e8b80d09d47a262f, type: 3}
+--- !u!136 &8963342932580542214
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4136665910395667612}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.05
+  m_Height: 0.43
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.195, z: 0}
 --- !u!1001 &7603003552261348410
 PrefabInstance:
   m_ObjectHideFlags: 0

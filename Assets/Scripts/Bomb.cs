@@ -13,59 +13,45 @@ public class Bomb : MonoBehaviour
     public float explosionDamage = 250f;
     public GameObject explosionPrefab;
 
-    private Vector3 startPosition;
-    private Vector3 targetPosition;
-    private float elapsedTime = 0f;
     private Rigidbody rb;
     private bool hasExploded = false;
 
     public void Initialize(Vector3 throwDirection)
     {
         rb = GetComponent<Rigidbody>();
-        // Keep it kinematic during custom arc flight so physics doesn't interfere
-        rb.isKinematic = true;
-
-        startPosition = transform.position;
+        // Ensure it uses true physics instead of being kinematic
+        rb.isKinematic = false;
+        rb.useGravity = true;
 
         throwDirection.y = 0f;
         throwDirection.Normalize();
 
-        targetPosition = startPosition + (throwDirection * totalDistance);
+        // Calculate required initial velocities to match the desired arc and distance
+        // Horizontal velocity: distance / time
+        float horizontalSpeed = totalDistance / flightDuration;
+        Vector3 horizontalVelocity = throwDirection * horizontalSpeed;
+
+        // Vertical velocity: using kinematic equation s = ut + 0.5at^2 solved for u
+        // s = peakHeight, t = flightDuration / 2 (time to peak), a = gravity (-Physics.gravity.y)
+        float gravity = Mathf.Abs(Physics.gravity.y);
+        float timeToPeak = flightDuration * 0.5f;
+        float verticalVelocityY = (peakHeight + 0.5f * gravity * timeToPeak * timeToPeak) / timeToPeak;
+
+        // Combine into the final throw velocity vector
+        rb.linearVelocity = new Vector3(horizontalVelocity.x, verticalVelocityY, horizontalVelocity.z);
     }
 
-    void Update()
-    {
-        if (hasExploded) return;
-
-        elapsedTime += Time.deltaTime;
-        float t = Mathf.Clamp01(elapsedTime / flightDuration);
-
-        Vector3 currentPos = Vector3.Lerp(startPosition, targetPosition, t);
-        float heightOffset = 4 * peakHeight * t * (1f - t);
-        currentPos.y = Mathf.Lerp(startPosition.y, targetPosition.y, t) + heightOffset;
-
-        transform.position = currentPos;
-
-        if (t >= 1f)
-        {
-            Explode();
-        }
-    }
-
-    // Trigger explosion early if it hits a wall, floor, or enemy collider
     void OnCollisionEnter(Collision collision)
     {
         if (hasExploded) return;
+        if (collision.collider.GetComponent<Player>() != null) return;
         Explode();
     }
 
-    // If using trigger colliders for hits
     void OnTriggerEnter(Collider other)
     {
         if (hasExploded) return;
-        // Optional: Ignore the player if the bomb spawns right on top of them
         if (other.GetComponent<Player>() != null) return;
-
         Explode();
     }
 
@@ -92,15 +78,16 @@ public class Bomb : MonoBehaviour
                 continue;
             }
 
-            if (hit.GetComponent<Enemy>() is Enemy enemy)
+            if ((hit.GetComponent<Enemy>() ?? hit.GetComponentInParent<Enemy>()) is Enemy enemy)
             {
-                Vector3 hitVector = hit.transform.position - center;
+                Vector3 hitVector = enemy.transform.position - center;
                 float effectAmount = hitVector.sqrMagnitude / (explosionRadius * explosionRadius);
-                if (hit.GetComponent<EnemyRock>() is EnemyRock rockEnemy)
+                
+                if (enemy.GetComponent<EnemyRock>() is EnemyRock rockEnemy)
                 {
                     enemy.TakeDamage(explosionDamage * 2.5f * effectAmount, hitVector, 5 * effectAmount);
                 }
-                else if (hit.GetComponent<EnemyGhost>() is EnemyGhost ghost)
+                else if (enemy.GetComponent<EnemyGhost>() is EnemyGhost ghost)
                 {
                     enemy.TakeDamage(1e10f, Vector3.zero);
                 }
@@ -108,7 +95,6 @@ public class Bomb : MonoBehaviour
                 {
                     enemy.TakeDamage(explosionDamage * effectAmount, hitVector, 5 * effectAmount);
                 }
-
             }
         }
 

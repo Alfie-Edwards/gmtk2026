@@ -33,7 +33,7 @@ public class Enemy : MonoBehaviour
 
     [Header("Health & Combat")]
     public float maxHealth = 100f;
-    private float currentHealth;
+    public float currentHealth { get; private set; }
     public float hitCooldown = 0.5f;
     private float lastHitTime = -999f;
 
@@ -44,6 +44,7 @@ public class Enemy : MonoBehaviour
     public float contactForce = 10f;
 
     [Header("Loot Settings")]
+    public GameObject bigCoinPrefab;
     public GameObject coinPrefab;
     public GameObject xxxPrefab;
     public int minCoins = 1;
@@ -165,27 +166,25 @@ public class Enemy : MonoBehaviour
         // Drop all embedded arrows before destroying or spawning loot
         foreach (Transform child in transform)
         {
-            Arrow arrow = child.GetComponent<Arrow>();
-            if (arrow != null)
+            if (child.GetComponent<Arrow>() is Arrow arrow)
             {
                 child.SetParent(null);
 
-                Rigidbody arrowRb = child.GetComponent<Rigidbody>();
-                if (arrowRb != null)
+                if (child.GetComponent<Rigidbody>() is Rigidbody arrowRb)
                 {
                     arrowRb.isKinematic = false;
                     arrowRb.useGravity = true;
-#if UNITY_6000_0_OR_NEWER
                     arrowRb.linearVelocity = Vector3.zero;
-#else
-                    arrowRb.velocity = Vector3.zero;
-#endif
                 }
 
-                Collider arrowCol = child.GetComponent<Collider>();
-                if (arrowCol != null)
+                if (child.GetComponent<Collider>() is Collider arrowCol)
                 {
                     arrowCol.enabled = true;
+                }
+
+                if (child.GetComponent<Item>() is Item item)
+                {
+                    item.enabled = true;
                 }
             }
         }
@@ -201,9 +200,18 @@ public class Enemy : MonoBehaviour
 
     void SpawnLoot()
     {
-        if (coinPrefab != null)
+        if (coinPrefab != null && bigCoinPrefab != null)
         {
             int coinCount = Random.Range(minCoins, maxCoins + 1);
+
+            while (coinCount >= 10)
+            {
+                Vector2 randomCircle = Random.insideUnitCircle * coinSpawnSpread;
+                Vector3 spawnPosition = transform.position + new Vector3(randomCircle.x, 0f, randomCircle.y);
+
+                Instantiate(bigCoinPrefab, spawnPosition, Random.rotation);
+                coinCount -= 10;
+            }
 
             for (int i = 0; i < coinCount; i++)
             {

@@ -88,6 +88,7 @@ public class EnemyGhost : MonoBehaviour
     {
         float step = moveSpeed * Time.deltaTime;
         transform.position += (playerPosition - transform.position).normalized * step;
+        transform.position += Vector3.up * Mathf.Lerp(0, playerPosition.y - transform.position.y, Time.deltaTime);
     }
 
     IEnumerator DashRoutine()

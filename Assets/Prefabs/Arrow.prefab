@@ -76,7 +76,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!136 &7561175735657315249
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -96,10 +96,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.05
-  m_Height: 0.25
+  m_Radius: 0.1
+  m_Height: 2
   m_Direction: 2
-  m_Center: {x: 0, y: 0, z: 0.875}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &463151207225921846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,12 +107,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7136933982424411359}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a1dc3984bfa0b47bab67ff353c6392a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
   type: 10
+  amount: 1
 --- !u!1001 &1972111572221281473
 PrefabInstance:
   m_ObjectHideFlags: 0
