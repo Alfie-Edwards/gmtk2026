@@ -619,25 +619,25 @@ public class Player : MonoBehaviour
     }
 
     public void GetHit(Vector3 impulse) {
-        // RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PlayerGetsHit");
-        // if (Time.time < lastHitTime + hitCooldown) return;
-        // lastHitTime = Time.time;
-        // knockbackVelocity += impulse;
-        // if (dayNightCycle.isNight)
-        // {
-        //     if (treasureBag.Amount(ItemType.Gold) > 0)
-        //     {
-        //         DropGold(10);
-        //     }
-        //     else
-        //     {
-        //         Spawn();
-        //     }
-        // }
-        // else
-        // {
-        //     dayNightCycle.timeRemainingS -= 5f;
-        // }
+        RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PlayerGetsHit");
+        if (Time.time < lastHitTime + hitCooldown) return;
+        lastHitTime = Time.time;
+        knockbackVelocity += impulse;
+        if (dayNightCycle.isNight)
+        {
+            if (treasureBag.Amount(ItemType.Gold) > 0)
+            {
+                DropGold(10);
+            }
+            else
+            {
+                Spawn();
+            }
+        }
+        else
+        {
+            dayNightCycle.timeRemainingS -= 5f;
+        }
     }
 
     private void DropGold(int amount) {
