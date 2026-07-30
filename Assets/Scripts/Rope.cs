@@ -40,7 +40,7 @@ public class Rope : MonoBehaviour
         InitializeWhip();
     }
 
-    void InitializeWhip()
+    public void InitializeWhip()
     {
         if (startTransform == null || endTransform == null) return;
 

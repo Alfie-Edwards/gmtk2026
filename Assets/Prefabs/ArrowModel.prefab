@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7181266240526570031}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ArrowModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 1153457923153421209}
   - component: {fileID: 695224756109846173}
   - component: {fileID: 2941541420321990367}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 2596071455907787169}
   - component: {fileID: 1311144737143276113}
   - component: {fileID: 5426841506442616779}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

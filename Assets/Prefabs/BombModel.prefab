@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7988226904049933045}
   - component: {fileID: 530418551030871981}
   - component: {fileID: 1549962385150425124}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 5528701423260749091}
   - component: {fileID: 9010005372119483699}
   - component: {fileID: 2167444116962727492}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,7 +237,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8392997701363428831}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: BombModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}

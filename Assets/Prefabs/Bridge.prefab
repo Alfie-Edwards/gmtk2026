@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3311823851730113570}
   - component: {fileID: 8504125859349158501}
   - component: {fileID: 683985444460080938}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 5745266160841604373}
   - component: {fileID: 8718817767904217193}
   - component: {fileID: 6353517749694973246}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 5825334208681454375}
   - component: {fileID: 2676957394528706788}
   - component: {fileID: 6805910440667431174}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -281,7 +281,7 @@ GameObject:
   - component: {fileID: 9149225967552278513}
   - component: {fileID: 8101940791383839970}
   - component: {fileID: 8631365398616614966}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -371,7 +371,7 @@ GameObject:
   - component: {fileID: 2554873752373327266}
   - component: {fileID: 8610852548927416970}
   - component: {fileID: -1923580262996853480}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Bridge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -413,6 +413,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Bridge
   fallDuration: 2
   hingePoint: {fileID: 3600103222412405498}
+  rotationAxis: {x: 1, y: 0, z: 0}
 --- !u!65 &-1923580262996853480
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -443,7 +444,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3600103222412405498}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -476,7 +477,7 @@ GameObject:
   - component: {fileID: 7848589722437186422}
   - component: {fileID: 2974572118049198811}
   - component: {fileID: 7320002055198883089}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

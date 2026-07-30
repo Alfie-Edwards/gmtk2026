@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4217980673060440391}
   - component: {fileID: 8139289666237849004}
   - component: {fileID: 4873363529147712928}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,7 +99,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4535615541216728042}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: BowModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 3511426385425878402}
   - component: {fileID: 2897067388538649914}
   - component: {fileID: 8297310834406563432}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 6034812191188206553}
   - component: {fileID: 5473808649116918372}
   - component: {fileID: 8957924474435921388}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -316,7 +316,7 @@ GameObject:
   - component: {fileID: 6154902745761042979}
   - component: {fileID: 8748222203017429889}
   - component: {fileID: 668748537661737836}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

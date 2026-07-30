@@ -142,4 +142,9 @@ public class Whip : MonoBehaviour
         }
         return anyHit;
     }
+
+    public void Reset()
+    {
+        rope.InitializeWhip();
+    }
 }

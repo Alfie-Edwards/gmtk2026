@@ -17,6 +17,7 @@ public class Hotbar : MonoBehaviour
     [SerializeField] public bool enableSelection;
     [SerializeField] public List<ItemSprite> sprites;
     [SerializeField] public GameObject itemTemplate;
+    [SerializeField] public bool show1 = false;
 
     private Bag bag_;
     private int iSelected;
@@ -104,10 +105,14 @@ public class Hotbar : MonoBehaviour
             Image icon = uiItem.GetComponentsInChildren<Image>()[1];
             icon.sprite = GetSprite(item.type);
             icon.SetAllDirty();
+            if (icon.sprite == null)
+            {
+                icon.gameObject.SetActive(false);
+            }
 
             // Set the amount text
             TextMeshProUGUI count = uiItem.GetComponentInChildren<TextMeshProUGUI>();
-            if (item.count > 1 || bag_.persistItems)
+            if (show1 || item.count > 1 || bag_.persistItems)
             {
                 if (limits.ContainsKey(item.type)) {
                     count.text = $"{item.count} / {limits[item.type]}";

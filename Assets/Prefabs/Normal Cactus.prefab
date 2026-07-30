@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2105369562808805944}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 5665639638516379907}
   - component: {fileID: 2669371914514842879}
   - component: {fileID: 5749953476100193515}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 6066809270282683062}
   - component: {fileID: 7886186494996032649}
   - component: {fileID: 3012192548096332907}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Normal Cactus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,8 +174,8 @@ MonoBehaviour:
   gravity: 0
   jumpForce: 2.5
   detectionRadius: 0
-  maxHealth: 100
-  hitCooldown: 0
+  maxHealth: 150
+  hitCooldown: 0.1
   knockbackMagnitude: 0
   knockbackDamping: 999
   contactForce: 20
@@ -284,6 +284,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: a15b2451b65787e4885c1ad49377ed5a, type: 3}
       propertyPath: m_Name
       value: cactus
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a15b2451b65787e4885c1ad49377ed5a, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

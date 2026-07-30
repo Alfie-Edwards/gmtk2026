@@ -80,34 +80,35 @@ public class Bomb : MonoBehaviour
 
         foreach (Collider hit in hits)
         {
-            Rock rock = hit.GetComponent<Rock>();
-            if (rock != null)
+            if (hit.GetComponent<Rock>() is Rock rock)
             {
                 rock.Break();
                 continue;
             }
 
-            CrackedWall wall = hit.GetComponent<CrackedWall>();
-            if (wall != null)
+            if (hit.GetComponent<CrackedWall>() is CrackedWall wall)
             {
                 wall.Break();
                 continue;
             }
 
-            Enemy enemy = hit.GetComponent<Enemy>();
-            if (enemy != null)
+            if (hit.GetComponent<Enemy>() is Enemy enemy)
             {
                 Vector3 hitVector = hit.transform.position - center;
                 float effectAmount = hitVector.sqrMagnitude / (explosionRadius * explosionRadius);
-                EnemyRock rockEnemy = hit.GetComponent<EnemyRock>();
-                if (rockEnemy != null)
+                if (hit.GetComponent<EnemyRock>() is EnemyRock rockEnemy)
                 {
                     enemy.TakeDamage(explosionDamage * 2.5f * effectAmount, hitVector, 5 * effectAmount);
+                }
+                else if (hit.GetComponent<EnemyGhost>() is EnemyGhost ghost)
+                {
+                    enemy.TakeDamage(1e10f, Vector3.zero);
                 }
                 else
                 {
                     enemy.TakeDamage(explosionDamage * effectAmount, hitVector, 5 * effectAmount);
                 }
+
             }
         }
 

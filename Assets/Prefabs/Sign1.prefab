@@ -540,6 +540,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Billboard
       objectReference: {fileID: 0}
+    - target: {fileID: 8354195630468810829, guid: ff2b02f41cf8043aabc7873a642b6fb0, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

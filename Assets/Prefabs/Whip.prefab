@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2929644885617440899}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: EndPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 7696652988658892329}
   - component: {fileID: 7793095966691314461}
   - component: {fileID: 2762211843412985140}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Whip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -230,7 +230,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6200936734468639441}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: StartPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

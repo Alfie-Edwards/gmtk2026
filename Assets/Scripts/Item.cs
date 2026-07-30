@@ -27,5 +27,13 @@ public enum ItemType {
 public class Item : MonoBehaviour
 {
     public ItemType type = ItemType.None;
+    private float tStart;
+
+    void Awake()
+    {
+        tStart = Time.time;
+    }
+
+    public float Age { get => Time.time - tStart; }
 
 }

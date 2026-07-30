@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7844387982078029637}
   - component: {fileID: 8450693769546121584}
   - component: {fileID: 2691973348801264662}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 6346263222439854638}
   - component: {fileID: 225243019313493696}
   - component: {fileID: 2744502329264323473}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: CactusSpike
   m_TagString: Untagged
   m_Icon: {fileID: 0}

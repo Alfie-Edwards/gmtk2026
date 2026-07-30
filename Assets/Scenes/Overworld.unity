@@ -251,6 +251,94 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8811634843850132643, guid: 2803177a64b9fb84e85aefe70723b97d, type: 3}
   m_PrefabInstance: {fileID: 1158277284156527210}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &346666161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 346666162}
+  - component: {fileID: 346666165}
+  - component: {fileID: 346666164}
+  - component: {fileID: 346666163}
+  m_Layer: 5
+  m_Name: Treasure
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &346666162
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 346666161}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1670144254}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 4, y: -72}
+  m_SizeDelta: {x: 0, y: 8}
+  m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &346666163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 346666161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.HorizontalLayoutGroup
+  m_Padding:
+    m_Left: 4
+    m_Right: 4
+    m_Top: 4
+    m_Bottom: 4
+  m_ChildAlignment: 0
+  m_Spacing: 8
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
+--- !u!114 &346666164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 346666161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f560572cbde0640a7a46a3d422240473, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BagView
+  enableSelection: 0
+  sprites: []
+  itemTemplate: {fileID: 6586581150101938763, guid: 39d38b2517e25464dac44338f6019f73, type: 3}
+  show1: 1
+--- !u!222 &346666165
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 346666161}
+  m_CullTransparentMesh: 1
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -497,6 +585,7 @@ MonoBehaviour:
   - type: 6
     sprite: {fileID: 21300000, guid: d14fae3fecfcb43f78d65b654d63d839, type: 3}
   itemTemplate: {fileID: 6586581150101938763, guid: 29b0c474c655d442ba56d88882130acc, type: 3}
+  show1: 0
 --- !u!222 &655745755
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1229,8 +1318,9 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 655745752}
-  - {fileID: 2006800383}
   - {fileID: 1960720806}
+  - {fileID: 2006800383}
+  - {fileID: 346666162}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1494,7 +1584,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2006800382}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1502,9 +1592,9 @@ RectTransform:
   m_Father: {fileID: 1670144254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 727}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 4, y: -4}
+  m_SizeDelta: {x: 0, y: 8}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &2006800385
 MonoBehaviour:
@@ -1519,10 +1609,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.HorizontalLayoutGroup
   m_Padding:
-    m_Left: 8
-    m_Right: 8
-    m_Top: 8
-    m_Bottom: 8
+    m_Left: 4
+    m_Right: 4
+    m_Top: 4
+    m_Bottom: 4
   m_ChildAlignment: 0
   m_Spacing: 8
   m_ChildForceExpandWidth: 0
@@ -1553,6 +1643,7 @@ MonoBehaviour:
   - type: 9
     sprite: {fileID: 21300000, guid: 12cb08c1af2bc4b30a621ab893381596, type: 3}
   itemTemplate: {fileID: 6586581150101938763, guid: 29b0c474c655d442ba56d88882130acc, type: 3}
+  show1: 1
 --- !u!222 &2006800387
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2710,6 +2801,10 @@ PrefabInstance:
       propertyPath: dummyGoldPrefab
       value: 
       objectReference: {fileID: 575649640322857749, guid: ca4ffe134b4384d5a8891b2077eeafa3, type: 3}
+    - target: {fileID: 1992119046202100588, guid: ad99cc5ad44a44d058d72ed1a421e40f, type: 3}
+      propertyPath: treasureDisplay
+      value: 
+      objectReference: {fileID: 346666164}
     - target: {fileID: 1992119046202100588, guid: ad99cc5ad44a44d058d72ed1a421e40f, type: 3}
       propertyPath: itemPickupRadius
       value: 1

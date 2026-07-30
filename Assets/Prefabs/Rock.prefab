@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7861518284079145703}
   - component: {fileID: 8872798085583713424}
   - component: {fileID: 3643452383294170481}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,6 +120,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 1561d45ba9c4694439f68c4a1f43603b, type: 3}
       propertyPath: m_Name
       value: mineable rock
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1561d45ba9c4694439f68c4a1f43603b, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

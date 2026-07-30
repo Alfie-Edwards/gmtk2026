@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     [SerializeField] public DayNightCycle dayNightCycle;
     [SerializeField] public Hotbar hotbar;
     [SerializeField] public Hotbar ammoDisplay;
+    [SerializeField] public Hotbar treasureDisplay;
     [SerializeField] public Transform camera;
     [SerializeField] public float cameraDist = 8f;
     [SerializeField] public float cameraAngle = 45f;
@@ -37,7 +38,7 @@ public class Player : MonoBehaviour
     [SerializeField] public GameObject bombShop;
     [SerializeField] public GameObject quiverShop;
     [SerializeField] public GameObject bombBagShop;
-    [SerializeField] public GameObject dummyGoldPrefab;
+    [SerializeField] public GameObject droppedGoldPrefab;
 
     private int startQuiverSize = 0;
     private int maxQuiverSize = 4;
@@ -93,6 +94,7 @@ public class Player : MonoBehaviour
     private Quaternion lookTarget;
     private Bag itemsBag;
     private Bag ammoBag;
+    private Bag treasureBag;
     private Vector3 knockbackVelocity;
     private Vector3 cameraOffset;
     void Start()
@@ -102,12 +104,21 @@ public class Player : MonoBehaviour
         quiverSize = startQuiverSize;
         bombBagSize = startBombBagSize;
 
-        // init objects
+        // bags
         itemsBag = new Bag();
-        ammoBag = new Bag();
-        ammoBag.persistItems = true;
+        ammoBag = new Bag
+        {
+            persistItems = true
+        };
+        treasureBag = new Bag();
+        itemsBag.OnItemAdded += OnItemPickedup;
+        ammoBag.OnItemAdded += OnItemPickedup;
+        treasureBag.OnItemAdded += OnItemPickedup;
+
+        // Hookup to and init stuff in the world.
         hotbar.bag = itemsBag;
         ammoDisplay.bag = ammoBag;
+        treasureDisplay.bag = treasureBag;
         controller = GetComponent<CharacterController>();
         PickupItem(ItemType.Whip);
         cameraOffset = new Vector3(0f, cameraDist * Mathf.Sin(cameraAngle * Mathf.Deg2Rad), cameraZOffset + cameraDist * -Mathf.Cos(cameraAngle * Mathf.Deg2Rad));
@@ -150,6 +161,7 @@ public class Player : MonoBehaviour
 
         // 3. Re-enable the CharacterController
         if (controller != null) controller.enabled = true;
+        whip.Reset();
     }
 
     void Update()
@@ -161,11 +173,6 @@ public class Player : MonoBehaviour
         UseItems();
         UpdateWeapons();
         MapAreaStuff();
-
-        if (Keyboard.current.gKey.wasPressedThisFrame)
-        {
-            //SpawnGhost();
-        }
 
         if (dayNightCycle.timeRemainingS < 12f && (dayNightCycle.timeRemainingS + Time.deltaTime) >= 12f)
         {
@@ -214,6 +221,7 @@ public class Player : MonoBehaviour
         {
             case MapArea.Town:
                 TownMusic.start();
+                StartCoroutine(treasureBag.EmptyInto(ammoBag, 10f));
                 WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 if (win)
@@ -289,10 +297,11 @@ public class Player : MonoBehaviour
         foreach (Item item in FindObjectsByType<Item>()) {
             if (!item.enabled) continue;
             float itemPickupRadiusSq = itemPickupRadius * itemPickupRadius;
-            if ((transform.position - item.transform.position).sqrMagnitude < itemPickupRadiusSq)
+            if (item.Age > 0.5f && (transform.position - item.transform.position).sqrMagnitude < itemPickupRadiusSq)
             {
                 if (CanPickupItem(item.type))
                 {
+                    Debug.Log(item.Age);
                     PickupItem(item.type);
                     Destroy(item.gameObject);
                 }
@@ -384,33 +393,21 @@ public class Player : MonoBehaviour
         switch (type)
         {
             case ItemType.Gold:
-                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PickupCoin");
-                return true;
             case ItemType.Whisky:
-                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_SlurpCoffee");
-                TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 return true;
 
             case ItemType.Whip:
             case ItemType.Bow:
-                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PickupMajorItem");
-                return true;
             case ItemType.BombBag:
-                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PickupMajorItem");
-                return true;
             case ItemType.Pickaxe:
-                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PickupMajorItem");
                 return itemsBag.Amount(type) == 0;
 
             case ItemType.Dynamite:
-
-                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PickupMajorItem");
                 return itemsBag.Has(ItemType.BombBag) && ammoBag.Amount(ItemType.Dynamite) < bombBagSize;
 
             case ItemType.Arrow:
                 return itemsBag.Has(ItemType.Bow) && ammoBag.Amount(ItemType.Arrow) < quiverSize;
 
-            // Upgrades
             case ItemType.Seed:
                 return FindObjectsByType<PlantSpot>().Any(x => !x.Growing);
 
@@ -462,6 +459,16 @@ public class Player : MonoBehaviour
                 break;
 
             case ItemType.Gold:
+                if (mapArea == MapArea.Town)
+                {
+                    ammoBag.Add(type);
+                }
+                else
+                {
+                    treasureBag.Add(type);
+                }
+                break;
+
             case ItemType.Dynamite:
             case ItemType.Arrow:
                 ammoBag.Add(type);
@@ -505,6 +512,29 @@ public class Player : MonoBehaviour
 
             case ItemType.Rooster:
                 SpawnRooster();
+                break;
+        }
+    }
+
+    private void OnItemPickedup(ItemType type)
+    {
+    
+        switch (type)
+        {
+            case ItemType.Gold:
+                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PickupCoin");
+                break;
+
+            case ItemType.Whisky:
+                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_SlurpCoffee");
+                TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                break;
+
+            case ItemType.Whip:
+            case ItemType.Bow:
+            case ItemType.BombBag:
+            case ItemType.Pickaxe:
+                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PickupMajorItem");
                 break;
         }
     }
@@ -579,7 +609,7 @@ public class Player : MonoBehaviour
         knockbackVelocity += impulse;
         if (dayNightCycle.isNight)
         {
-            if (ammoBag.Amount(ItemType.Gold) > 0)
+            if (treasureBag.Amount(ItemType.Gold) > 0)
             {
                 DropGold(10);
             }
@@ -595,18 +625,18 @@ public class Player : MonoBehaviour
     }
 
     private void DropGold(int amount) {
-        int totalGold = ammoBag.Amount(ItemType.Gold);
+        int totalGold = treasureBag.Amount(ItemType.Gold);
         if (amount > totalGold) {
             amount = totalGold;
         }
-        ammoBag.Remove(ItemType.Gold, amount);
+        treasureBag.Remove(ItemType.Gold, amount);
 
         if (FindObjectsByType<RandomFlingOnSpawn>().Length < 25)
         {
             if (amount > 25) amount = 25;
             for (int i = 0; i != amount; ++i)
             {
-                Instantiate(dummyGoldPrefab, transform.position, Random.rotation);
+                Instantiate(droppedGoldPrefab, transform.position, Random.rotation);
             }
         }
     }

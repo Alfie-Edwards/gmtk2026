@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5004539333767823922}
   - component: {fileID: -3450478895281911920}
   - component: {fileID: -2378225824412942418}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: DummyGold
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 2166023454351525045}
   - component: {fileID: 1560485703530959590}
   - component: {fileID: 2338574537959906737}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -190,7 +190,7 @@ GameObject:
   - component: {fileID: 7264078943542885}
   - component: {fileID: 7676765234780251076}
   - component: {fileID: 362461613656351193}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
