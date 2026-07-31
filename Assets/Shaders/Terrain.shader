@@ -4,7 +4,6 @@ Shader "Custom/TriplanarFloor"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Color ("Tint Color", Color) = (1,1,1,1)
-        _Tiling ("Tiling", Float) = 1.0
     }
 
     SubShader
@@ -17,7 +16,7 @@ Shader "Custom/TriplanarFloor"
         }
         LOD 100
 
-        // --- FORWARD PASS (Your custom triplanar look) ---
+        // --- FORWARD PASS ---
         Pass
         {
             Name "UniversalForward"
@@ -40,7 +39,7 @@ Shader "Custom/TriplanarFloor"
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _Color;
-                float _Tiling;
+                float4 _MainTex_ST; // xy = Tiling, zw = Offset
             CBUFFER_END
 
             struct Attributes
@@ -97,9 +96,10 @@ Shader "Custom/TriplanarFloor"
                 float3 blend = abs(normalWS);
                 blend /= (blend.x + blend.y + blend.z);
 
-                float2 uvX = input.worldPos.zy * _Tiling;
-                float2 uvY = input.worldPos.xz * _Tiling;
-                float2 uvZ = input.worldPos.xy * _Tiling;
+                // Apply Tiling (xy) and Offset (zw) from the Material Inspector
+                float2 uvX = (input.worldPos.zy * _MainTex_ST.xy) + _MainTex_ST.zw;
+                float2 uvY = (input.worldPos.xz * _MainTex_ST.xy) + _MainTex_ST.zw;
+                float2 uvZ = (input.worldPos.xy * _MainTex_ST.xy) + _MainTex_ST.zw;
 
                 float4 colX = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvX);
                 float4 colY = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvY);
@@ -118,14 +118,10 @@ Shader "Custom/TriplanarFloor"
                 Light mainLight = GetMainLight();
                 #endif
 
-                // Diffuse lighting (NdotL) combined with shadows
                 float NdotL = saturate(dot(normalWS, mainLight.direction));
                 float3 lighting = mainLight.color * (NdotL * mainLight.shadowAttenuation);
-
-                // Add ambient/global illumination so unlit areas aren't pitch black
                 float3 ambient = SampleSH(normalWS);
 
-                // Apply lighting to the final texture color
                 finalColor.rgb *= (lighting + ambient);
 
                 return finalColor;
