@@ -337,12 +337,12 @@ public class Player : MonoBehaviour
             {
                 if (dayNightCycle.isNight)
                 {
-                    saloon.message = "go to bed?";
+                    saloon.message = "go to sleep?";
                     if (Keyboard.current.zKey.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame || Keyboard.current.xKey.wasPressedThisFrame) dayNightCycle.SetDay();
                 }
-                else if (!dayNightCycle.timePaused)
+                else
                 {
-                    saloon.message = "come back at the end of the day";
+                    saloon.message = "Come back at the end of the day.";
                 }
                 saloon.Show();
             }
