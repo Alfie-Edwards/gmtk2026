@@ -78,6 +78,15 @@ public class DayNightCycle : MonoBehaviour
             Destroy(currentWilderness);
             currentWilderness = Instantiate(wildernessPrefab, pos, rot, parent);
         }
+
+        // Destroy all drops from the ground.
+        foreach (Item item in FindObjectsByType<Item>())
+        {
+            if (item.transform.position.z >= 0 && (item.type == ItemType.Gold || item.type == ItemType.Whisky))
+            {
+                Destroy(item.gameObject);
+            }
+        }
     }
 
     void Start()
