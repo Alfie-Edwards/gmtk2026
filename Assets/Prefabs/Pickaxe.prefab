@@ -80,7 +80,7 @@ MonoBehaviour:
   swingDuration: 0.4
   swingOffset: {x: 0, y: 0, z: -0.8}
   swingRotationOffset: {x: 80, y: 0, z: 0}
-  hitRadius: 1
+  hitRadius: 0.2
   hitPoint: {fileID: 7414474821479838494}
 --- !u!1001 &56270582937779719
 PrefabInstance:

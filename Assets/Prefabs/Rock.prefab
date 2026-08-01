@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 569db9533e63b411f83234464b8e46f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Rock
-  coinCount: 20
+  coinCount: 15
   coinPrefab: {fileID: 575649640322857749, guid: 447ae08732a2f564ab18fa5320338070, type: 3}
   bigCoinPrefab: {fileID: 575649640322857749, guid: 36cfc354e13ba1d4f947b51d4da7fea3, type: 3}
 --- !u!65 &3643452383294170481

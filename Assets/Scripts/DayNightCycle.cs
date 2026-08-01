@@ -93,6 +93,13 @@ public class DayNightCycle : MonoBehaviour
 
     public void ResetWilderness()
     {
+        foreach (Item item in FindObjectsByType<Item>())
+        {
+            if (item.transform.position.z >= 0 && (item.type == ItemType.Gold || item.type == ItemType.Whisky))
+            {
+                Destroy(item.gameObject);
+            }
+        }
         if (currentWilderness != null && wildernessPrefab != null)
         {
             Transform t = currentWilderness.transform;
@@ -102,14 +109,6 @@ public class DayNightCycle : MonoBehaviour
 
             Destroy(currentWilderness);
             currentWilderness = Instantiate(wildernessPrefab, pos, rot, parent);
-        }
-
-        foreach (Item item in FindObjectsByType<Item>())
-        {
-            if (item.transform.position.z >= 0 && (item.type == ItemType.Gold || item.type == ItemType.Whisky))
-            {
-                Destroy(item.gameObject);
-            }
         }
     }
 
