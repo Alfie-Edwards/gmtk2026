@@ -1473,6 +1473,7 @@ MonoBehaviour:
   currentWilderness: {fileID: 1253079320}
   dayTemperature: 5800
   sunsetTemperature: 1500
+  progressSmoothingSpeed: 8
 --- !u!4 &1818425924
 Transform:
   m_ObjectHideFlags: 0

@@ -8,16 +8,16 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField] private float startDayLengthS = 30;
 
     [Header("UI & Lighting References")]
-    public TextMeshProUGUI timerText;         // Drag your UI Text here
-    public Light sunLight;                    // Drag your directional light here
+    public TextMeshProUGUI timerText;            // Drag your UI Text here
+    public Light sunLight;                       // Drag your directional light here
     public CanvasGroup sunriseFadeCanvasGroup; // Drag a UI Panel covering the screen with a CanvasGroup component here
 
     [Header("Clean Orbit Controls")]
     [Range(0f, 180f)]
-    public float dayStartAngle = 0f;          // 1. Angle the sun settles at after sunrise
+    public float dayStartAngle = 0f;            // 1. Angle the sun settles at after sunrise
     [Range(0f, 180f)]
-    public float dayEndAngle = 90f;           // 2. Angle the sun reaches when timer hits zero
-    public float hoopTiltZ = 0f;              // 3. Rotate the hoop sideways (Z-axis roll) about its path plane
+    public float dayEndAngle = 90f;             // 2. Angle the sun reaches when timer hits zero
+    public float hoopTiltZ = 0f;                // 3. Rotate the hoop sideways (Z-axis roll) about its path plane
     public float compassHeading = 0f;         // 4. Rotate the whole system about the Y-axis (compass heading)
 
     [Header("Midday Slice & Ambient Environment")]
@@ -40,6 +40,10 @@ public class DayNightCycle : MonoBehaviour
     public float dayTemperature = 6500f;      // Peak Daylight Kelvin (Cool/Neutral) inside the midday slice
     public float sunsetTemperature = 3000f;   // Sunset/Sunrise Kelvin at 0f and 180f
 
+    [Header("Smoothing Settings")]
+    [Tooltip("How fast the visual animation catches up when time is added/removed. Higher = faster catch-up, Lower = smoother/slower transition.")]
+    public float progressSmoothingSpeed = 5f;
+
     public event Action DayStart;
     public event Action NightStart;
 
@@ -48,17 +52,38 @@ public class DayNightCycle : MonoBehaviour
     public bool timePaused { get; private set; }
 
     private float timeRemainingS_ = 0;
-    private float sunriseTimer = 0f;          // Tracks the sunrise transition animation
+    private float timeExtensionBonus = 0f;        // Tracks added time temporarily for the current day only
+    private float sunriseTimer = 0f;            // Tracks the sunrise transition animation
     private bool isTransitioningDay = false;
-    private float trueNightTimer = 0f;        // Tracks the quick fade to true night
+    private float trueNightTimer = 0f;            // Tracks the quick fade to true night
     private bool isTransitioningTrueNight = false;
+
+    // Smooth tracking variables to prevent snapping
+    private float smoothDayProgress = 0f;
+
+    // Effective total length for the current day including any added time bonuses
+    private float EffectiveDayLength => dayLengthS + timeExtensionBonus;
 
     public float timeRemainingS
     {
         get => timeRemainingS_;
         set
         {
+            float delta = value - timeRemainingS_;
+
+            if (delta > 0 && !isNight && !timePaused)
+            {
+                float oldEffectiveLength = dayLengthS + timeExtensionBonus;
+                float currentProgress = Mathf.InverseLerp(oldEffectiveLength, 0f, timeRemainingS_);
+
+                timeExtensionBonus += delta;
+
+                float newEffectiveLength = dayLengthS + timeExtensionBonus;
+                smoothDayProgress = Mathf.InverseLerp(newEffectiveLength, 0f, Mathf.Lerp(newEffectiveLength, 0f, currentProgress));
+            }
+
             timeRemainingS_ = value;
+
             if (timeRemainingS_ <= 0 && !isNight && !isTransitioningTrueNight) {
                 SetNight();
                 StartTrueNightTransition();
@@ -79,7 +104,6 @@ public class DayNightCycle : MonoBehaviour
             currentWilderness = Instantiate(wildernessPrefab, pos, rot, parent);
         }
 
-        // Destroy all drops from the ground.
         foreach (Item item in FindObjectsByType<Item>())
         {
             if (item.transform.position.z >= 0 && (item.type == ItemType.Gold || item.type == ItemType.Whisky))
@@ -92,7 +116,9 @@ public class DayNightCycle : MonoBehaviour
     void Start()
     {
         dayLengthS = startDayLengthS;
-        timeRemainingS = dayLengthS;
+        timeExtensionBonus = 0f;
+        timeRemainingS_ = EffectiveDayLength;
+        smoothDayProgress = 0f;
         isNight = false;
         timePaused = true;
 
@@ -220,6 +246,8 @@ public class DayNightCycle : MonoBehaviour
             }
             else if (timePaused)
             {
+                smoothDayProgress = 0f;
+
                 sunLight.colorTemperature = GetTemperatureForAngle(dayStartAngle);
                 sunLight.intensity = maxSunIntensity;
                 RenderSettings.ambientLight = GetAmbientColorForAngle(dayStartAngle);
@@ -229,8 +257,11 @@ public class DayNightCycle : MonoBehaviour
             }
             else
             {
-                float dayProgress = Mathf.InverseLerp(dayLengthS, 0f, timeRemainingS);
-                float currentAngle = Mathf.Lerp(dayStartAngle, dayEndAngle, dayProgress);
+                float targetDayProgress = Mathf.InverseLerp(EffectiveDayLength, 0f, timeRemainingS);
+                
+                smoothDayProgress = Mathf.Lerp(smoothDayProgress, targetDayProgress, Time.deltaTime * progressSmoothingSpeed);
+                
+                float currentAngle = Mathf.Lerp(dayStartAngle, dayEndAngle, smoothDayProgress);
 
                 sunLight.colorTemperature = GetTemperatureForAngle(currentAngle);
                 sunLight.intensity = maxSunIntensity;
@@ -286,8 +317,7 @@ public class DayNightCycle : MonoBehaviour
 
     public void IncreaseDayLength(float amountS)
     {
-        dayLengthS += amountS;
-        timeRemainingS += amountS;
+        timeRemainingS += amountS; 
     }
 
     public void PauseTime()
@@ -298,6 +328,8 @@ public class DayNightCycle : MonoBehaviour
     public void UnpauseTime()
     {
         timePaused = false;
+        // Explicitly lock progress to 0 when unpaused right after sunrise so it starts cleanly from the beginning
+        smoothDayProgress = 0f;
     }
 
     public void StartTrueNightTransition()
@@ -323,7 +355,10 @@ public class DayNightCycle : MonoBehaviour
         }
         ResetWilderness();
         isNight = false;
-        timeRemainingS = dayLengthS;
+        dayLengthS = startDayLengthS; 
+        timeExtensionBonus = 0f; 
+        timeRemainingS_ = EffectiveDayLength; 
+        smoothDayProgress = 0f; 
         sunriseTimer = 0f;
         isTransitioningDay = true;
         timePaused = true; 
@@ -333,14 +368,14 @@ public class DayNightCycle : MonoBehaviour
             sunLight.useColorTemperature = true;
             Quaternion compassRot = Quaternion.Euler(0f, compassHeading, 0f);
             Quaternion hoopTiltRot = Quaternion.Euler(0f, 0f, hoopTiltZ);
-            Quaternion startRot = Quaternion.Euler(0f, 0f, 0f); 
+            Quaternion startRot = Quaternion.Euler(dayStartAngle, 0f, 0f); 
             sunLight.transform.rotation = compassRot * hoopTiltRot * startRot;
 
-            sunLight.colorTemperature = sunsetTemperature;
-            sunLight.intensity = 0f;
+            sunLight.colorTemperature = GetTemperatureForAngle(dayStartAngle);
+            sunLight.intensity = maxSunIntensity;
         }
 
-        RenderSettings.ambientLight = nightAmbientColor;
+        RenderSettings.ambientLight = GetAmbientColorForAngle(dayStartAngle);
 
         DayStart?.Invoke();
     }
