@@ -5731,6 +5731,10 @@ PrefabInstance:
       propertyPath: m_text
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1479015149511602999, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
+      propertyPath: m_text
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1501801534330661733, guid: ffcb51af2a6984f9ebb7f48528d01423, type: 3}
       propertyPath: m_Name
       value: Arrow shop

@@ -317,6 +317,7 @@ public class DayNightCycle : MonoBehaviour
     public void IncreaseDayLength(float amountS)
     {
         timeRemainingS += amountS; 
+        dayLengthS += amountS; 
     }
 
     public void PauseTime()
@@ -354,7 +355,6 @@ public class DayNightCycle : MonoBehaviour
         }
         ResetWilderness();
         isNight = false;
-        dayLengthS = startDayLengthS; 
         timeExtensionBonus = 0f; 
         timeRemainingS_ = EffectiveDayLength; 
         smoothDayProgress = 0f; 
