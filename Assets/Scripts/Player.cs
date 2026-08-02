@@ -134,7 +134,7 @@ public class Player : MonoBehaviour
         quiverShop.SetActive(false);
         bombShop.SetActive(false);
         bombBagShop.SetActive(false);
-        // Spawn();
+        Spawn();
 
         // init controls
         Cursor.lockState = CursorLockMode.Locked;
