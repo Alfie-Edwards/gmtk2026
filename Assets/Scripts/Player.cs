@@ -338,7 +338,7 @@ public class Player : MonoBehaviour
                 if (dayNightCycle.isNight)
                 {
                     saloon.message = "go to sleep?";
-                    if (Keyboard.current.zKey.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame || Keyboard.current.xKey.wasPressedThisFrame) dayNightCycle.SetDay();
+                    if (Keyboard.current.cKey.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame || Keyboard.current.xKey.wasPressedThisFrame) dayNightCycle.SetDay();
                 }
                 else
                 {
@@ -379,7 +379,7 @@ public class Player : MonoBehaviour
 
             // Buy from shop
             closest.Show();
-            if ((Keyboard.current.eKey.wasPressedThisFrame || Keyboard.current.zKey.wasPressedThisFrame || Keyboard.current.xKey.wasPressedThisFrame) && closest.cost <= ammoBag.Amount(ItemType.Gold) && CanPickupItem(closest.itemType)) {
+            if ((Keyboard.current.eKey.wasPressedThisFrame || Keyboard.current.cKey.wasPressedThisFrame || Keyboard.current.xKey.wasPressedThisFrame) && closest.cost <= ammoBag.Amount(ItemType.Gold) && CanPickupItem(closest.itemType)) {
                 ammoBag.Remove(ItemType.Gold, closest.cost);
                 PickupItem(closest.itemType);
                 RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_Purchase");
