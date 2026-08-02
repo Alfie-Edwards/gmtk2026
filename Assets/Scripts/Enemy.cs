@@ -228,7 +228,7 @@ public class Enemy : MonoBehaviour
         }
         if (xxxPrefab != null && canDropXXX)
         {
-            if (Random.Range(0, 1) == 0) {
+            if (Random.Range(0, 8) == 0) {
                 Instantiate(xxxPrefab, transform.position, Quaternion.identity);
             }
         }
