@@ -15,6 +15,7 @@ public class HealthBar : MonoBehaviour
 
     private float lastKnownHealth;
     private Coroutine fadeCoroutine;
+    private bool hidden;
 
     private void Awake()
     {
@@ -25,6 +26,7 @@ public class HealthBar : MonoBehaviour
         canvasGroup.alpha = 0f;
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
+        hidden = true;
     }
 
     private void Start()
@@ -43,7 +45,15 @@ public class HealthBar : MonoBehaviour
 
     private void Update()
     {
-        if (targetEnemy == null) return;
+        if (targetEnemy == null)
+        {
+            if (!hidden)
+            {
+                healthSlider.value = 0;
+                Hide();
+            }
+            return;
+        }
 
         // Poll for health changes since the Enemy class doesn't have events
         if (!Mathf.Approximately(targetEnemy.currentHealth, lastKnownHealth))
@@ -73,12 +83,16 @@ public class HealthBar : MonoBehaviour
 
     public void Show()
     {
+        if (!hidden) return;
+        hidden = false;
         gameObject.SetActive(true);
         FadeTo(1f);
     }
 
     public void Hide()
     {
+        if (hidden) return;
+        hidden = true;
         FadeTo(0f);
     }
 
