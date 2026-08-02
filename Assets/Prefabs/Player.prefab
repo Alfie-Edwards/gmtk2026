@@ -178,7 +178,7 @@ MonoBehaviour:
   cameraUpTilt: 10
   cameraZOffset: 10
   ghostPrefab: {fileID: 9125636384562115356, guid: 491def86a2ed640219eea5d3704fba73, type: 3}
-  ghostSpawnsPerSecond: 6
+  ghostSpawnsPerSecond: 3
   arrowShop: {fileID: 0}
   bombShop: {fileID: 0}
   quiverShop: {fileID: 0}
