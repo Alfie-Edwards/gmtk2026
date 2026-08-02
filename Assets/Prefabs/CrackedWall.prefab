@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5780170681102180373}
   - component: {fileID: 8047675845375845650}
   - component: {fileID: 7404294309354073619}
+  - component: {fileID: 1241347956682625687}
   m_Layer: 0
   m_Name: CrackedWall
   m_TagString: Untagged
@@ -49,6 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CrackedWall
   meshFilter: {fileID: 8047675845375845650}
   meshCollider: {fileID: 5780170681102180373}
+  boxCollider: {fileID: 1241347956682625687}
   intactMesh: {fileID: 4493585093827132993, guid: 0255fb1b4304baf4bacae1f6026e3800, type: 3}
   brokenMesh: {fileID: -8678823145569952518, guid: cc076985bc56a254a970683049bd1961, type: 3}
 --- !u!64 &5780170681102180373
@@ -130,3 +132,24 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &1241347956682625687
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8161975839293687312}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3, y: 2.010671, z: 1}
+  m_Center: {x: 0.00035238266, y: 1.0033311, z: -0.010612249}

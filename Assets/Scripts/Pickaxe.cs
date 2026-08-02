@@ -81,25 +81,19 @@ public class Pickaxe : MonoBehaviour
 
         foreach (Collider hit in hits)
         {
-            // Check for Rock component
-            Rock rock = hit.GetComponent<Rock>();
-            if (rock != null)
+            if (hit.GetComponent<Rock>() is Rock rock)
             {
                 rock.Break();
                 continue;
             }
 
-            // Check for CrackedWall component
-            CrackedWall wall = hit.GetComponent<CrackedWall>();
-            if (wall != null)
+            if (hit.GetComponent<CrackedWall>() is CrackedWall wall)
             {
                 wall.Break();
                 continue;
             }
 
-            // Check for general Enemy to deal small damage after break
-            Enemy enemy = hit.GetComponent<Enemy>();
-            if (enemy != null)
+            if (hit.GetComponent<Enemy>() is Enemy enemy)
             {
                 Vector3 hitDirection = (hit.transform.position - transform.position).normalized;
                 enemy.TakeDamage(10f, hitDirection);

@@ -4,6 +4,7 @@ public class CrackedWall : MonoBehaviour
 {
     [SerializeField] private MeshFilter meshFilter;       
     [SerializeField] private MeshCollider meshCollider;
+    [SerializeField] private BoxCollider boxCollider;
     [SerializeField] private Mesh intactMesh;       
     [SerializeField] private Mesh brokenMesh;       
 
@@ -11,6 +12,7 @@ public class CrackedWall : MonoBehaviour
 
     private void Start()
     {
+        boxCollider.enabled = true;
         if (meshFilter != null && intactMesh != null)
         {
             meshFilter.sharedMesh = intactMesh;
@@ -20,12 +22,14 @@ public class CrackedWall : MonoBehaviour
         {
             meshCollider.sharedMesh = intactMesh;
         }
+        meshCollider.enabled = false;
     }
 
     public void Break()
     {
         if (isBroken) return;
         isBroken = true;
+        meshCollider.enabled = true;
 
         if (meshFilter != null && brokenMesh != null)
         {
@@ -36,5 +40,6 @@ public class CrackedWall : MonoBehaviour
         {
             meshCollider.sharedMesh = brokenMesh;
         }
+        boxCollider.enabled = false;
     }
 }
