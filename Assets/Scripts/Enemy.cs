@@ -87,7 +87,6 @@ public class Enemy : MonoBehaviour
         if (controller == null || !controller.enabled) return;
 
         Vector3 moveDir = Vector3.zero;
-        bool isTryingToMove = false;
 
         if (Player != null)
         {
@@ -104,7 +103,6 @@ public class Enemy : MonoBehaviour
                 {
                     moveDir = toPlayer.normalized * moveSpeed;
                     transform.rotation = Quaternion.LookRotation(toPlayer);
-                    isTryingToMove = true;
                 }
             }
         }

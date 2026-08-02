@@ -77,6 +77,7 @@ public class Player : MonoBehaviour
     private EventInstance WildernessMusic;
     private EventInstance TownMusic;
     private EventInstance TenSecondMusic;
+    private int lastCheckedSecond = -1;
 
     public int whipLevel { get; private set; }
     public int quiverSize {
@@ -148,10 +149,10 @@ public class Player : MonoBehaviour
 
         TownMusic.start();
 
-        ammoBag.Add(ItemType.Gold, 99990);
-        PickupItem(ItemType.Bow);
-        PickupItem(ItemType.BombBag);
-        PickupItem(ItemType.Pickaxe);
+        // ammoBag.Add(ItemType.Gold, 99990);
+        // PickupItem(ItemType.Bow);
+        // PickupItem(ItemType.BombBag);
+        // PickupItem(ItemType.Pickaxe);
     }
 
     void Spawn()
@@ -183,12 +184,41 @@ public class Player : MonoBehaviour
         UseItems();
         UpdateWeapons();
         MapAreaStuff();
+        SyncMusic();
+    }
 
-        if (dayNightCycle.timeRemainingS < 12f && (dayNightCycle.timeRemainingS + Time.deltaTime) >= 12f && mapArea != MapArea.Town)
+    private void SyncMusic()
+    {
+        if (TenSecondMusic.isValid() && mapArea != MapArea.Town)
         {
-            WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            TenSecondMusic.start();
+            int secondsRemainingDay = Mathf.CeilToInt(dayNightCycle.timeRemainingS);
+            int targetTimeSongMs = Mathf.Clamp(Mathf.FloorToInt((12f - dayNightCycle.timeRemainingS) * 1000), 0, 12000);
+            TenSecondMusic.getPlaybackState(out FMOD.Studio.PLAYBACK_STATE state);
+
+            switch (state)
+            {
+                case FMOD.Studio.PLAYBACK_STATE.PLAYING:
+                    TenSecondMusic.getTimelinePosition(out int currentPositionMs);
+                    int currentSecondSong = currentPositionMs / 1000;
+                    int currentSecondDay = 12 - secondsRemainingDay;
+                    if ((lastCheckedSecond != -1) && (currentSecondSong < 12) && (currentSecondSong < currentSecondDay) && (currentSecondSong != lastCheckedSecond))
+                    {
+                        TenSecondMusic.setTimelinePosition(targetTimeSongMs);
+                    }
+                    lastCheckedSecond = currentSecondSong;
+                    break;
+
+                case FMOD.Studio.PLAYBACK_STATE.STOPPED:
+                case FMOD.Studio.PLAYBACK_STATE.STOPPING:
+                    if (secondsRemainingDay <= 12)
+                    {
+                        WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                        TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                        TenSecondMusic.start();
+                        TenSecondMusic.setTimelinePosition(targetTimeSongMs);
+                    }
+                    break;
+            }
         }
     }
 
@@ -502,7 +532,19 @@ public class Player : MonoBehaviour
                 break;
 
             case ItemType.Whisky:
-                dayNightCycle.timeRemainingS += 30;
+                if (!dayNightCycle.isNight)
+                {
+                    TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                    dayNightCycle.timeRemainingS += 30;
+                    if (mapArea == MapArea.Town)
+                    {
+                        TownMusic.start();
+                    }
+                    else
+                    {
+                        WildernessMusic.start();
+                    }
+                }
                 break;
 
             // Upgrades
