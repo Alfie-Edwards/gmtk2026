@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 15819431353111755}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0.784}
+  m_LocalPosition: {x: 0, y: 0.365, z: 0.639}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -338,12 +338,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef910ac8550774116bb773ab3c8095db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyLava
-  detectionRadius: 10
-  visualRoot: {fileID: 3150365934214766344}
-  hiddenYOffset: -1
-  poppedYOffset: 2
-  transitionSpeed: 20
+  detectionRadius: 8.55
+  skinnedMeshRenderer: {fileID: 9070258743839293935}
+  squashBlendShapeName: squash
+  stretchBlendShapeName: stretch
+  transitionSpeed: 500
   rotationSpeed: 10
+  attackCollider: {fileID: 3012192548096332907}
+  hiddenColliderCenter: {x: 0, y: 0, z: 0}
+  hiddenColliderHeight: 0.1
+  poppedColliderCenter: {x: 0, y: 1, z: 0}
+  poppedColliderHeight: 2
+  disableColliderWhenHidden: 1
   spikePrefab: {fileID: 9197701245545295047, guid: 7f8caf9960c1a43b48ac295276f1c5d3, type: 3}
   firePoint: {fileID: 2105369562808805944}
   popWaitTime: 0.5
@@ -370,11 +376,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a6648a96b6906942a3f66569e323939, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.053
+      value: -0.006
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a6648a96b6906942a3f66569e323939, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.143
+      value: 0.088
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a6648a96b6906942a3f66569e323939, type: 3}
       propertyPath: m_LocalPosition.z
@@ -441,6 +447,10 @@ PrefabInstance:
       value: 1.0163255
       objectReference: {fileID: 0}
     - target: {fileID: -3887185075125053422, guid: 1a6648a96b6906942a3f66569e323939, type: 3}
+      propertyPath: m_UpdateWhenOffscreen
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -3887185075125053422, guid: 1a6648a96b6906942a3f66569e323939, type: 3}
       propertyPath: 'm_BlendShapeWeights.Array.data[0]'
       value: 0
       objectReference: {fileID: 0}
@@ -468,5 +478,10 @@ PrefabInstance:
 --- !u!4 &3487827891342409238 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1a6648a96b6906942a3f66569e323939, type: 3}
+  m_PrefabInstance: {fileID: 4030151576622766589}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &9070258743839293935 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -3887185075125053422, guid: 1a6648a96b6906942a3f66569e323939, type: 3}
   m_PrefabInstance: {fileID: 4030151576622766589}
   m_PrefabAsset: {fileID: 0}

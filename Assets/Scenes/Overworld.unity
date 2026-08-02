@@ -476,7 +476,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 440081241078898736, guid: 9d3c0e65f4f8a47c482dc8bdcd752d1d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -28.5
+      value: -31
       objectReference: {fileID: 0}
     - target: {fileID: 440081241078898736, guid: 9d3c0e65f4f8a47c482dc8bdcd752d1d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -929,6 +929,14 @@ PrefabInstance:
     - target: {fileID: 579500444982961619, guid: 2be1ca9581322a545864bb55913cc13a, type: 3}
       propertyPath: m_Name
       value: wilderness
+      objectReference: {fileID: 0}
+    - target: {fileID: 1011313196889021505, guid: 2be1ca9581322a545864bb55913cc13a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.088
+      objectReference: {fileID: 0}
+    - target: {fileID: 1240204313710878861, guid: 2be1ca9581322a545864bb55913cc13a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.162
       objectReference: {fileID: 0}
     - target: {fileID: 1665166357674558159, guid: 2be1ca9581322a545864bb55913cc13a, type: 3}
       propertyPath: m_LocalPosition.x
