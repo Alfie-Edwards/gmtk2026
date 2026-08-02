@@ -102,15 +102,7 @@ public class Pickaxe : MonoBehaviour
             if (enemy != null)
             {
                 Vector3 hitDirection = (hit.transform.position - transform.position).normalized;
-                EnemyRock rockEnemy = hit.GetComponent<EnemyRock>();
-                if (rockEnemy != null)
-                {
-                    enemy.TakeDamage(100f, hitDirection); // Adjust damage amount as needed
-                }
-                else
-                {
-                    enemy.TakeDamage(10f, hitDirection); // Adjust damage amount as needed
-                }
+                enemy.TakeDamage(10f, hitDirection);
             }
         }
     }

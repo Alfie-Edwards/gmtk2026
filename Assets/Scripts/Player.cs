@@ -134,7 +134,7 @@ public class Player : MonoBehaviour
         quiverShop.SetActive(false);
         bombShop.SetActive(false);
         bombBagShop.SetActive(false);
-        Spawn();
+        // Spawn();
 
         // init controls
         Cursor.lockState = CursorLockMode.Locked;
@@ -147,6 +147,11 @@ public class Player : MonoBehaviour
         TenSecondMusic =RuntimeManager.CreateInstance(tenSecondMusicSource);
 
         TownMusic.start();
+
+        // ammoBag.Add(ItemType.Gold, 99990);
+        // PickupItem(ItemType.Bow);
+        // PickupItem(ItemType.BombBag);
+        // PickupItem(ItemType.Pickaxe);
     }
 
     void Spawn()
@@ -230,6 +235,9 @@ public class Player : MonoBehaviour
                 TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 WildernessMusic.start();
                 break;
+            case MapArea.Boss:
+                Object.FindAnyObjectByType<HealthBar>()?.Hide();
+                break;
         }
         switch (newArea)
         {
@@ -251,6 +259,7 @@ public class Player : MonoBehaviour
                 break;
             case MapArea.Boss:
                 WildernessMusic.setParameterByNameWithLabel("Variation", "Lava Mountains");
+                Object.FindAnyObjectByType<HealthBar>()?.Show();
                 break;
         }
     }

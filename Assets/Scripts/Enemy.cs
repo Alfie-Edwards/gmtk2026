@@ -28,7 +28,7 @@ public class Enemy : MonoBehaviour
     }
 
     private CharacterController controller;
-    private Vector3 verticalVelocity;
+    public float verticalVelocity = 0f;
     private float jumpCooldownTimer = 0f; // Cooldown to prevent multi-jumping instantly
 
     [Header("Health & Combat")]
@@ -84,6 +84,8 @@ public class Enemy : MonoBehaviour
 
     void HandleMovement()
     {
+        if (controller == null || !controller.enabled) return;
+
         Vector3 moveDir = Vector3.zero;
         bool isTryingToMove = false;
 
@@ -107,13 +109,13 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        if (controller.isGrounded && verticalVelocity.y <= 0)
+        if (controller.isGrounded && verticalVelocity <= 0)
         {
-            verticalVelocity.y = -2f;
+            verticalVelocity = -2f;
         }
         else
         {
-            verticalVelocity.y -= gravity * Time.deltaTime;
+            verticalVelocity -= gravity * Time.deltaTime;
         }
 
         if (knockbackVelocity.magnitude > 0.1f)
@@ -125,19 +127,22 @@ public class Enemy : MonoBehaviour
             knockbackVelocity = Vector3.zero;
         }
 
-        Vector3 finalMovement = moveDir + verticalVelocity + knockbackVelocity;
+        Vector3 finalMovement = moveDir + verticalVelocity * Vector3.up + knockbackVelocity;
         controller.Move(finalMovement * Time.deltaTime);
-
-        if (controller.isGrounded && isTryingToMove && (controller.collisionFlags & CollisionFlags.Sides) != 0 && jumpCooldownTimer <= 0f)
-        {
-            Jump(jumpForce);
-            jumpCooldownTimer = 1.5f;
-        }
     }
 
     public void TakeDamage(float damageAmount, Vector3 hitDirection, float knockbackModifier = 1.0f)
     {
         if (Time.time < lastHitTime + hitCooldown) return;
+
+        // Boss is immune while it has its rock.
+        if (GetComponent<EnemyRock>() is EnemyRock enemyRock)
+        {
+            if (enemyRock.hasRock)
+            {
+                return;
+            }
+        }
 
         lastHitTime = Time.time;
         currentHealth -= damageAmount;
@@ -158,7 +163,7 @@ public class Enemy : MonoBehaviour
 
     public void Jump(float jumpForce)
     {
-        verticalVelocity.y = jumpForce;
+        verticalVelocity = jumpForce;
     }
 
     void Die()

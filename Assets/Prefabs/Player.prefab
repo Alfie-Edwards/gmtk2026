@@ -304,6 +304,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 6970878688065656316, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
+      propertyPath: hitRadius
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 7861784498913831635, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
       propertyPath: m_Name
       value: Pickaxe

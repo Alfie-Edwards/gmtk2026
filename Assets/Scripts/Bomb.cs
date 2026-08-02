@@ -83,11 +83,7 @@ public class Bomb : MonoBehaviour
                 Vector3 hitVector = enemy.transform.position - center;
                 float effectAmount = hitVector.sqrMagnitude / (explosionRadius * explosionRadius);
                 
-                if (enemy.GetComponent<EnemyRock>() is EnemyRock rockEnemy)
-                {
-                    enemy.TakeDamage(explosionDamage * 2.5f * effectAmount, hitVector, 5 * effectAmount);
-                }
-                else if (enemy.GetComponent<EnemyGhost>() is EnemyGhost ghost)
+                if (enemy.GetComponent<EnemyGhost>() is EnemyGhost ghost)
                 {
                     enemy.TakeDamage(1e10f, Vector3.zero);
                 }
