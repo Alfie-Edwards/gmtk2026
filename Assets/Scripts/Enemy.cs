@@ -236,8 +236,7 @@ public class Enemy : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        Player player = hit.collider.GetComponent<Player>();
-        if (player != null)
+        if (hit.collider.GetComponent<Player>() is Player player)
         {
             Debug.Log("HIT PLAYER");
             Vector3 knockbackDir = -hit.normal;

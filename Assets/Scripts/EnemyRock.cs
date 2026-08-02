@@ -19,6 +19,12 @@ public class EnemyRock : MonoBehaviour
     [Tooltip("Vertical offset from the enemy's transform origin to its feet/base.")]
     public float enemyBaseOffset = 0f;
 
+    [Header("Contact Damage Settings")]
+    [Tooltip("Radius for checking player contact while burrowed/subsurface moving.")]
+    public float burrowContactRadius = 1.2f;
+    [Tooltip("Layers to check for player contact.")]
+    public LayerMask playerLayer;
+
     [Header("Cactus Settings")]
     public GameObject cactusPrefab;
     [Tooltip("The vertical height/size of the cactus model itself.")]
@@ -106,6 +112,12 @@ public class EnemyRock : MonoBehaviour
             }
         }
 
+        // Check for contact damage when burrowed or moving subsurface with an active rock
+        if (hasRock && (currentState == State.Burrowed || currentState == State.SubSurfaceMoving))
+        {
+            CheckBurrowContactDamage();
+        }
+
         if (hasRock && activeRock == null)
         {
             hasRock = false;
@@ -116,11 +128,51 @@ public class EnemyRock : MonoBehaviour
                 activeBehaviorRoutine = null;
             }
 
-            // Instantly transition out of burrow/subsurface/cactus sequences into emerging and running the circle
             StartCoroutine(TransitionToCircleRunFromBrokenRock());
         }
 
         HandleBehavior();
+    }
+
+    private void CheckBurrowContactDamage()
+    {
+        Vector3 capsulePoint1 = transform.position + Vector3.up * enemyBaseOffset;
+        Vector3 capsulePoint2 = transform.position + Vector3.up * (2f - enemyBaseOffset);
+        float capsuleRadius = 0.27f;
+
+        Collider[] bodyHits = Physics.OverlapCapsule(capsulePoint1, capsulePoint2, capsuleRadius, playerLayer);
+        foreach (var hit in bodyHits)
+        {
+            if (hit.GetComponent<Player>() is Player player)
+            {
+                Debug.Log("HIT PLAYER (Body)");
+                Vector3 knockbackDir = (player.transform.position - transform.position);
+                knockbackDir.y *= 0.01f;
+                knockbackDir.Normalize();
+                player.GetHit(knockbackDir * 30);
+                break;
+            }
+        }
+
+        if (hasRock && activeRock != null)
+        {
+            Vector3 rockCenter = activeRock.transform.position;
+            Vector3 cubeHalfExtents = new Vector3(0.35f, 0.35f, 0.35f);
+
+            Collider[] rockHits = Physics.OverlapBox(rockCenter, cubeHalfExtents, activeRock.transform.rotation, playerLayer);
+            foreach (var hit in rockHits)
+            {
+                if (hit.GetComponent<Player>() is Player player)
+                {
+                    Debug.Log("HIT PLAYER (Rock)");
+                    Vector3 knockbackDir = (player.transform.position - activeRock.transform.position);
+                    knockbackDir.y *= 0.01f;
+                    knockbackDir.Normalize();
+                    player.GetHit(knockbackDir * 30);
+                    break;
+                }
+            }
+        }
     }
 
     private System.Collections.IEnumerator TransitionToCircleRunFromBrokenRock()
@@ -207,6 +259,7 @@ public class EnemyRock : MonoBehaviour
                     {
                         if (hasRock)
                         {
+                            Object.FindAnyObjectByType<HealthBar>()?.Show();
                             activeBehaviorRoutine = StartCoroutine(PerformSubSurfaceMovesUntilFar());
                         }
                         else
@@ -249,7 +302,6 @@ public class EnemyRock : MonoBehaviour
                 if (toPlayer.sqrMagnitude > 0.01f)
                 {
                     Quaternion targetRot = Quaternion.LookRotation(toPlayer.normalized);
-                    
                     transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, burrowIdleTurnSpeed * Time.deltaTime);
 
                     float angleDiff = Quaternion.Angle(transform.rotation, targetRot);

@@ -259,7 +259,7 @@ public class Player : MonoBehaviour
                 break;
             case MapArea.Boss:
                 WildernessMusic.setParameterByNameWithLabel("Variation", "Lava Mountains");
-                Object.FindAnyObjectByType<HealthBar>()?.Show();
+                Object.FindAnyObjectByType<HealthBar>()?.ShowIfEverShown();
                 break;
         }
     }

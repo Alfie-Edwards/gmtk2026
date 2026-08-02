@@ -89,7 +89,7 @@ MonoBehaviour:
   hitCooldown: 0.1
   knockbackMagnitude: 1
   knockbackDamping: 8
-  contactForce: 20
+  contactForce: 25
   bigCoinPrefab: {fileID: 575649640322857749, guid: 36cfc354e13ba1d4f947b51d4da7fea3, type: 3}
   coinPrefab: {fileID: 575649640322857749, guid: 447ae08732a2f564ab18fa5320338070, type: 3}
   xxxPrefab: {fileID: 8767786966827885196, guid: 76a24074ab89094458eb7abc38c1b344, type: 3}
@@ -159,10 +159,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyRock
   rockPrefab: {fileID: 8310796378712230136, guid: 6ec5fad187e119a4bbbca1e4b44228e1, type: 3}
   rockSpawnPoint: {fileID: 8474051109390354216}
+  hasRock: 1
   groundTransform: {fileID: 0}
   burrowDepth: 2
   burrowMoveSpeed: 10
   enemyBaseOffset: -1.434
+  burrowContactRadius: 1.2
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
   cactusPrefab: {fileID: 9125636384562115356, guid: bf479fa9234bf49c7a17880a08ffe576, type: 3}
   cactusModelHeight: 1.95
   cactusBaseOffset: -1

@@ -17,6 +17,8 @@ public class HealthBar : MonoBehaviour
     private Coroutine fadeCoroutine;
     private bool hidden;
 
+    public bool everShown { get; private set; }
+
     private void Awake()
     {
         if (canvasGroup == null)
@@ -27,6 +29,7 @@ public class HealthBar : MonoBehaviour
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
         hidden = true;
+        everShown = false;
     }
 
     private void Start()
@@ -81,9 +84,15 @@ public class HealthBar : MonoBehaviour
         }
     }
 
+    public void ShowIfEverShown()
+    {
+        if (everShown) Show();
+    }
+
     public void Show()
     {
         if (!hidden) return;
+        everShown = true;
         hidden = false;
         gameObject.SetActive(true);
         FadeTo(1f);
