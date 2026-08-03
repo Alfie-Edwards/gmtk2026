@@ -109,6 +109,18 @@ public class DayNightCycle : MonoBehaviour
 
             Destroy(currentWilderness);
             currentWilderness = Instantiate(wildernessPrefab, pos, rot, parent);
+
+        
+            if (FindAnyObjectByType<Player>() is Player player)
+            {
+                if (player.win)
+                {
+                    foreach (EnemyRock boss in FindObjectsByType<EnemyRock>())
+                    {
+                        Destroy(boss);
+                    }
+                }
+            }
         }
     }
 
@@ -194,7 +206,7 @@ public class DayNightCycle : MonoBehaviour
 
         if (timerText != null)
         {
-            bool showTimer = !timePaused && !isNight && !isTransitioningTrueNight;
+            bool showTimer = !((FindAnyObjectByType<Player>()?.win ?? false) || timePaused || isNight || isTransitioningTrueNight);
             timerText.gameObject.SetActive(showTimer);
 
             if (showTimer)

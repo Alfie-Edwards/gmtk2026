@@ -12,6 +12,7 @@ public enum MapArea {
     Wilderness,
     Wilderness2,
     Boss,
+    Escape,
     None,
 }
 
@@ -147,6 +148,7 @@ public class Player : MonoBehaviour
         TownMusic = RuntimeManager.CreateInstance(townMusicSource);
         TenSecondMusic =RuntimeManager.CreateInstance(tenSecondMusicSource);
 
+        mapArea = MapArea.Town;
         TownMusic.start();
 
         // ammoBag.Add(ItemType.Gold, 99990);
@@ -164,6 +166,7 @@ public class Player : MonoBehaviour
 
         // 2. Set position and rotation
         transform.position = new Vector3(13.89f, 0.5f, -8.35f);
+        // transform.position = new Vector3(0f, -3f, 75f); // ending
         transform.rotation = Quaternion.Euler(0f, -180f, 0f);
         lookTarget = Quaternion.Euler(0f, -180f, 0f); // Keep if used in your script
         camera.position = transform.position + cameraOffset;
@@ -210,7 +213,7 @@ public class Player : MonoBehaviour
 
                 case FMOD.Studio.PLAYBACK_STATE.STOPPED:
                 case FMOD.Studio.PLAYBACK_STATE.STOPPING:
-                    if (secondsRemainingDay <= 12)
+                    if (secondsRemainingDay <= 12 && mapArea != MapArea.Escape)
                     {
                         WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                         TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
@@ -234,21 +237,40 @@ public class Player : MonoBehaviour
     private MapArea GetCurrentMapArea() {
         if (transform.position.z < 0)
         {
+            if (transform.position.x < -26)
+            {
+                return MapArea.Escape;
+            }
             return MapArea.Town;
         }
-        if (transform.position.z < 34)
+        else if (transform.position.z < 34)
         {
+            if (transform.position.x < -42 || (transform.position.z < 10 && transform.position.x < -34))
+            {
+                return MapArea.Escape;
+            }
             return MapArea.Wilderness;
         }
-        if (transform.position.z < 68)
+        else if (transform.position.z < 68)
         {
+            if (transform.position.x < -52)
+            {
+                return MapArea.Escape;
+            }
             return MapArea.Wilderness2;
         }
-        return MapArea.Boss;
+        else if (transform.position.x < -40 || transform.position.z > 83)
+        {
+            return MapArea.Escape;
+        }
+        else
+        {
+            return MapArea.Boss;
+        }
     }
 
     private void DoMapAreaStuff(MapArea area) {
-        if (area != MapArea.Town && dayNightCycle.isNight)
+        if (area != MapArea.Town && area != MapArea.Escape && dayNightCycle.isNight)
         {
             if (Random.value < ghostSpawnsPerSecond * Time.deltaTime)
             {
@@ -261,12 +283,18 @@ public class Player : MonoBehaviour
         Debug.Log($"Entered {newArea}");
         switch (prevArea) {
             case MapArea.Town:
-                if (!dayNightCycle.isNight) dayNightCycle.UnpauseTime();
-                TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                WildernessMusic.start();
+                if (newArea != MapArea.Escape)
+                {
+                    if (!dayNightCycle.isNight) dayNightCycle.UnpauseTime();
+                    TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                    WildernessMusic.start();
+                }
                 break;
-            case MapArea.Boss:
-                Object.FindAnyObjectByType<HealthBar>()?.Hide();
+            case MapArea.Escape:
+                if (newArea == MapArea.Town)
+                {
+                    dayNightCycle.SetDay();
+                }
                 break;
         }
         switch (newArea)
@@ -276,10 +304,10 @@ public class Player : MonoBehaviour
                 StartCoroutine(treasureBag.EmptyInto(ammoBag, 10f));
                 WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                if (win)
-                {
-                    SceneManager.LoadScene("WIN");
-                }
+                // if (win)
+                // {
+                //     SceneManager.LoadScene("WIN");
+                // }
                 break;
             case MapArea.Wilderness:
                 WildernessMusic.setParameterByNameWithLabel("Variation", "Desert");
@@ -289,7 +317,18 @@ public class Player : MonoBehaviour
                 break;
             case MapArea.Boss:
                 WildernessMusic.setParameterByNameWithLabel("Variation", "Lava Mountains");
-                Object.FindAnyObjectByType<HealthBar>()?.ShowIfEverShown();
+                FindAnyObjectByType<HealthBar>()?.ShowIfEverShown();
+                break;
+            case MapArea.Escape:
+                win = true;
+                FindAnyObjectByType<HealthBar>()?.Hide();
+                WildernessMusic.setParameterByNameWithLabel("Variation", "Lava Mountains");
+                TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                WildernessMusic.getPlaybackState(out FMOD.Studio.PLAYBACK_STATE state);
+                if (state != FMOD.Studio.PLAYBACK_STATE.PLAYING)
+                {
+                    WildernessMusic.start();
+                }
                 break;
         }
     }
