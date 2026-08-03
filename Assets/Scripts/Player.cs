@@ -714,7 +714,7 @@ public class Player : MonoBehaviour
 
     public void GetHit(Vector3 impulse) {
         RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PlayerGetsHit");
-        if (Time.time < lastHitTime + hitCooldown) return;
+        if (mapArea == MapArea.Escape || Time.time < lastHitTime + hitCooldown) return;
         lastHitTime = Time.time;
         knockbackVelocity += impulse;
         if (dayNightCycle.isNight)
