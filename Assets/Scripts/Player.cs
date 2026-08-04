@@ -15,7 +15,7 @@ public enum MapArea {
     None,
 }
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController), typeof(DamageFlash))]
 public class Player : MonoBehaviour
 {
     [Header("Keyboard")]
@@ -709,6 +709,7 @@ public class Player : MonoBehaviour
         if (mapArea == MapArea.Escape || Time.time < lastHitTime + hitCooldown) return;
         lastHitTime = Time.time;
         knockbackVelocity += impulse;
+        GetComponent<DamageFlash>()?.TriggerFlash();
         if (dayNightCycle.isNight)
         {
             if (treasureBag.Amount(ItemType.Gold) > 0)

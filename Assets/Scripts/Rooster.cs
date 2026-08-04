@@ -151,6 +151,7 @@ public class Rooster : MonoBehaviour
 
     public void Hit()
     {
+        GetComponent<DamageFlash>()?.TriggerFlash();
         isRunningAway = true;
         currentTargetDistance = runAwayDistance;
         runAwayTimer = runAwayDuration;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController), typeof(DamageFlash))]
 public class Enemy : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -144,6 +144,7 @@ public class Enemy : MonoBehaviour
 
         lastHitTime = Time.time;
         currentHealth -= damageAmount;
+        GetComponent<DamageFlash>()?.TriggerFlash();
 
         ApplyKnockback(hitDirection, knockbackModifier);
 

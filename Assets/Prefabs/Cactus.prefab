@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 7886186494996032649}
   - component: {fileID: 3012192548096332907}
   - component: {fileID: 4490106116342746559}
+  - component: {fileID: -2985299133075802449}
   m_Layer: 3
   m_Name: Cactus
   m_TagString: Untagged
@@ -175,6 +176,7 @@ MonoBehaviour:
   gravity: 0
   jumpForce: 2.5
   detectionRadius: 0
+  verticalVelocity: 0
   maxHealth: 150
   hitCooldown: 0.1
   knockbackMagnitude: 0
@@ -252,6 +254,19 @@ MonoBehaviour:
   firePoint: {fileID: 2105369562808805944}
   fireCooldown: 2.5
   spawnOffset: 1
+--- !u!114 &-2985299133075802449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9125636384562115356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbd633a1160cca143ba2d52184f92379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageFlash
+  flashDuration: 0.03
 --- !u!1001 &3155996205914639803
 PrefabInstance:
   m_ObjectHideFlags: 0

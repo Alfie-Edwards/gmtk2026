@@ -1684,6 +1684,7 @@ GameObject:
   - component: {fileID: 335428945573125354}
   - component: {fileID: 5525485078575319095}
   - component: {fileID: 7771144355702449852}
+  - component: {fileID: -2798060266818832202}
   m_Layer: 0
   m_Name: Rooster
   m_TagString: Untagged
@@ -1771,6 +1772,19 @@ MonoBehaviour:
   gravity: -9.81
   separationRadius: 1.5
   separationWeight: 1.5
+--- !u!114 &-2798060266818832202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8203415952206793447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbd633a1160cca143ba2d52184f92379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageFlash
+  flashDuration: 0.03
 --- !u!1 &8416798908962508436
 GameObject:
   m_ObjectHideFlags: 0

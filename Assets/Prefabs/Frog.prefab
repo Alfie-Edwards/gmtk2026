@@ -193,6 +193,7 @@ GameObject:
   - component: {fileID: 7886186494996032649}
   - component: {fileID: 3012192548096332907}
   - component: {fileID: -8660073734634861956}
+  - component: {fileID: -3670015826976860686}
   m_Layer: 3
   m_Name: Frog
   m_TagString: Untagged
@@ -314,6 +315,19 @@ MonoBehaviour:
   jumpDistance: 4
   rotationSpeed: 10
   gravity: 20
+--- !u!114 &-3670015826976860686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9125636384562115356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbd633a1160cca143ba2d52184f92379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageFlash
+  flashDuration: 0.03
 --- !u!1001 &4302647321286379492
 PrefabInstance:
   m_ObjectHideFlags: 0
