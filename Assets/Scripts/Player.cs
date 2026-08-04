@@ -154,10 +154,10 @@ public class Player : MonoBehaviour
         mapArea = MapArea.Town;
         TownMusic.start();
 
-        ammoBag.Add(ItemType.Gold, 99990);
-        PickupItem(ItemType.Bow);
-        PickupItem(ItemType.BombBag);
-        PickupItem(ItemType.Pickaxe);
+        // ammoBag.Add(ItemType.Gold, 99990);
+        // PickupItem(ItemType.Bow);
+        // PickupItem(ItemType.BombBag);
+        // PickupItem(ItemType.Pickaxe);
     }
 
     void Spawn()
