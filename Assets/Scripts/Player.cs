@@ -48,8 +48,6 @@ public class Player : MonoBehaviour
     private int startQuiverSize = 0;
     private int startBombBagSize = 0;
     private int startWhipLevel = 1;
-    private int maxWhipLevel = 4;
-    private int maxRoosters = 3;
     private int numSeeds = 0;
 
     [Header("Weapons")]
@@ -286,7 +284,14 @@ public class Player : MonoBehaviour
                 {
                     if (!dayNightCycle.isNight) dayNightCycle.UnpauseTime();
                     TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                    WildernessMusic.start();
+                    if (dayNightCycle.timeRemainingS <= 12)
+                    {
+                        TenSecondMusic.start();
+                    }
+                    else
+                    {
+                        WildernessMusic.start();   
+                    }
                 }
                 break;
             case MapArea.Escape:
@@ -316,6 +321,7 @@ public class Player : MonoBehaviour
                 break;
             case MapArea.Escape:
                 win = true;
+                dayNightCycle.SetNight();
                 FindAnyObjectByType<HealthBar>()?.Hide();
                 WildernessMusic.setParameterByNameWithLabel("Variation", "Lava Mountains");
                 TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
@@ -355,7 +361,7 @@ public class Player : MonoBehaviour
             // Jump
             if (Keyboard.current != null && Keyboard.current.zKey.wasPressedThisFrame && controller.isGrounded)
             {
-                velocity =  Vector3.up * Mathf.Sqrt(jumpHeight * -2.0f * gravity);
+                velocity = Vector3.up * Mathf.Sqrt(jumpHeight * -2.0f * gravity);
             }
 
             // Gravity

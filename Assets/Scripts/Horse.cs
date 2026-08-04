@@ -68,10 +68,6 @@ public class Horse : MonoBehaviour
         {
             velocity.y += gravity * Time.deltaTime;
         }
-        else if (controller.isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f; 
-        }
 
         // Move the Controller
         controller.Move((velocity + move + knockbackVelocity) * Time.deltaTime);
@@ -112,6 +108,12 @@ public class Horse : MonoBehaviour
         if (rider.GetComponent<Player>() is Player player)
         {
             player.disableControls = true;
+        }
+
+        if (rider.GetComponent<CharacterController>() is CharacterController cc)
+        {
+            cc.Move(Vector3.zero);
+            cc.enabled = false;
         }
 
         if (mountPoint != null)

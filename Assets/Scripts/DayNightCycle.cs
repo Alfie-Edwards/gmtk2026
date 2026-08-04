@@ -212,7 +212,7 @@ public class DayNightCycle : MonoBehaviour
             if (showTimer)
             {
                 int seconds = Mathf.CeilToInt(timeRemainingS);
-                timerText.text = $"Time Left: {seconds}s";
+                timerText.text = $"{seconds}s to sundown";
             }
         }
 
@@ -356,6 +356,14 @@ public class DayNightCycle : MonoBehaviour
     public void SetNight()
     {
         if (isNight) return;
+        if (timeRemainingS > 5)
+        {
+            timeExtensionBonus = (4 * dayLengthS + 5 * timeExtensionBonus) / timeRemainingS;
+            timeRemainingS_ = 5;
+            Invoke("SetNight", 5);
+            return;
+
+        }
         isNight = true;
         NightStart?.Invoke();
     }
@@ -363,6 +371,11 @@ public class DayNightCycle : MonoBehaviour
     public void SetDay()
     {
         if (!isNight) return;
+        if (isTransitioningTrueNight && trueNightTimer < trueNightTransitionDuration)
+        {
+            Invoke("SetDay", trueNightTransitionDuration - trueNightTimer);
+            return;
+        }
         foreach (Enemy enemy in FindObjectsByType<Enemy>())
         {
             Destroy(enemy.gameObject);
