@@ -378,7 +378,10 @@ public class DayNightCycle : MonoBehaviour
         }
         foreach (Enemy enemy in FindObjectsByType<Enemy>())
         {
-            Destroy(enemy.gameObject);
+            if (enemy.transform.position.z > 0)
+            {
+                Destroy(enemy.gameObject);
+            }
         }
         ResetWilderness();
         isNight = false;

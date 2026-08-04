@@ -104,6 +104,7 @@ public class Rope : MonoBehaviour
 
     void Simulate()
     {
+        if (segments == null || segments.Count == 0) return;
         WhipSegment startSeg = segments[0];
         startSeg.position = startTransform.position;
         startSeg.prevPosition = startTransform.position;

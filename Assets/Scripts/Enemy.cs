@@ -68,7 +68,7 @@ public class Enemy : MonoBehaviour
 
         HandleMovement();
 
-        if (transform.position.z < 0)
+        if (transform.position.z < 0 && (transform.position.x > -20 && transform.position.x < 30))
         {
             Cull();
         }
