@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using FMODUnity;
 using FMOD.Studio;
-using UnityEngine.SceneManagement;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -47,9 +46,7 @@ public class Player : MonoBehaviour
     [SerializeField] public GameObject roosterPrefab;
 
     private int startQuiverSize = 0;
-    private int maxQuiverSize = 4;
     private int startBombBagSize = 0;
-    private int maxBombBagSize = 4;
     private int startWhipLevel = 1;
     private int maxWhipLevel = 4;
     private int maxRoosters = 3;
@@ -407,7 +404,7 @@ public class Player : MonoBehaviour
     }
 
     private void HandleSaloon() {
-        float sqDistCutoff = 3f * 3f;
+        float sqDistCutoff = 2f * 2f;
         foreach (Saloon saloon in FindObjectsByType<Saloon>())
         {
             float sqDist = (saloon.transform.position - transform.position).sqrMagnitude;
@@ -431,7 +428,7 @@ public class Player : MonoBehaviour
     private void HandleShops() {
         ShopCrate closest = null;
         float closestSqDist = float.MaxValue;
-        float sqDistCutoff = 2f * 2f;
+        float sqDistCutoff = 1.5f * 1.5f;
 
         foreach (ShopCrate x in FindObjectsByType<ShopCrate>())
         {
@@ -466,9 +463,6 @@ public class Player : MonoBehaviour
                     case ItemType.Seed:
                         numSeeds += 1;
                         closest.cost += 10 * numSeeds;
-                        if (!CanPickupItem(closest.itemType)) {
-                            closest.SetSoldOut();
-                        }
                         break;
 
                     case ItemType.Rooster:
@@ -476,11 +470,9 @@ public class Player : MonoBehaviour
                     case ItemType.BombBagUpgrade:
                     case ItemType.WhipUpgrade:
                         closest.cost *= 3;
-                        if (!CanPickupItem(closest.itemType)) {
-                            closest.SetSoldOut();
-                        }
                         break;
                 }
+                closest.Buy();
             }
         }
     }
@@ -489,6 +481,8 @@ public class Player : MonoBehaviour
     {
         switch (type)
         {
+            case ItemType.Rooster:
+            case ItemType.WhipUpgrade:
             case ItemType.Gold:
             case ItemType.Whisky:
                 return true;
@@ -509,16 +503,10 @@ public class Player : MonoBehaviour
                 return FindObjectsByType<PlantSpot>().Any(x => !x.Growing);
 
             case ItemType.QuiverUpgrade:
-                return itemsBag.Has(ItemType.Bow) && quiverSize < maxQuiverSize;
+                return itemsBag.Has(ItemType.Bow);
 
             case ItemType.BombBagUpgrade:
-                return itemsBag.Has(ItemType.BombBag) && bombBagSize < maxBombBagSize;
-
-            case ItemType.WhipUpgrade:
-                return whipLevel < maxWhipLevel;
-
-            case ItemType.Rooster:
-                return FindObjectsByType<Rooster>().Count() < maxRoosters;
+                return itemsBag.Has(ItemType.BombBag);
 
             default:
                 return false;
@@ -576,11 +564,8 @@ public class Player : MonoBehaviour
                 {
                     TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                     dayNightCycle.timeRemainingS += 30;
-                    if (mapArea == MapArea.Town)
-                    {
-                        TownMusic.start();
-                    }
-                    else
+                    WildernessMusic.getPlaybackState(out FMOD.Studio.PLAYBACK_STATE state);
+                    if (state != FMOD.Studio.PLAYBACK_STATE.PLAYING)
                     {
                         WildernessMusic.start();
                     }

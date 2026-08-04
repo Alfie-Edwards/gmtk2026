@@ -8,6 +8,8 @@ public class ShopCrate : MonoBehaviour
 {
     [Header("UI References")]
     [field: SerializeField] public ItemType itemType { get; private set; }
+    [field: SerializeField] public int remainingPurchases = -1;
+    [field: SerializeField] public bool hideAfterSoldOut = false;
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private TextMeshProUGUI costText;
@@ -17,17 +19,6 @@ public class ShopCrate : MonoBehaviour
 
     [Header("Timings")]
     [SerializeField] private float fadeSpeed = 5f;
-
-    // private static readonly Dictionary<ItemType, int> INTIIAL_PRICES = new Dictionary<ItemType, int>
-    // {
-    //     { ItemType.Seed, 10 },
-    //     { ItemType.Arrow, 10 },
-    //     { ItemType.Dynamite, 50 },
-    //     { ItemType.WhipUpgrade, 50 },
-    //     { ItemType.QuiverUpgrade, 50 },
-    //     { ItemType.BombBagUpgrade, 50 },
-    //     { ItemType.Rooster, 50 },
-    // };
 
 
     private bool wasReuppedThisFrame = false;
@@ -60,7 +51,7 @@ public class ShopCrate : MonoBehaviour
 
     public int cost
     {
-        get => int.TryParse(costText?.text, out int result) ? result : 0;
+        get => remainingPurchases == 0 ? int.MaxValue : (int.TryParse(costText?.text, out int result) ? result : 0);
         set
         {
             if (costText != null)
@@ -72,9 +63,13 @@ public class ShopCrate : MonoBehaviour
     }
 
     public void SetSoldOut() {
+        if (hideAfterSoldOut)
+        {
+            SetAlpha(0f);
+        }
+        remainingPurchases = 0;
         description = "Sold out...";
-        cost = int.MaxValue;
-        coinImage.gameObject.SetActive(false);
+        coinImage?.gameObject?.SetActive(false);
     }
 
     void Awake()
@@ -104,9 +99,25 @@ public class ShopCrate : MonoBehaviour
         wasReuppedThisFrame = false;
     }
 
+    
+    public void Buy()
+    {
+        if (remainingPurchases > 0)
+        {
+            remainingPurchases -= 1;
+        }
+        if (remainingPurchases == 0)
+        {
+            SetSoldOut();
+        }
+    }
+
     public void Show()
     {
-        wasReuppedThisFrame = true;
+        if (!hideAfterSoldOut || remainingPurchases != 0)
+        {
+            wasReuppedThisFrame = true;
+        }
     }
 
     private void SetAlpha(float alpha)

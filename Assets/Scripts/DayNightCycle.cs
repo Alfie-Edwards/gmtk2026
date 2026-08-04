@@ -334,11 +334,13 @@ public class DayNightCycle : MonoBehaviour
 
     public void PauseTime()
     {
+        if (timePaused) return;
         timePaused = true;
     }
 
     public void UnpauseTime()
     {
+        if (!timePaused) return;
         timePaused = false;
         // Explicitly lock progress to 0 when unpaused right after sunrise so it starts cleanly from the beginning
         smoothDayProgress = 0f;
