@@ -18,6 +18,11 @@ public enum MapArea {
 [RequireComponent(typeof(CharacterController), typeof(DamageFlash))]
 public class Player : MonoBehaviour
 {
+    [Header("Inputs")]
+    [SerializeField] private InputActionReference moveAction;
+    [SerializeField] private InputActionReference jumpAction;
+    [SerializeField] private InputActionReference useAction;
+
     [Header("Keyboard")]
     [SerializeField] public float moveSpeed = 5.0f;
     [SerializeField] public float gravity = -9.81f * 2.0f;
@@ -336,7 +341,7 @@ public class Player : MonoBehaviour
 
     private void UseItems()
     {
-        if (Keyboard.current.xKey.wasPressedThisFrame)
+        if (useAction.action.WasPressedThisFrame())
         {
             Use(hotbar.Selected);
         }
@@ -346,25 +351,14 @@ public class Player : MonoBehaviour
     {
         if (!disableControls)
         {
-            float moveForwardAmount = 0;
-            float moveRightAmount = 0;
-            if (Keyboard.current != null)
-            {
-                if (Keyboard.current.upArrowKey.isPressed) moveForwardAmount += 1;
-                if (Keyboard.current.downArrowKey.isPressed) moveForwardAmount -= 1;
-                if (Keyboard.current.rightArrowKey.isPressed) moveRightAmount += 1;
-                if (Keyboard.current.leftArrowKey.isPressed) moveRightAmount -= 1;
-            }
-            Vector3 move = ((Vector3.forward * moveForwardAmount) + (Vector3.right * moveRightAmount)).normalized * moveSpeed;
+            Vector2 moveInput = moveAction.action.ReadValue<Vector2>();
+            Vector3 move = ((Vector3.forward * moveInput.y) + (Vector3.right * moveInput.x)).normalized * moveSpeed;
 
-
-            // Jump
-            if (Keyboard.current != null && Keyboard.current.zKey.wasPressedThisFrame && controller.isGrounded)
+            if (jumpAction.action.WasPressedThisFrame() && controller.isGrounded)
             {
                 velocity = Vector3.up * Mathf.Sqrt(jumpHeight * -2.0f * gravity);
             }
 
-            // Gravity
             if (!controller.isGrounded)
             {
                 velocity += Vector3.up * gravity * Time.deltaTime;
@@ -372,7 +366,6 @@ public class Player : MonoBehaviour
 
             knockbackVelocity = Vector3.Lerp(knockbackVelocity, Vector3.zero, knockbackDamping * Time.deltaTime);
 
-            // 4. Move the Controller
             controller.Move((velocity + move + knockbackVelocity) * Time.deltaTime);
 
             if (move != Vector3.zero)
@@ -429,7 +422,7 @@ public class Player : MonoBehaviour
                 if (dayNightCycle.isNight)
                 {
                     saloon.message = "go to sleep?";
-                    if (Keyboard.current.cKey.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame || Keyboard.current.xKey.wasPressedThisFrame) dayNightCycle.SetDay();
+                    if (useAction.action.WasPressedThisFrame()) dayNightCycle.SetDay();
                 }
                 else
                 {
@@ -470,7 +463,7 @@ public class Player : MonoBehaviour
 
             // Buy from shop
             closest.Show();
-            if ((Keyboard.current.eKey.wasPressedThisFrame || Keyboard.current.cKey.wasPressedThisFrame || Keyboard.current.xKey.wasPressedThisFrame) && closest.cost <= ammoBag.Amount(ItemType.Gold) && CanPickupItem(closest.itemType)) {
+            if (useAction.action.WasPressedThisFrame() && closest.cost <= ammoBag.Amount(ItemType.Gold) && CanPickupItem(closest.itemType)) {
                 ammoBag.Remove(ItemType.Gold, closest.cost);
                 PickupItem(closest.itemType);
                 RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_Purchase");

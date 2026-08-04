@@ -632,6 +632,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f78570ef65f4731429462245e2601d52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Horse
+  moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  jumpAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  anyKeyAction: {fileID: -6060696691388963804, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   moveSpeed: 6
   jumpHeight: 2
   gravity: -20
@@ -640,6 +643,9 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  endScreenGroup: {fileID: 0}
+  endScreenImages: []
+  invisibleWall: {fileID: 0}
 --- !u!65 &7703945689769164095
 BoxCollider:
   m_ObjectHideFlags: 0

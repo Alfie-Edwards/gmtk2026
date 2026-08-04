@@ -20,6 +20,14 @@ public class Hotbar : MonoBehaviour
     [SerializeField] public GameObject itemTemplate;
     [SerializeField] public bool show1 = false;
 
+    [Header("Inputs")]
+    [SerializeField] private InputActionReference scrollLeftAction;
+    [SerializeField] private InputActionReference scrollRightAction;
+    [SerializeField] private InputActionReference goto1Action;
+    [SerializeField] private InputActionReference goto2Action;
+    [SerializeField] private InputActionReference goto3Action;
+    [SerializeField] private InputActionReference goto4Action;
+
     private Bag bag_;
     private int iSelected_;
     private int iSelected
@@ -65,14 +73,34 @@ public class Hotbar : MonoBehaviour
     {
         if (bag == null || !enableSelection) return;
         float scrollY = Mouse.current.scroll.ReadValue().y;
-        if (scrollY > 0f || Keyboard.current.sKey.wasPressedThisFrame)
+        if (scrollRightAction.action.WasPressedThisFrame())
         {
-            iSelected = Mathf.Clamp(iSelected + 1, 0, bag.numUniqueItems - 1);
+            iSelected = (iSelected + 1) % bag.numUniqueItems;
             Refresh();
         }
-        else if (scrollY < 0f || (Keyboard.current.aKey.wasPressedThisFrame || Keyboard.current.aKey.wasPressedThisFrame))
+        else if (scrollLeftAction.action.WasPressedThisFrame())
         {
-            iSelected = Mathf.Clamp(iSelected - 1, 0, bag.numUniqueItems - 1);
+            iSelected = (iSelected - 1 + bag.numUniqueItems) % bag.numUniqueItems;
+            Refresh();
+        }
+        else if (goto1Action.action.WasPressedThisFrame() && bag.numUniqueItems > 0)
+        {
+            iSelected = 0;
+            Refresh();
+        }
+        else if (goto2Action.action.WasPressedThisFrame() && bag.numUniqueItems > 1)
+        {
+            iSelected = 1;
+            Refresh();
+        }
+        else if (goto3Action.action.WasPressedThisFrame() && bag.numUniqueItems > 2)
+        {
+            iSelected = 2;
+            Refresh();
+        }
+        else if (goto4Action.action.WasPressedThisFrame() && bag.numUniqueItems > 3)
+        {
+            iSelected = 3;
             Refresh();
         }
     }

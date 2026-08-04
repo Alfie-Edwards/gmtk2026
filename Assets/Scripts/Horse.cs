@@ -7,6 +7,11 @@ using System.Collections;
 
 public class Horse : MonoBehaviour
 {
+    [Header("Inputs")]
+    [SerializeField] private InputActionReference moveAction;
+    [SerializeField] private InputActionReference jumpAction;
+    [SerializeField] private InputActionReference anyKeyAction;
+
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
     public float jumpHeight = 2f;
@@ -50,7 +55,7 @@ public class Horse : MonoBehaviour
         }
         if (endScreenFinished)
         {
-            if (!restarting && Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame)
+            if (!restarting && anyKeyAction.action.WasPressedThisFrame())
             {
                 StartCoroutine(Restart());
             }
@@ -63,29 +68,20 @@ public class Horse : MonoBehaviour
             StartCoroutine(ShowEndScreen());
         }
 
-        float moveForwardAmount = 0;
-        float moveRightAmount = 0;
-        if (Keyboard.current != null)
-        {
-            if (Keyboard.current.upArrowKey.isPressed) moveForwardAmount += 1;
-            if (Keyboard.current.downArrowKey.isPressed) moveForwardAmount -= 1;
-            if (Keyboard.current.rightArrowKey.isPressed) moveRightAmount += 1;
-            if (Keyboard.current.leftArrowKey.isPressed) moveRightAmount -= 1;
-        }
-        Vector3 move = ((Vector3.forward * moveForwardAmount) + (Vector3.right * moveRightAmount)).normalized * moveSpeed;
+        Vector2 moveInput = moveAction.action.ReadValue<Vector2>();
+        Vector3 move = ((Vector3.forward * moveInput.y) + (Vector3.right * moveInput.x)).normalized * moveSpeed;
 
-        // Jump
-        if (Keyboard.current != null && Keyboard.current.zKey.wasPressedThisFrame && controller.isGrounded)
+        if (jumpAction.action.WasPressedThisFrame() && controller.isGrounded)
         {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravity);
+            velocity = Vector3.up * Mathf.Sqrt(jumpHeight * -2.0f * gravity);
         }
 
         if (!controller.isGrounded)
         {
-            velocity.y += gravity * Time.deltaTime;
+            velocity += Vector3.up * gravity * Time.deltaTime;
         }
 
-        controller.Move((velocity + move + knockbackVelocity) * Time.deltaTime);
+        controller.Move((velocity + move) * Time.deltaTime);
 
         if (move != Vector3.zero)
         {
