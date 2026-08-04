@@ -51,11 +51,6 @@ public class Rope : MonoBehaviour
         Vector3 startPos = startTransform.position;
         Vector3 endPos = endTransform.position;
 
-        if (Vector3.SqrMagnitude(startPos - endPos) < 0.0001f)
-        {
-            endPos = startPos + Vector3.down * ropeLength;
-        }
-
         for (int i = 0; i < segmentCount; i++)
         {
             float t = (float)i / (segmentCount - 1);
@@ -210,5 +205,11 @@ public class Rope : MonoBehaviour
         }
 
         lineRenderer.SetPositions(positions);
+    }
+
+    public void Reset()
+    {
+        InitializeWhip();
+        DrawWhip();
     }
 }

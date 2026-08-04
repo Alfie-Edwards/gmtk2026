@@ -183,7 +183,6 @@ public class Player : MonoBehaviour
         HandleShops();
         HandleSaloon();
         UseItems();
-        UpdateWeapons();
         MapAreaStuff();
         SyncMusic();
     }
@@ -387,20 +386,19 @@ public class Player : MonoBehaviour
 
     private void OnItemChanged(ItemType itemType)
     {
+        whip.gameObject.SetActive(hotbar.Selected == ItemType.Whip);
+        bow.gameObject.SetActive(hotbar.Selected == ItemType.Bow);
+        bombBag.gameObject.SetActive(hotbar.Selected == ItemType.BombBag);
+        pickaxe.gameObject.SetActive(hotbar.Selected == ItemType.Pickaxe);
         switch(itemType)
         {
             case ItemType.Whip:
                 whip.Reset();
                 break;
+            case ItemType.Pickaxe:
+                pickaxe.Reset();
+                break;
         }
-    }
-
-    private void UpdateWeapons()
-    {
-        whip.gameObject.SetActive(hotbar.Selected == ItemType.Whip);
-        bow.gameObject.SetActive(hotbar.Selected == ItemType.Bow);
-        bombBag.gameObject.SetActive(hotbar.Selected == ItemType.BombBag);
-        pickaxe.gameObject.SetActive(hotbar.Selected == ItemType.Pickaxe);
     }
 
     private void PickupItems()

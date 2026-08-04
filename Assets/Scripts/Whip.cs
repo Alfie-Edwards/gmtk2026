@@ -148,6 +148,9 @@ public class Whip : MonoBehaviour
 
     public void Reset()
     {
-        rope.InitializeWhip();
+        StopAllCoroutines();
+        SnapToStart();
+        rope.Reset();
+        isAttacking = false;
     }
 }

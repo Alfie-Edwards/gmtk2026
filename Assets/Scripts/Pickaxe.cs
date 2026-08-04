@@ -20,11 +20,20 @@ public class Pickaxe : MonoBehaviour
     {
         initialLocalPos = transform.localPosition;
         initialLocalRot = transform.localRotation;
+        Reset();
 
         if (hitPoint == null)
         {
             hitPoint = transform;
         }
+    }
+
+    public void Reset()
+    {
+        StopAllCoroutines();
+        transform.localPosition = initialLocalPos;
+        transform.localRotation = initialLocalRot;
+        isSwinging = false;
     }
 
     public void Swing()
