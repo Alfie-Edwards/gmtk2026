@@ -79,6 +79,7 @@ public class Player : MonoBehaviour
     private EventInstance TownMusic;
     private EventInstance TenSecondMusic;
     private int lastCheckedSecond = -1;
+    public bool disableControls = false;
 
     public int whipLevel { get; private set; }
     public int quiverSize {
@@ -97,7 +98,7 @@ public class Player : MonoBehaviour
     }
 
     private CharacterController controller;
-    private Vector3 velocity = Vector3.zero;
+    public Vector3 velocity { get; private set; }
     private Quaternion lookTarget;
     private Bag itemsBag;
     private Bag ammoBag;
@@ -141,6 +142,7 @@ public class Player : MonoBehaviour
         // init controls
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        velocity = Vector3.zero;
 
         ammoBag.Add(ItemType.Gold, 10);
 
@@ -151,10 +153,10 @@ public class Player : MonoBehaviour
         mapArea = MapArea.Town;
         TownMusic.start();
 
-        // ammoBag.Add(ItemType.Gold, 99990);
-        // PickupItem(ItemType.Bow);
-        // PickupItem(ItemType.BombBag);
-        // PickupItem(ItemType.Pickaxe);
+        ammoBag.Add(ItemType.Gold, 99990);
+        PickupItem(ItemType.Bow);
+        PickupItem(ItemType.BombBag);
+        PickupItem(ItemType.Pickaxe);
     }
 
     void Spawn()
@@ -304,10 +306,6 @@ public class Player : MonoBehaviour
                 StartCoroutine(treasureBag.EmptyInto(ammoBag, 10f));
                 WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                // if (win)
-                // {
-                //     SceneManager.LoadScene("WIN");
-                // }
                 break;
             case MapArea.Wilderness:
                 WildernessMusic.setParameterByNameWithLabel("Variation", "Desert");
@@ -343,40 +341,43 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        float moveForwardAmount = 0;
-        float moveRightAmount = 0;
-        if (Keyboard.current != null)
+        if (!disableControls)
         {
-            if (Keyboard.current.upArrowKey.isPressed) moveForwardAmount += 1;
-            if (Keyboard.current.downArrowKey.isPressed) moveForwardAmount -= 1;
-            if (Keyboard.current.rightArrowKey.isPressed) moveRightAmount += 1;
-            if (Keyboard.current.leftArrowKey.isPressed) moveRightAmount -= 1;
+            float moveForwardAmount = 0;
+            float moveRightAmount = 0;
+            if (Keyboard.current != null)
+            {
+                if (Keyboard.current.upArrowKey.isPressed) moveForwardAmount += 1;
+                if (Keyboard.current.downArrowKey.isPressed) moveForwardAmount -= 1;
+                if (Keyboard.current.rightArrowKey.isPressed) moveRightAmount += 1;
+                if (Keyboard.current.leftArrowKey.isPressed) moveRightAmount -= 1;
+            }
+            Vector3 move = ((Vector3.forward * moveForwardAmount) + (Vector3.right * moveRightAmount)).normalized * moveSpeed;
+
+
+            // Jump
+            if (Keyboard.current != null && Keyboard.current.zKey.wasPressedThisFrame && controller.isGrounded)
+            {
+                velocity =  Vector3.up * Mathf.Sqrt(jumpHeight * -2.0f * gravity);
+            }
+
+            // Gravity
+            if (!controller.isGrounded)
+            {
+                velocity += Vector3.up * gravity * Time.deltaTime;
+            }
+
+            knockbackVelocity = Vector3.Lerp(knockbackVelocity, Vector3.zero, knockbackDamping * Time.deltaTime);
+
+            // 4. Move the Controller
+            controller.Move((velocity + move + knockbackVelocity) * Time.deltaTime);
+
+            if (move != Vector3.zero)
+            {
+                lookTarget = Quaternion.LookRotation(move);
+            }
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookTarget, Mathf.Min(16f * Time.deltaTime, 1f));
         }
-        Vector3 move = ((Vector3.forward * moveForwardAmount) + (Vector3.right * moveRightAmount)).normalized * moveSpeed;
-
-
-        // Jump
-        if (Keyboard.current != null && Keyboard.current.zKey.wasPressedThisFrame && controller.isGrounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravity);
-        }
-
-        // Gravity
-        if (!controller.isGrounded)
-        {
-            velocity.y += gravity * Time.deltaTime;
-        }
-
-        knockbackVelocity = Vector3.Lerp(knockbackVelocity, Vector3.zero, knockbackDamping * Time.deltaTime);
-
-        // 4. Move the Controller
-        controller.Move((velocity + move + knockbackVelocity) * Time.deltaTime);
-
-        if (move != Vector3.zero)
-        {
-            lookTarget = Quaternion.LookRotation(move);
-        }
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookTarget, Mathf.Min(16f * Time.deltaTime, 1f));
         camera.transform.position = Vector3.Lerp(camera.transform.position, transform.position + cameraOffset, Mathf.Min(3f * Time.deltaTime, 1f));
     }
 
