@@ -198,7 +198,6 @@ MonoBehaviour:
   quiverShop: {fileID: 0}
   bombBagShop: {fileID: 0}
   droppedGoldPrefab: {fileID: 575649640322857749, guid: 447ae08732a2f564ab18fa5320338070, type: 3}
-  damageFlash: {fileID: 0}
   roosterSpawnPoint: {fileID: 0}
   roosterPrefab: {fileID: 8203415952206793447, guid: 4b1c46cbd5e103f479fe5f7018548431, type: 3}
   whip: {fileID: 1802198996311432322}
@@ -274,31 +273,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5212585560870118872, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.17339
+      value: 0.033
       objectReference: {fileID: 0}
     - target: {fileID: 5212585560870118872, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.70386815
+      value: -1.08
       objectReference: {fileID: 0}
     - target: {fileID: 5212585560870118872, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.32401913
+      value: 0.415
       objectReference: {fileID: 0}
     - target: {fileID: 5212585560870118872, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9688449
+      value: 0.96262807
       objectReference: {fileID: 0}
     - target: {fileID: 5212585560870118872, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.17067508
+      value: -0.16957991
       objectReference: {fileID: 0}
     - target: {fileID: 5212585560870118872, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.031136654
+      value: -0.036635138
       objectReference: {fileID: 0}
     - target: {fileID: 5212585560870118872, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.17674866
+      value: -0.20796107
       objectReference: {fileID: 0}
     - target: {fileID: 5212585560870118872, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -310,7 +309,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5212585560870118872, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -20.678
+      value: -24.381
       objectReference: {fileID: 0}
     - target: {fileID: 5509500956726530723, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
       propertyPath: m_Layer
@@ -323,6 +322,18 @@ PrefabInstance:
     - target: {fileID: 6970878688065656316, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
       propertyPath: hitRadius
       value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7414474821479838494, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.166
+      objectReference: {fileID: 0}
+    - target: {fileID: 7414474821479838494, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.239
+      objectReference: {fileID: 0}
+    - target: {fileID: 7414474821479838494, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.318
       objectReference: {fileID: 0}
     - target: {fileID: 7861784498913831635, guid: 6c956f81bff7e4c3389c57f5fc99dd91, type: 3}
       propertyPath: m_Name
@@ -367,11 +378,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2762211843412985140, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
       propertyPath: hitRadius
-      value: 0.2
+      value: 0.22
       objectReference: {fileID: 0}
     - target: {fileID: 2762211843412985140, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
       propertyPath: throwDuration
-      value: 0.3
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 2762211843412985140, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
       propertyPath: playerCollider
@@ -379,7 +390,7 @@ PrefabInstance:
       objectReference: {fileID: 4206865211183290909}
     - target: {fileID: 2762211843412985140, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
       propertyPath: retractDuration
-      value: 0.05
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 2762211843412985140, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
       propertyPath: enemyLayer.m_Bits

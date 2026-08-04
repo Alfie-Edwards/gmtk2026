@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 
+using System;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Transform))]
@@ -20,7 +21,17 @@ public class Hotbar : MonoBehaviour
     [SerializeField] public bool show1 = false;
 
     private Bag bag_;
-    private int iSelected;
+    private int iSelected_;
+    private int iSelected
+    {
+        get => iSelected_;
+        set
+        {
+            if (iSelected == value) return;
+            iSelected_ = value;
+            SelectedChanged?.Invoke(Selected);
+        }
+    }
     private Dictionary<ItemType, int> limits = new Dictionary<ItemType, int>();
 
     public Bag bag {
@@ -35,8 +46,10 @@ public class Hotbar : MonoBehaviour
         }
     }
 
+    public event Action<ItemType> SelectedChanged;
+
     void Start() {
-        iSelected = 0;
+        iSelected_ = 0;
     }
 
     public void SetLimit(ItemType type, int limit) {

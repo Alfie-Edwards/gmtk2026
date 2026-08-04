@@ -37,16 +37,17 @@ public class Pickaxe : MonoBehaviour
     {
         isSwinging = true;
         float elapsed = 0f;
-        float halfDuration = swingDuration / 2f;
+        float forwardDuration = swingDuration * 0.3f;
+        float backwardDuration = swingDuration - forwardDuration;
 
         Vector3 targetPos = initialLocalPos + swingOffset;
         Quaternion targetRot = initialLocalRot * Quaternion.Euler(swingRotationOffset);
 
         // 1. Swing forward / down
-        while (elapsed < halfDuration)
+        while (elapsed < forwardDuration)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / halfDuration);
+            float t = Mathf.Clamp01(elapsed / forwardDuration);
 
             transform.localPosition = Vector3.Lerp(initialLocalPos, targetPos, t);
             transform.localRotation = Quaternion.Slerp(initialLocalRot, targetRot, t);
@@ -56,13 +57,11 @@ public class Pickaxe : MonoBehaviour
         // 2. Check for targets at the peak of the swing
         CheckHits();
 
-        elapsed = 0f;
-
         // 3. Return to initial position
-        while (elapsed < halfDuration)
+        while (elapsed < backwardDuration)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / halfDuration);
+            float t = Mathf.Clamp01(elapsed / backwardDuration);
 
             transform.localPosition = Vector3.Lerp(targetPos, initialLocalPos, t);
             transform.localRotation = Quaternion.Slerp(targetRot, initialLocalRot, t);

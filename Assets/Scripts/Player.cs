@@ -122,6 +122,7 @@ public class Player : MonoBehaviour
         hotbar.bag = itemsBag;
         ammoDisplay.bag = ammoBag;
         treasureDisplay.bag = treasureBag;
+        hotbar.SelectedChanged += OnItemChanged;
         controller = GetComponent<CharacterController>();
         PickupItem(ItemType.Whip);
         cameraOffset = new Vector3(0f, cameraDist * Mathf.Sin(cameraAngle * Mathf.Deg2Rad), cameraZOffset + cameraDist * -Mathf.Cos(cameraAngle * Mathf.Deg2Rad));
@@ -382,6 +383,16 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, lookTarget, Mathf.Min(16f * Time.deltaTime, 1f));
         }
         camera.transform.position = Vector3.Lerp(camera.transform.position, transform.position + cameraOffset, Mathf.Min(3f * Time.deltaTime, 1f));
+    }
+
+    private void OnItemChanged(ItemType itemType)
+    {
+        switch(itemType)
+        {
+            case ItemType.Whip:
+                whip.Reset();
+                break;
+        }
     }
 
     private void UpdateWeapons()
