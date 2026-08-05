@@ -432,7 +432,7 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    saloon.message = "Come back at the end of the day.";
+                    saloon.message = "Come back at\n~ sundown ~";
                 }
                 saloon.Show();
             }
