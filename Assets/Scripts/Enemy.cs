@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController), typeof(DamageFlash))]
 public class Enemy : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -17,7 +17,7 @@ public class Enemy : MonoBehaviour
         {
             if (playerTransform == null)
             {
-                Player playerComponent = Object.FindAnyObjectByType<Player>();
+                Player playerComponent = FindAnyObjectByType<Player>();
                 if (playerComponent != null)
                 {
                     playerTransform = playerComponent.transform;
@@ -68,7 +68,7 @@ public class Enemy : MonoBehaviour
 
         HandleMovement();
 
-        if (transform.position.z < 0)
+        if (transform.position.z < 0 && (transform.position.x > -20 && transform.position.x < 30))
         {
             Cull();
         }
@@ -87,7 +87,6 @@ public class Enemy : MonoBehaviour
         if (controller == null || !controller.enabled) return;
 
         Vector3 moveDir = Vector3.zero;
-        bool isTryingToMove = false;
 
         if (Player != null)
         {
@@ -104,7 +103,6 @@ public class Enemy : MonoBehaviour
                 {
                     moveDir = toPlayer.normalized * moveSpeed;
                     transform.rotation = Quaternion.LookRotation(toPlayer);
-                    isTryingToMove = true;
                 }
             }
         }
@@ -146,6 +144,7 @@ public class Enemy : MonoBehaviour
 
         lastHitTime = Time.time;
         currentHealth -= damageAmount;
+        GetComponent<DamageFlash>()?.TriggerFlash();
 
         ApplyKnockback(hitDirection, knockbackModifier);
 

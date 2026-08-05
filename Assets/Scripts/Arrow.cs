@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(Collider), typeof(Item))]
@@ -58,6 +59,7 @@ public class Arrow : MonoBehaviour
     void Embed(Collider hitCollider, Collision collision = null)
     {
         if (isEmbedded) return;
+        RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PlayerGetsHit");
         isEmbedded = true;
         Debug.Log("Embedding!");
 

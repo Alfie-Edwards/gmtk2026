@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 using System.Collections;
 
@@ -20,11 +21,20 @@ public class Pickaxe : MonoBehaviour
     {
         initialLocalPos = transform.localPosition;
         initialLocalRot = transform.localRotation;
+        Reset();
 
         if (hitPoint == null)
         {
             hitPoint = transform;
         }
+    }
+
+    public void Reset()
+    {
+        StopAllCoroutines();
+        transform.localPosition = initialLocalPos;
+        transform.localRotation = initialLocalRot;
+        isSwinging = false;
     }
 
     public void Swing()
@@ -35,34 +45,31 @@ public class Pickaxe : MonoBehaviour
 
     private IEnumerator PerformSwing()
     {
+        RuntimeManager.PlayOneShot("event:/SFX/Weapons/SFX_WhipCrack");
         isSwinging = true;
         float elapsed = 0f;
-        float halfDuration = swingDuration / 2f;
+        float forwardDuration = swingDuration * 0.3f;
+        float backwardDuration = swingDuration - forwardDuration;
 
         Vector3 targetPos = initialLocalPos + swingOffset;
         Quaternion targetRot = initialLocalRot * Quaternion.Euler(swingRotationOffset);
 
-        // 1. Swing forward / down
-        while (elapsed < halfDuration)
+        while (elapsed < forwardDuration)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / halfDuration);
+            float t = Mathf.Clamp01(elapsed / forwardDuration);
 
             transform.localPosition = Vector3.Lerp(initialLocalPos, targetPos, t);
             transform.localRotation = Quaternion.Slerp(initialLocalRot, targetRot, t);
             yield return null;
         }
 
-        // 2. Check for targets at the peak of the swing
         CheckHits();
 
-        elapsed = 0f;
-
-        // 3. Return to initial position
-        while (elapsed < halfDuration)
+        while (elapsed < backwardDuration)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / halfDuration);
+            float t = Mathf.Clamp01(elapsed / backwardDuration);
 
             transform.localPosition = Vector3.Lerp(targetPos, initialLocalPos, t);
             transform.localRotation = Quaternion.Slerp(targetRot, initialLocalRot, t);
@@ -74,26 +81,27 @@ public class Pickaxe : MonoBehaviour
         isSwinging = false;
     }
 
-    void CheckHits()
+    private void CheckHits()
     {
         Vector3 center = hitPoint.position;
         Collider[] hits = Physics.OverlapSphere(center, hitRadius);
+
+        if (hits.Length > 0)
+        {
+            RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PlayerGetsHit");
+        }
 
         foreach (Collider hit in hits)
         {
             if (hit.GetComponent<Rock>() is Rock rock)
             {
                 rock.Break();
-                continue;
             }
-
-            if (hit.GetComponent<CrackedWall>() is CrackedWall wall)
+            else if (hit.GetComponent<CrackedWall>() is CrackedWall wall)
             {
                 wall.Break();
-                continue;
             }
-
-            if (hit.GetComponent<Enemy>() is Enemy enemy)
+            else if (hit.GetComponent<Enemy>() is Enemy enemy)
             {
                 Vector3 hitDirection = (hit.transform.position - transform.position).normalized;
                 enemy.TakeDamage(10f, hitDirection);

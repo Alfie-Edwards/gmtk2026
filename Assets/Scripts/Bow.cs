@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 
 public class Bow : MonoBehaviour
@@ -15,14 +16,9 @@ public class Bow : MonoBehaviour
             return;
         }
 
+        RuntimeManager.PlayOneShot("event:/SFX/Weapons/SFX_WhipCrack");
         Vector3 spawnPos = spawnPoint != null ? spawnPoint.position : transform.position;
         GameObject arrowObj = Instantiate(arrowPrefab, spawnPos, Quaternion.identity);
-
-        Arrow arrow = arrowObj.GetComponent<Arrow>();
-        if (arrow != null)
-        {
-            // Pass the player's collider so it gets ignored
-            arrow.Initialize(fireDirection, playerCollider);
-        }
+        arrowObj.GetComponent<Arrow>()?.Initialize(fireDirection, playerCollider);
     }
 }

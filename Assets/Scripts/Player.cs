@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using FMODUnity;
 using FMOD.Studio;
-using UnityEngine.SceneManagement;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +11,18 @@ public enum MapArea {
     Wilderness,
     Wilderness2,
     Boss,
+    Escape,
     None,
 }
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController), typeof(DamageFlash))]
 public class Player : MonoBehaviour
 {
+    [Header("Inputs")]
+    [SerializeField] private InputActionReference moveAction;
+    [SerializeField] private InputActionReference jumpAction;
+    [SerializeField] private InputActionReference useAction;
+
     [Header("Keyboard")]
     [SerializeField] public float moveSpeed = 5.0f;
     [SerializeField] public float gravity = -9.81f * 2.0f;
@@ -34,6 +39,7 @@ public class Player : MonoBehaviour
     [SerializeField] public float cameraAngle = 45f;
     [SerializeField] public float cameraUpTilt = 10f;
     [SerializeField] public float cameraZOffset = 10f;
+    [SerializeField] public float cameraFollowSpeed = 3f;
     [SerializeField] public GameObject ghostPrefab;
     [SerializeField] public int ghostSpawnsPerSecond = 2;
     [SerializeField] public GameObject arrowShop;
@@ -46,12 +52,8 @@ public class Player : MonoBehaviour
     [SerializeField] public GameObject roosterPrefab;
 
     private int startQuiverSize = 0;
-    private int maxQuiverSize = 4;
     private int startBombBagSize = 0;
-    private int maxBombBagSize = 4;
     private int startWhipLevel = 1;
-    private int maxWhipLevel = 4;
-    private int maxRoosters = 3;
     private int numSeeds = 0;
 
     [Header("Weapons")]
@@ -77,6 +79,8 @@ public class Player : MonoBehaviour
     private EventInstance WildernessMusic;
     private EventInstance TownMusic;
     private EventInstance TenSecondMusic;
+    private int lastCheckedSecond = -1;
+    public bool disableControls = false;
 
     public int whipLevel { get; private set; }
     public int quiverSize {
@@ -95,13 +99,14 @@ public class Player : MonoBehaviour
     }
 
     private CharacterController controller;
-    private Vector3 velocity = Vector3.zero;
+    public Vector3 velocity { get; private set; }
     private Quaternion lookTarget;
     private Bag itemsBag;
     private Bag ammoBag;
     private Bag treasureBag;
     private Vector3 knockbackVelocity;
-    private Vector3 cameraOffset;
+    public Vector3 cameraOffset {get; set; }
+    private bool actionUsed;
     void Start()
     {
         // init upgrades
@@ -124,6 +129,7 @@ public class Player : MonoBehaviour
         hotbar.bag = itemsBag;
         ammoDisplay.bag = ammoBag;
         treasureDisplay.bag = treasureBag;
+        hotbar.SelectedChanged += OnItemChanged;
         controller = GetComponent<CharacterController>();
         PickupItem(ItemType.Whip);
         cameraOffset = new Vector3(0f, cameraDist * Mathf.Sin(cameraAngle * Mathf.Deg2Rad), cameraZOffset + cameraDist * -Mathf.Cos(cameraAngle * Mathf.Deg2Rad));
@@ -139,6 +145,8 @@ public class Player : MonoBehaviour
         // init controls
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        velocity = Vector3.zero;
+        actionUsed = false;
 
         ammoBag.Add(ItemType.Gold, 10);
 
@@ -146,6 +154,7 @@ public class Player : MonoBehaviour
         TownMusic = RuntimeManager.CreateInstance(townMusicSource);
         TenSecondMusic =RuntimeManager.CreateInstance(tenSecondMusicSource);
 
+        mapArea = MapArea.Town;
         TownMusic.start();
 
         ammoBag.Add(ItemType.Gold, 99990);
@@ -157,14 +166,12 @@ public class Player : MonoBehaviour
     void Spawn()
     {
         if (controller == null) controller = GetComponent<CharacterController>();
-
-        // 1. Temporarily disable the CharacterController so it releases control of the transform
         if (controller != null) controller.enabled = false;
 
-        // 2. Set position and rotation
         transform.position = new Vector3(13.89f, 0.5f, -8.35f);
+        // transform.position = new Vector3(0f, -3f, 75f); // ending
         transform.rotation = Quaternion.Euler(0f, -180f, 0f);
-        lookTarget = Quaternion.Euler(0f, -180f, 0f); // Keep if used in your script
+        lookTarget = Quaternion.Euler(0f, -180f, 0f);
         camera.position = transform.position + cameraOffset;
 
         dayNightCycle.SetDay();
@@ -176,19 +183,48 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        actionUsed = false;
         Move();
         PickupItems();
-        HandleShops();
         HandleSaloon();
+        HandleShops();
         UseItems();
-        UpdateWeapons();
         MapAreaStuff();
+        SyncMusic();
+    }
 
-        if (dayNightCycle.timeRemainingS < 12f && (dayNightCycle.timeRemainingS + Time.deltaTime) >= 12f && mapArea != MapArea.Town)
+    private void SyncMusic()
+    {
+        if (TenSecondMusic.isValid() && mapArea != MapArea.Town)
         {
-            WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            TenSecondMusic.start();
+            int secondsRemainingDay = Mathf.CeilToInt(dayNightCycle.timeRemainingS);
+            int targetTimeSongMs = Mathf.Clamp(Mathf.FloorToInt((12f - dayNightCycle.timeRemainingS) * 1000), 0, 12000);
+            TenSecondMusic.getPlaybackState(out FMOD.Studio.PLAYBACK_STATE state);
+
+            switch (state)
+            {
+                case FMOD.Studio.PLAYBACK_STATE.PLAYING:
+                    TenSecondMusic.getTimelinePosition(out int currentPositionMs);
+                    int currentSecondSong = currentPositionMs / 1000;
+                    int currentSecondDay = 12 - secondsRemainingDay;
+                    if ((lastCheckedSecond != -1) && (currentSecondSong < 12) && (currentSecondSong < currentSecondDay) && (currentSecondSong != lastCheckedSecond))
+                    {
+                        TenSecondMusic.setTimelinePosition(targetTimeSongMs);
+                    }
+                    lastCheckedSecond = currentSecondSong;
+                    break;
+
+                case FMOD.Studio.PLAYBACK_STATE.STOPPED:
+                case FMOD.Studio.PLAYBACK_STATE.STOPPING:
+                    if (secondsRemainingDay <= 12 && mapArea != MapArea.Escape)
+                    {
+                        WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                        TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                        TenSecondMusic.start();
+                        TenSecondMusic.setTimelinePosition(targetTimeSongMs);
+                    }
+                    break;
+            }
         }
     }
 
@@ -204,21 +240,40 @@ public class Player : MonoBehaviour
     private MapArea GetCurrentMapArea() {
         if (transform.position.z < 0)
         {
+            if (transform.position.x < -26)
+            {
+                return MapArea.Escape;
+            }
             return MapArea.Town;
         }
-        if (transform.position.z < 34)
+        else if (transform.position.z < 34)
         {
+            if (transform.position.x < -42 || (transform.position.z < 10 && transform.position.x < -34))
+            {
+                return MapArea.Escape;
+            }
             return MapArea.Wilderness;
         }
-        if (transform.position.z < 68)
+        else if (transform.position.z < 68)
         {
+            if (transform.position.x < -52)
+            {
+                return MapArea.Escape;
+            }
             return MapArea.Wilderness2;
         }
-        return MapArea.Boss;
+        else if (transform.position.x < -40 || transform.position.z > 83)
+        {
+            return MapArea.Escape;
+        }
+        else
+        {
+            return MapArea.Boss;
+        }
     }
 
     private void DoMapAreaStuff(MapArea area) {
-        if (area != MapArea.Town && dayNightCycle.isNight)
+        if (area != MapArea.Town && area != MapArea.Escape && dayNightCycle.isNight)
         {
             if (Random.value < ghostSpawnsPerSecond * Time.deltaTime)
             {
@@ -231,12 +286,25 @@ public class Player : MonoBehaviour
         Debug.Log($"Entered {newArea}");
         switch (prevArea) {
             case MapArea.Town:
-                if (!dayNightCycle.isNight) dayNightCycle.UnpauseTime();
-                TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                WildernessMusic.start();
+                if (newArea != MapArea.Escape)
+                {
+                    if (!dayNightCycle.isNight) dayNightCycle.UnpauseTime();
+                    TownMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                    if (dayNightCycle.timeRemainingS <= 12)
+                    {
+                        TenSecondMusic.start();
+                    }
+                    else
+                    {
+                        WildernessMusic.start();   
+                    }
+                }
                 break;
-            case MapArea.Boss:
-                Object.FindAnyObjectByType<HealthBar>()?.Hide();
+            case MapArea.Escape:
+                if (newArea == MapArea.Town)
+                {
+                    dayNightCycle.SetDay();
+                }
                 break;
         }
         switch (newArea)
@@ -246,10 +314,6 @@ public class Player : MonoBehaviour
                 StartCoroutine(treasureBag.EmptyInto(ammoBag, 10f));
                 WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                if (win)
-                {
-                    SceneManager.LoadScene("WIN");
-                }
                 break;
             case MapArea.Wilderness:
                 WildernessMusic.setParameterByNameWithLabel("Variation", "Desert");
@@ -259,64 +323,77 @@ public class Player : MonoBehaviour
                 break;
             case MapArea.Boss:
                 WildernessMusic.setParameterByNameWithLabel("Variation", "Lava Mountains");
-                Object.FindAnyObjectByType<HealthBar>()?.ShowIfEverShown();
+                FindAnyObjectByType<HealthBar>()?.ShowIfEverShown();
+                break;
+            case MapArea.Escape:
+                win = true;
+                dayNightCycle.SetNight();
+                FindAnyObjectByType<HealthBar>()?.Hide();
+                WildernessMusic.setParameterByNameWithLabel("Variation", "Lava Mountains");
+                TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                WildernessMusic.getPlaybackState(out FMOD.Studio.PLAYBACK_STATE state);
+                if (state != FMOD.Studio.PLAYBACK_STATE.PLAYING)
+                {
+                    WildernessMusic.start();
+                }
                 break;
         }
     }
 
     private void UseItems()
     {
-        if (Keyboard.current.xKey.wasPressedThisFrame)
+        if (!actionUsed && useAction.action.WasPressedThisFrame())
         {
+            actionUsed = true;
             Use(hotbar.Selected);
         }
     }
 
     private void Move()
     {
-        float moveForwardAmount = 0;
-        float moveRightAmount = 0;
-        if (Keyboard.current != null)
+        if (!disableControls)
         {
-            if (Keyboard.current.upArrowKey.isPressed) moveForwardAmount += 1;
-            if (Keyboard.current.downArrowKey.isPressed) moveForwardAmount -= 1;
-            if (Keyboard.current.rightArrowKey.isPressed) moveRightAmount += 1;
-            if (Keyboard.current.leftArrowKey.isPressed) moveRightAmount -= 1;
+            Vector2 moveInput = moveAction.action.ReadValue<Vector2>();
+            Vector3 move = ((Vector3.forward * moveInput.y) + (Vector3.right * moveInput.x)) * moveSpeed;
+
+            if (jumpAction.action.WasPressedThisFrame() && controller.isGrounded)
+            {
+                velocity = Vector3.up * Mathf.Sqrt(jumpHeight * -2.0f * gravity);
+            }
+
+            if (!controller.isGrounded)
+            {
+                velocity += Vector3.up * gravity * Time.deltaTime;
+            }
+
+            knockbackVelocity = Vector3.Lerp(knockbackVelocity, Vector3.zero, knockbackDamping * Time.deltaTime);
+
+            controller.Move((velocity + move + knockbackVelocity) * Time.deltaTime);
+
+            if (move != Vector3.zero)
+            {
+                lookTarget = Quaternion.LookRotation(move);
+            }
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookTarget, Mathf.Min(16f * Time.deltaTime, 1f));
         }
-        Vector3 move = ((Vector3.forward * moveForwardAmount) + (Vector3.right * moveRightAmount)).normalized * moveSpeed;
-
-
-        // Jump
-        if (Keyboard.current != null && Keyboard.current.zKey.wasPressedThisFrame && controller.isGrounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravity);
-        }
-
-        // Gravity
-        if (!controller.isGrounded)
-        {
-            velocity.y += gravity * Time.deltaTime;
-        }
-
-        knockbackVelocity = Vector3.Lerp(knockbackVelocity, Vector3.zero, knockbackDamping * Time.deltaTime);
-
-        // 4. Move the Controller
-        controller.Move((velocity + move + knockbackVelocity) * Time.deltaTime);
-
-        if (move != Vector3.zero)
-        {
-            lookTarget = Quaternion.LookRotation(move);
-        }
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookTarget, Mathf.Min(16f * Time.deltaTime, 1f));
-        camera.transform.position = Vector3.Lerp(camera.transform.position, transform.position + cameraOffset, Mathf.Min(3f * Time.deltaTime, 1f));
+        camera.transform.position = Vector3.Lerp(camera.transform.position, transform.position + cameraOffset, Mathf.Min(cameraFollowSpeed * Time.deltaTime, 1f));
     }
 
-    private void UpdateWeapons()
+    private void OnItemChanged(ItemType itemType)
     {
         whip.gameObject.SetActive(hotbar.Selected == ItemType.Whip);
         bow.gameObject.SetActive(hotbar.Selected == ItemType.Bow);
         bombBag.gameObject.SetActive(hotbar.Selected == ItemType.BombBag);
         pickaxe.gameObject.SetActive(hotbar.Selected == ItemType.Pickaxe);
+        switch(itemType)
+        {
+            case ItemType.Whip:
+                whip.Reset();
+                break;
+            case ItemType.Pickaxe:
+                pickaxe.Reset();
+                break;
+        }
     }
 
     private void PickupItems()
@@ -337,7 +414,7 @@ public class Player : MonoBehaviour
     }
 
     private void HandleSaloon() {
-        float sqDistCutoff = 3f * 3f;
+        float sqDistCutoff = 2f * 2f;
         foreach (Saloon saloon in FindObjectsByType<Saloon>())
         {
             float sqDist = (saloon.transform.position - transform.position).sqrMagnitude;
@@ -347,7 +424,11 @@ public class Player : MonoBehaviour
                 if (dayNightCycle.isNight)
                 {
                     saloon.message = "go to sleep?";
-                    if (Keyboard.current.cKey.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame || Keyboard.current.xKey.wasPressedThisFrame) dayNightCycle.SetDay();
+                    if (!actionUsed && useAction.action.WasPressedThisFrame())
+                    {
+                        actionUsed = true;
+                        dayNightCycle.SetDay();
+                    }
                 }
                 else
                 {
@@ -361,7 +442,7 @@ public class Player : MonoBehaviour
     private void HandleShops() {
         ShopCrate closest = null;
         float closestSqDist = float.MaxValue;
-        float sqDistCutoff = 2f * 2f;
+        float sqDistCutoff = 1.5f * 1.5f;
 
         foreach (ShopCrate x in FindObjectsByType<ShopCrate>())
         {
@@ -388,28 +469,31 @@ public class Player : MonoBehaviour
 
             // Buy from shop
             closest.Show();
-            if ((Keyboard.current.eKey.wasPressedThisFrame || Keyboard.current.cKey.wasPressedThisFrame || Keyboard.current.xKey.wasPressedThisFrame) && closest.cost <= ammoBag.Amount(ItemType.Gold) && CanPickupItem(closest.itemType)) {
-                ammoBag.Remove(ItemType.Gold, closest.cost);
-                PickupItem(closest.itemType);
-                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_Purchase");
-                switch (closest.itemType) {
-                    case ItemType.Seed:
-                        numSeeds += 1;
-                        closest.cost += 10 * numSeeds;
-                        if (!CanPickupItem(closest.itemType)) {
-                            closest.SetSoldOut();
-                        }
-                        break;
+            if (!actionUsed && useAction.action.WasPressedThisFrame())
+            {
+                if (closest.remainingPurchases != 0)
+                {
+                    actionUsed = true;
+                }
+                if (closest.cost <= ammoBag.Amount(ItemType.Gold) && CanPickupItem(closest.itemType))
+                {
+                    ammoBag.Remove(ItemType.Gold, closest.cost);
+                    PickupItem(closest.itemType);
+                    RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_Purchase");
+                    switch (closest.itemType) {
+                        case ItemType.Seed:
+                            numSeeds += 1;
+                            closest.cost += 10 * numSeeds;
+                            break;
 
-                    case ItemType.Rooster:
-                    case ItemType.QuiverUpgrade:
-                    case ItemType.BombBagUpgrade:
-                    case ItemType.WhipUpgrade:
-                        closest.cost *= 3;
-                        if (!CanPickupItem(closest.itemType)) {
-                            closest.SetSoldOut();
-                        }
-                        break;
+                        case ItemType.Rooster:
+                        case ItemType.QuiverUpgrade:
+                        case ItemType.BombBagUpgrade:
+                        case ItemType.WhipUpgrade:
+                            closest.cost *= 3;
+                            break;
+                    }
+                    closest.Buy();
                 }
             }
         }
@@ -419,6 +503,8 @@ public class Player : MonoBehaviour
     {
         switch (type)
         {
+            case ItemType.Rooster:
+            case ItemType.WhipUpgrade:
             case ItemType.Gold:
             case ItemType.Whisky:
                 return true;
@@ -439,16 +525,10 @@ public class Player : MonoBehaviour
                 return FindObjectsByType<PlantSpot>().Any(x => !x.Growing);
 
             case ItemType.QuiverUpgrade:
-                return itemsBag.Has(ItemType.Bow) && quiverSize < maxQuiverSize;
+                return itemsBag.Has(ItemType.Bow);
 
             case ItemType.BombBagUpgrade:
-                return itemsBag.Has(ItemType.BombBag) && bombBagSize < maxBombBagSize;
-
-            case ItemType.WhipUpgrade:
-                return whipLevel < maxWhipLevel;
-
-            case ItemType.Rooster:
-                return FindObjectsByType<Rooster>().Count() < maxRoosters;
+                return itemsBag.Has(ItemType.BombBag);
 
             default:
                 return false;
@@ -502,7 +582,16 @@ public class Player : MonoBehaviour
                 break;
 
             case ItemType.Whisky:
-                dayNightCycle.timeRemainingS += 30;
+                if (!dayNightCycle.isNight)
+                {
+                    TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                    dayNightCycle.timeRemainingS += 30;
+                    WildernessMusic.getPlaybackState(out FMOD.Studio.PLAYBACK_STATE state);
+                    if (state != FMOD.Studio.PLAYBACK_STATE.PLAYING)
+                    {
+                        WildernessMusic.start();
+                    }
+                }
                 break;
 
             // Upgrades
@@ -609,7 +698,6 @@ public class Player : MonoBehaviour
         {
             case ItemType.Whip:
                 whip.Attack();
-                RuntimeManager.PlayOneShot("event:/SFX/Weapons/SFX_WhipCrack");
                 break;
             case ItemType.Bow:
                 if (ammoBag.Amount(ItemType.Arrow) > 0)
@@ -633,9 +721,10 @@ public class Player : MonoBehaviour
 
     public void GetHit(Vector3 impulse) {
         RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PlayerGetsHit");
-        if (Time.time < lastHitTime + hitCooldown) return;
+        if (mapArea == MapArea.Escape || Time.time < lastHitTime + hitCooldown) return;
         lastHitTime = Time.time;
         knockbackVelocity += impulse;
+        GetComponent<DamageFlash>()?.TriggerFlash();
         if (dayNightCycle.isNight)
         {
             if (treasureBag.Amount(ItemType.Gold) > 0)

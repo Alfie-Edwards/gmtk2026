@@ -109,6 +109,18 @@ public class DayNightCycle : MonoBehaviour
 
             Destroy(currentWilderness);
             currentWilderness = Instantiate(wildernessPrefab, pos, rot, parent);
+
+        
+            if (FindAnyObjectByType<Player>() is Player player)
+            {
+                if (player.win)
+                {
+                    foreach (EnemyRock boss in FindObjectsByType<EnemyRock>())
+                    {
+                        Destroy(boss);
+                    }
+                }
+            }
         }
     }
 
@@ -194,13 +206,13 @@ public class DayNightCycle : MonoBehaviour
 
         if (timerText != null)
         {
-            bool showTimer = !timePaused && !isNight && !isTransitioningTrueNight;
+            bool showTimer = !((FindAnyObjectByType<Player>()?.win ?? false) || timePaused || isNight || isTransitioningTrueNight);
             timerText.gameObject.SetActive(showTimer);
 
             if (showTimer)
             {
                 int seconds = Mathf.CeilToInt(timeRemainingS);
-                timerText.text = $"Time Left: {seconds}s";
+                timerText.text = $"{seconds}s to sundown";
             }
         }
 
@@ -322,11 +334,13 @@ public class DayNightCycle : MonoBehaviour
 
     public void PauseTime()
     {
+        if (timePaused) return;
         timePaused = true;
     }
 
     public void UnpauseTime()
     {
+        if (!timePaused) return;
         timePaused = false;
         // Explicitly lock progress to 0 when unpaused right after sunrise so it starts cleanly from the beginning
         smoothDayProgress = 0f;
@@ -342,6 +356,14 @@ public class DayNightCycle : MonoBehaviour
     public void SetNight()
     {
         if (isNight) return;
+        if (timeRemainingS > 5)
+        {
+            timeExtensionBonus = (4 * dayLengthS + 5 * timeExtensionBonus) / timeRemainingS;
+            timeRemainingS_ = 5;
+            Invoke("SetNight", 5);
+            return;
+
+        }
         isNight = true;
         NightStart?.Invoke();
     }
@@ -349,9 +371,17 @@ public class DayNightCycle : MonoBehaviour
     public void SetDay()
     {
         if (!isNight) return;
+        if (isTransitioningTrueNight && trueNightTimer < trueNightTransitionDuration)
+        {
+            Invoke("SetDay", trueNightTransitionDuration - trueNightTimer);
+            return;
+        }
         foreach (Enemy enemy in FindObjectsByType<Enemy>())
         {
-            Destroy(enemy.gameObject);
+            if (enemy.transform.position.z > 0)
+            {
+                Destroy(enemy.gameObject);
+            }
         }
         ResetWilderness();
         isNight = false;

@@ -259,7 +259,7 @@ public class EnemyRock : MonoBehaviour
                     {
                         if (hasRock)
                         {
-                            Object.FindAnyObjectByType<HealthBar>()?.Show();
+                            FindAnyObjectByType<HealthBar>()?.Show();
                             activeBehaviorRoutine = StartCoroutine(PerformSubSurfaceMovesUntilFar());
                         }
                         else
@@ -747,7 +747,7 @@ public class EnemyRock : MonoBehaviour
 
     private Transform GetPlayerTransform()
     {
-        Player playerComp = Object.FindAnyObjectByType<Player>();
+        Player playerComp = FindAnyObjectByType<Player>();
         return playerComp is not null ? playerComp.transform : null;
     }
 

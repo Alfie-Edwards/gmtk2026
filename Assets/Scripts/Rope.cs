@@ -29,13 +29,24 @@ public class Rope : MonoBehaviour
 
     private List<WhipSegment> segments = new List<WhipSegment>();
     private List<int> constraintIndices = new List<int>();
-    private LineRenderer lineRenderer;
+    private LineRenderer lineRenderer_;
     private float segmentLength;
     private bool isInitialized = false;
 
+    private LineRenderer lineRenderer
+    {
+        get
+        {
+            if (lineRenderer_ == null)
+            {
+                lineRenderer_ = GetComponent<LineRenderer>();
+            }
+            return lineRenderer_;
+        }
+    }
+
     void Start()
     {
-        lineRenderer = GetComponent<LineRenderer>();
         SetupLineRendererStyle();
         InitializeWhip();
     }
@@ -50,11 +61,6 @@ public class Rope : MonoBehaviour
 
         Vector3 startPos = startTransform.position;
         Vector3 endPos = endTransform.position;
-
-        if (Vector3.SqrMagnitude(startPos - endPos) < 0.0001f)
-        {
-            endPos = startPos + Vector3.down * ropeLength;
-        }
 
         for (int i = 0; i < segmentCount; i++)
         {
@@ -109,6 +115,7 @@ public class Rope : MonoBehaviour
 
     void Simulate()
     {
+        if (segments == null || segments.Count == 0) return;
         WhipSegment startSeg = segments[0];
         startSeg.position = startTransform.position;
         startSeg.prevPosition = startTransform.position;
@@ -195,6 +202,10 @@ public class Rope : MonoBehaviour
 
     void DrawWhip()
     {
+        if (lineRenderer == null || segments == null || segments.Count < segmentCount)
+        {
+            return;
+        }
         Vector3[] positions = new Vector3[segmentCount];
 
         for (int i = 0; i < segmentCount; i++)
@@ -210,5 +221,11 @@ public class Rope : MonoBehaviour
         }
 
         lineRenderer.SetPositions(positions);
+    }
+
+    public void Reset()
+    {
+        InitializeWhip();
+        DrawWhip();
     }
 }

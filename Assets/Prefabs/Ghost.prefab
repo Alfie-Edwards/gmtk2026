@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5939434738518814591}
   - component: {fileID: 6463606170739983186}
   - component: {fileID: 3848897377209587127}
+  - component: {fileID: -6983497509579767889}
   m_Layer: 0
   m_Name: Ghost
   m_TagString: Untagged
@@ -58,7 +59,7 @@ MonoBehaviour:
   hitCooldown: 0.1
   knockbackMagnitude: 0.05
   knockbackDamping: 3
-  contactForce: 5
+  contactForce: 20
   bigCoinPrefab: {fileID: 575649640322857749, guid: 36cfc354e13ba1d4f947b51d4da7fea3, type: 3}
   coinPrefab: {fileID: 575649640322857749, guid: 447ae08732a2f564ab18fa5320338070, type: 3}
   xxxPrefab: {fileID: 8767786966827885196, guid: 76a24074ab89094458eb7abc38c1b344, type: 3}
@@ -105,13 +106,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyGhost
   detectionRadius: 30
   maxDistanceFromPlayer: 30
-  moveSpeed: 1.3
+  moveSpeed: 1.5
   verticalLerpSpeed: 0.5
   rotationSpeed: 5
   targetOpacity: 0.4
   fadeDuration: 10
-  minDashInterval: 3
-  maxDashInterval: 12
+  minDashInterval: 2
+  maxDashInterval: 5
   dashDistance: 16
   dashDuration: 6
   enemyRenderer: {fileID: 5939434738518814591}
@@ -194,3 +195,16 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9125636384562115356}
   m_Mesh: {fileID: 196288640622949635, guid: a88852c4a30e9be4daee1109e635bd24, type: 3}
+--- !u!114 &-6983497509579767889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9125636384562115356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbd633a1160cca143ba2d52184f92379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageFlash
+  flashDuration: 0.03

@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -39,6 +40,7 @@ public class Bomb : MonoBehaviour
 
         // Combine into the final throw velocity vector
         rb.linearVelocity = new Vector3(horizontalVelocity.x, verticalVelocityY, horizontalVelocity.z);
+        rb.angularVelocity = transform.right * 5;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -59,6 +61,7 @@ public class Bomb : MonoBehaviour
     {
         if (hasExploded) return;
         hasExploded = true;
+        RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PlayerGetsHit");
         Instantiate(explosionPrefab, transform.position, Quaternion.identity);
 
         Vector3 center = transform.position;

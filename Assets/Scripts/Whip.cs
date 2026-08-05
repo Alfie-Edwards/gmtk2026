@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 using System.Collections;
 
@@ -17,10 +18,15 @@ public class Whip : MonoBehaviour
     public LayerMask enemyLayer;
 
     private bool isAttacking = false;
+    private Vector3 previousEndPosition; // Tracked for capsule casting
 
     void Awake()
     {
         SnapToStart();
+        if (rope != null && rope.endTransform != null)
+        {
+            previousEndPosition = rope.endTransform.position;
+        }
     }
 
     void Update()
@@ -28,6 +34,7 @@ public class Whip : MonoBehaviour
         if (!isAttacking && rope != null && rope.endTransform != null)
         {
             SnapToStart();
+            previousEndPosition = rope.endTransform.position;
         }
     }
 
@@ -37,6 +44,7 @@ public class Whip : MonoBehaviour
         {
             Vector3 localIdleOffset = new Vector3(0f, 0f, idleOffsetZ);
             rope.endTransform.position = rope.startTransform.position + transform.TransformDirection(localIdleOffset);
+            previousEndPosition = rope.endTransform.position;
         }
     }
 
@@ -53,10 +61,12 @@ public class Whip : MonoBehaviour
 
     private IEnumerator PerformWhipAttack()
     {
+        RuntimeManager.PlayOneShot("event:/SFX/Weapons/SFX_WhipCrack");
         isAttacking = true;
 
         SnapToStart();
         Vector3 initialPos = rope.endTransform.position;
+        previousEndPosition = initialPos; // Initialize sweep start
 
         float elapsed = 0f;
 
@@ -74,13 +84,15 @@ public class Whip : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / throwDuration);
 
+            // Update positions for capsule sweep
+            previousEndPosition = rope.endTransform.position;
             rope.endTransform.position = Vector3.Lerp(initialPos, WorldPeakPos(), t);
 
-            // Check for hits during the throw; if something is hit, spawn prefab and break early
-            if (CheckHitAndRegister())
+            // Check for hits during the throw using capsule sweep
+            if (CheckHitAndRegister(out Vector3 pos))
             {
                 hitEnemy = true;
-                SpawnWhipCrack(rope.endTransform.position);
+                SpawnWhipCrack(pos);
                 break;
             }
 
@@ -90,10 +102,17 @@ public class Whip : MonoBehaviour
         // If we didn't break early, ensure it reaches the peak position
         if (!hitEnemy)
         {
+            previousEndPosition = rope.endTransform.position;
             rope.endTransform.position = WorldPeakPos();
+            
+            if (CheckHitAndRegister(out Vector3 pos))
+            {
+                SpawnWhipCrack(pos);
+            }
         }
 
         Vector3 currentPosAtRetract = rope.endTransform.position;
+        previousEndPosition = currentPosAtRetract;
 
         elapsed = 0f;
 
@@ -107,7 +126,9 @@ public class Whip : MonoBehaviour
             Vector3 returnPos = rope.startTransform.position + transform.TransformDirection(localIdleOffset);
             returnPos.y = rope.startTransform.position.y;
 
+            previousEndPosition = rope.endTransform.position;
             rope.endTransform.position = Vector3.Lerp(currentPosAtRetract, returnPos, t);
+
             yield return null;
         }
 
@@ -117,19 +138,22 @@ public class Whip : MonoBehaviour
 
     private void SpawnWhipCrack(Vector3 spawnPosition)
     {
+        RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PlayerGetsHit");
         if (whipCrackPrefab != null)
         {
             Instantiate(whipCrackPrefab, spawnPosition, Random.rotation);
         }
     }
 
-    private bool CheckHitAndRegister()
+    private bool CheckHitAndRegister(out Vector3 pos)
     {
-        Vector3 endPos = rope.endTransform.position;
+        pos = Vector3.zero;
+        Vector3 currentEndPos = rope.endTransform.position;
         Vector3 startPos = rope.startTransform.position;
-        Vector3 hitDirection = (endPos - startPos).normalized;
+        Vector3 hitDirection = (currentEndPos - startPos).normalized;
 
-        Collider[] hits = Physics.OverlapSphere(endPos, hitRadius, enemyLayer);
+        Collider[] hits = Physics.OverlapCapsule(previousEndPosition + hitDirection * hitRadius, currentEndPos, hitRadius, enemyLayer);
+        
         bool anyHit = false;
         foreach (Collider hit in hits)
         {
@@ -141,13 +165,44 @@ public class Whip : MonoBehaviour
             {
                 rooster.Hit();
             }
-            if (hit.name != "Player") anyHit = true;
+            if (hit.name != "Player")
+            {
+                pos = ProjectPointOnLineSegment(previousEndPosition, currentEndPos, hit.ClosestPoint(startPos)) - (hitDirection * 0.1f);
+                anyHit = true;
+            }
         }
         return anyHit;
     }
 
     public void Reset()
     {
-        rope.InitializeWhip();
+        StopAllCoroutines();
+        SnapToStart();
+        rope.Reset();
+        isAttacking = false;
+    }
+
+    private Vector3 ProjectPointOnLineSegment(Vector3 lineStart, Vector3 lineEnd, Vector3 point)
+    {
+        Vector3 lineVector = lineEnd - lineStart;
+        float lineLengthSquared = lineVector.sqrMagnitude;
+
+        // If the segment has zero length, just return one of the endpoints
+        if (lineLengthSquared < 0.0001f)
+        {
+            return lineStart;
+        }
+
+        // Get the vector from lineStart to the target point
+        Vector3 pointVector = point - lineStart;
+
+        // Find the projection factor (t) using the dot product, normalized by the line's squared length
+        float t = Vector3.Dot(pointVector, lineVector) / lineLengthSquared;
+
+        // Clamp t between 0 and 1 so it stays strictly on the line segment
+        t = Mathf.Clamp01(t);
+
+        // Return the final projected point on the segment
+        return lineStart + (lineVector * t);
     }
 }

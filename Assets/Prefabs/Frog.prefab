@@ -193,6 +193,7 @@ GameObject:
   - component: {fileID: 7886186494996032649}
   - component: {fileID: 3012192548096332907}
   - component: {fileID: -8660073734634861956}
+  - component: {fileID: -3670015826976860686}
   m_Layer: 3
   m_Name: Frog
   m_TagString: Untagged
@@ -234,11 +235,12 @@ MonoBehaviour:
   gravity: 0
   jumpForce: 2.5
   detectionRadius: 0
+  verticalVelocity: 0
   maxHealth: 150
   hitCooldown: 0.5
   knockbackMagnitude: 15
   knockbackDamping: 7
-  contactForce: 20
+  contactForce: 25
   bigCoinPrefab: {fileID: 575649640322857749, guid: 36cfc354e13ba1d4f947b51d4da7fea3, type: 3}
   coinPrefab: {fileID: 575649640322857749, guid: 447ae08732a2f564ab18fa5320338070, type: 3}
   xxxPrefab: {fileID: 8767786966827885196, guid: 76a24074ab89094458eb7abc38c1b344, type: 3}
@@ -313,6 +315,19 @@ MonoBehaviour:
   jumpDistance: 4
   rotationSpeed: 10
   gravity: 20
+--- !u!114 &-3670015826976860686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9125636384562115356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbd633a1160cca143ba2d52184f92379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageFlash
+  flashDuration: 0.03
 --- !u!1001 &4302647321286379492
 PrefabInstance:
   m_ObjectHideFlags: 0
