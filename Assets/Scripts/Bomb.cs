@@ -40,6 +40,7 @@ public class Bomb : MonoBehaviour
 
         // Combine into the final throw velocity vector
         rb.linearVelocity = new Vector3(horizontalVelocity.x, verticalVelocityY, horizontalVelocity.z);
+        rb.angularVelocity = transform.right * 5;
     }
 
     void OnCollisionEnter(Collision collision)

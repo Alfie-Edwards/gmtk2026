@@ -105,6 +105,7 @@ public class Player : MonoBehaviour
     private Bag treasureBag;
     private Vector3 knockbackVelocity;
     private Vector3 cameraOffset;
+    private bool actionUsed;
     void Start()
     {
         // init upgrades
@@ -144,6 +145,7 @@ public class Player : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         velocity = Vector3.zero;
+        actionUsed = false;
 
         ammoBag.Add(ItemType.Gold, 10);
 
@@ -154,10 +156,10 @@ public class Player : MonoBehaviour
         mapArea = MapArea.Town;
         TownMusic.start();
 
-        // ammoBag.Add(ItemType.Gold, 99990);
-        // PickupItem(ItemType.Bow);
-        // PickupItem(ItemType.BombBag);
-        // PickupItem(ItemType.Pickaxe);
+        ammoBag.Add(ItemType.Gold, 99990);
+        PickupItem(ItemType.Bow);
+        PickupItem(ItemType.BombBag);
+        PickupItem(ItemType.Pickaxe);
     }
 
     void Spawn()
@@ -183,10 +185,11 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        actionUsed = false;
         Move();
         PickupItems();
-        HandleShops();
         HandleSaloon();
+        HandleShops();
         UseItems();
         MapAreaStuff();
         SyncMusic();
@@ -341,8 +344,9 @@ public class Player : MonoBehaviour
 
     private void UseItems()
     {
-        if (useAction.action.WasPressedThisFrame())
+        if (!actionUsed && useAction.action.WasPressedThisFrame())
         {
+            actionUsed = true;
             Use(hotbar.Selected);
         }
     }
@@ -422,7 +426,11 @@ public class Player : MonoBehaviour
                 if (dayNightCycle.isNight)
                 {
                     saloon.message = "go to sleep?";
-                    if (useAction.action.WasPressedThisFrame()) dayNightCycle.SetDay();
+                    if (!actionUsed && useAction.action.WasPressedThisFrame())
+                    {
+                        actionUsed = true;
+                        dayNightCycle.SetDay();
+                    }
                 }
                 else
                 {
@@ -463,24 +471,32 @@ public class Player : MonoBehaviour
 
             // Buy from shop
             closest.Show();
-            if (useAction.action.WasPressedThisFrame() && closest.cost <= ammoBag.Amount(ItemType.Gold) && CanPickupItem(closest.itemType)) {
-                ammoBag.Remove(ItemType.Gold, closest.cost);
-                PickupItem(closest.itemType);
-                RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_Purchase");
-                switch (closest.itemType) {
-                    case ItemType.Seed:
-                        numSeeds += 1;
-                        closest.cost += 10 * numSeeds;
-                        break;
-
-                    case ItemType.Rooster:
-                    case ItemType.QuiverUpgrade:
-                    case ItemType.BombBagUpgrade:
-                    case ItemType.WhipUpgrade:
-                        closest.cost *= 3;
-                        break;
+            if (!actionUsed && useAction.action.WasPressedThisFrame())
+            {
+                if (closest.remainingPurchases != 0)
+                {
+                    actionUsed = true;
                 }
-                closest.Buy();
+                if (closest.cost <= ammoBag.Amount(ItemType.Gold) && CanPickupItem(closest.itemType))
+                {
+                    ammoBag.Remove(ItemType.Gold, closest.cost);
+                    PickupItem(closest.itemType);
+                    RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_Purchase");
+                    switch (closest.itemType) {
+                        case ItemType.Seed:
+                            numSeeds += 1;
+                            closest.cost += 10 * numSeeds;
+                            break;
+
+                        case ItemType.Rooster:
+                        case ItemType.QuiverUpgrade:
+                        case ItemType.BombBagUpgrade:
+                        case ItemType.WhipUpgrade:
+                            closest.cost *= 3;
+                            break;
+                    }
+                    closest.Buy();
+                }
             }
         }
     }

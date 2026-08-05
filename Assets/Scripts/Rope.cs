@@ -202,6 +202,10 @@ public class Rope : MonoBehaviour
 
     void DrawWhip()
     {
+        if (lineRenderer == null || segments == null || segments.Count < segmentCount)
+        {
+            return;
+        }
         Vector3[] positions = new Vector3[segmentCount];
 
         for (int i = 0; i < segmentCount; i++)
@@ -216,7 +220,7 @@ public class Rope : MonoBehaviour
             }
         }
 
-        lineRenderer?.SetPositions(positions);
+        lineRenderer.SetPositions(positions);
     }
 
     public void Reset()
