@@ -157,7 +157,7 @@ Transform:
   m_Children:
   - {fileID: 5665639638516379907}
   - {fileID: 2105369562808805944}
-  - {fileID: 4200116681605765192}
+  - {fileID: 3190484426127092304}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6066809270282683062
@@ -250,7 +250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyCactus
   detectionRadius: 10
-  skinnedMeshRenderer: {fileID: 8632986416127158193}
+  skinnedMeshRenderer: {fileID: 7044096109106255273}
   squashBlendShapeName: squash
   squashDuration: 1
   releaseDuration: 0.15
@@ -360,13 +360,13 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9ca2959e90ef9ca4ea39c8468e389155, type: 3}
---- !u!4 &4200116681605765192 stripped
+--- !u!4 &3190484426127092304 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9ca2959e90ef9ca4ea39c8468e389155, type: 3}
-  m_PrefabInstance: {fileID: 4450531299642359715}
+  m_PrefabInstance: {fileID: 3155996205914639803}
   m_PrefabAsset: {fileID: 0}
---- !u!137 &8632986416127158193 stripped
+--- !u!137 &7044096109106255273 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -3887185075125053422, guid: 9ca2959e90ef9ca4ea39c8468e389155, type: 3}
-  m_PrefabInstance: {fileID: 4450531299642359715}
+  m_PrefabInstance: {fileID: 3155996205914639803}
   m_PrefabAsset: {fileID: 0}
