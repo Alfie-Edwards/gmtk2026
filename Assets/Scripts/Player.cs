@@ -352,7 +352,7 @@ public class Player : MonoBehaviour
         if (!disableControls)
         {
             Vector2 moveInput = moveAction.action.ReadValue<Vector2>();
-            Vector3 move = ((Vector3.forward * moveInput.y) + (Vector3.right * moveInput.x)).normalized * moveSpeed;
+            Vector3 move = ((Vector3.forward * moveInput.y) + (Vector3.right * moveInput.x)) * moveSpeed;
 
             if (jumpAction.action.WasPressedThisFrame() && controller.isGrounded)
             {
@@ -684,7 +684,6 @@ public class Player : MonoBehaviour
         {
             case ItemType.Whip:
                 whip.Attack();
-                RuntimeManager.PlayOneShot("event:/SFX/Weapons/SFX_WhipCrack");
                 break;
             case ItemType.Bow:
                 if (ammoBag.Amount(ItemType.Arrow) > 0)

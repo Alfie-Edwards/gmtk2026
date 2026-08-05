@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -59,6 +60,7 @@ public class Bomb : MonoBehaviour
     {
         if (hasExploded) return;
         hasExploded = true;
+        RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PlayerGetsHit");
         Instantiate(explosionPrefab, transform.position, Quaternion.identity);
 
         Vector3 center = transform.position;

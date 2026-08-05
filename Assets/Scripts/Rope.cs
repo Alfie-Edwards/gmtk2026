@@ -29,13 +29,24 @@ public class Rope : MonoBehaviour
 
     private List<WhipSegment> segments = new List<WhipSegment>();
     private List<int> constraintIndices = new List<int>();
-    private LineRenderer lineRenderer;
+    private LineRenderer lineRenderer_;
     private float segmentLength;
     private bool isInitialized = false;
 
+    private LineRenderer lineRenderer
+    {
+        get
+        {
+            if (lineRenderer_ == null)
+            {
+                lineRenderer_ = GetComponent<LineRenderer>();
+            }
+            return lineRenderer_;
+        }
+    }
+
     void Start()
     {
-        lineRenderer = GetComponent<LineRenderer>();
         SetupLineRendererStyle();
         InitializeWhip();
     }
@@ -205,7 +216,7 @@ public class Rope : MonoBehaviour
             }
         }
 
-        lineRenderer.SetPositions(positions);
+        lineRenderer?.SetPositions(positions);
     }
 
     public void Reset()

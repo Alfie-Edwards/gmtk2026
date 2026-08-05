@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 
 public class BombBag : MonoBehaviour
@@ -14,17 +15,9 @@ public class BombBag : MonoBehaviour
             return;
         }
 
-        // Determine spawn position
+        RuntimeManager.PlayOneShot("event:/SFX/Weapons/SFX_WhipCrack");
         Vector3 spawnPos = spawnPoint != null ? spawnPoint.position : transform.position;
-
-        // Instantiate the bomb
         GameObject bombObj = Instantiate(bombPrefab, spawnPos, Quaternion.identity);
-
-        // Get the Bomb component and initialize its throw direction
-        Bomb bomb = bombObj.GetComponent<Bomb>();
-        if (bomb != null)
-        {
-            bomb.Initialize(throwDirection);
-        }
+        bombObj.GetComponent<Bomb>()?.Initialize(throwDirection);
     }
 }

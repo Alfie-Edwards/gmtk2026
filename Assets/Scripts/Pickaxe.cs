@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 using System.Collections;
 
@@ -44,6 +45,7 @@ public class Pickaxe : MonoBehaviour
 
     private IEnumerator PerformSwing()
     {
+        RuntimeManager.PlayOneShot("event:/SFX/Weapons/SFX_WhipCrack");
         isSwinging = true;
         float elapsed = 0f;
         float forwardDuration = swingDuration * 0.3f;
@@ -52,7 +54,6 @@ public class Pickaxe : MonoBehaviour
         Vector3 targetPos = initialLocalPos + swingOffset;
         Quaternion targetRot = initialLocalRot * Quaternion.Euler(swingRotationOffset);
 
-        // 1. Swing forward / down
         while (elapsed < forwardDuration)
         {
             elapsed += Time.deltaTime;
@@ -63,10 +64,8 @@ public class Pickaxe : MonoBehaviour
             yield return null;
         }
 
-        // 2. Check for targets at the peak of the swing
         CheckHits();
 
-        // 3. Return to initial position
         while (elapsed < backwardDuration)
         {
             elapsed += Time.deltaTime;
@@ -82,26 +81,27 @@ public class Pickaxe : MonoBehaviour
         isSwinging = false;
     }
 
-    void CheckHits()
+    private void CheckHits()
     {
         Vector3 center = hitPoint.position;
         Collider[] hits = Physics.OverlapSphere(center, hitRadius);
+
+        if (hits.Length > 0)
+        {
+            RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_PlayerGetsHit");
+        }
 
         foreach (Collider hit in hits)
         {
             if (hit.GetComponent<Rock>() is Rock rock)
             {
                 rock.Break();
-                continue;
             }
-
-            if (hit.GetComponent<CrackedWall>() is CrackedWall wall)
+            else if (hit.GetComponent<CrackedWall>() is CrackedWall wall)
             {
                 wall.Break();
-                continue;
             }
-
-            if (hit.GetComponent<Enemy>() is Enemy enemy)
+            else if (hit.GetComponent<Enemy>() is Enemy enemy)
             {
                 Vector3 hitDirection = (hit.transform.position - transform.position).normalized;
                 enemy.TakeDamage(10f, hitDirection);

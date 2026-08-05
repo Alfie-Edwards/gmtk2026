@@ -69,7 +69,7 @@ public class Horse : MonoBehaviour
         }
 
         Vector2 moveInput = moveAction.action.ReadValue<Vector2>();
-        Vector3 move = ((Vector3.forward * moveInput.y) + (Vector3.right * moveInput.x)).normalized * moveSpeed;
+        Vector3 move = ((Vector3.forward * moveInput.y) + (Vector3.right * moveInput.x)) * moveSpeed;
 
         if (jumpAction.action.WasPressedThisFrame() && controller.isGrounded)
         {
