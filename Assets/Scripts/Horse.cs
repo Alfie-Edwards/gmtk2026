@@ -198,6 +198,8 @@ public class Horse : MonoBehaviour
         if (rider.GetComponent<Player>() is Player player)
         {
             player.disableControls = true;
+            player.cameraFollowSpeed = 4.5f;
+            player.cameraOffset -= Vector3.down * 1.5f;
         }
 
         if (rider.GetComponent<CharacterController>() is CharacterController cc)

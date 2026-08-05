@@ -194,6 +194,7 @@ MonoBehaviour:
   cameraAngle: 45
   cameraUpTilt: 10
   cameraZOffset: 10
+  cameraFollowSpeed: 3
   ghostPrefab: {fileID: 9125636384562115356, guid: 491def86a2ed640219eea5d3704fba73, type: 3}
   ghostSpawnsPerSecond: 3
   arrowShop: {fileID: 0}
@@ -381,7 +382,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2762211843412985140, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
       propertyPath: hitRadius
-      value: 0.2
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 2762211843412985140, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
       propertyPath: throwDuration
@@ -405,7 +406,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2762211843412985140, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
       propertyPath: localThrowDirection.y
-      value: 0.2
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2929644885617440899, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.105
       objectReference: {fileID: 0}
     - target: {fileID: 6107392369490351173, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
       propertyPath: m_LocalScale.x
@@ -425,7 +430,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6107392369490351173, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.371
+      value: -0.162
       objectReference: {fileID: 0}
     - target: {fileID: 6107392369490351173, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -459,6 +464,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6200936734468639441, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.021
+      objectReference: {fileID: 0}
     - target: {fileID: 6228691600030570091, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
       propertyPath: m_Name
       value: Whip
@@ -473,7 +482,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7793095966691314461, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
       propertyPath: ropeLength
-      value: 2
+      value: 2.25
       objectReference: {fileID: 0}
     - target: {fileID: 7793095966691314461, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
       propertyPath: segmentCount

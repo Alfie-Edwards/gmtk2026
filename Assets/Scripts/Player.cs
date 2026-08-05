@@ -39,6 +39,7 @@ public class Player : MonoBehaviour
     [SerializeField] public float cameraAngle = 45f;
     [SerializeField] public float cameraUpTilt = 10f;
     [SerializeField] public float cameraZOffset = 10f;
+    [SerializeField] public float cameraFollowSpeed = 3f;
     [SerializeField] public GameObject ghostPrefab;
     [SerializeField] public int ghostSpawnsPerSecond = 2;
     [SerializeField] public GameObject arrowShop;
@@ -104,7 +105,7 @@ public class Player : MonoBehaviour
     private Bag ammoBag;
     private Bag treasureBag;
     private Vector3 knockbackVelocity;
-    private Vector3 cameraOffset;
+    public Vector3 cameraOffset {get; set; }
     private bool actionUsed;
     void Start()
     {
@@ -165,15 +166,12 @@ public class Player : MonoBehaviour
     void Spawn()
     {
         if (controller == null) controller = GetComponent<CharacterController>();
-
-        // 1. Temporarily disable the CharacterController so it releases control of the transform
         if (controller != null) controller.enabled = false;
 
-        // 2. Set position and rotation
         transform.position = new Vector3(13.89f, 0.5f, -8.35f);
         // transform.position = new Vector3(0f, -3f, 75f); // ending
         transform.rotation = Quaternion.Euler(0f, -180f, 0f);
-        lookTarget = Quaternion.Euler(0f, -180f, 0f); // Keep if used in your script
+        lookTarget = Quaternion.Euler(0f, -180f, 0f);
         camera.position = transform.position + cameraOffset;
 
         dayNightCycle.SetDay();
@@ -378,7 +376,7 @@ public class Player : MonoBehaviour
             }
             transform.rotation = Quaternion.Slerp(transform.rotation, lookTarget, Mathf.Min(16f * Time.deltaTime, 1f));
         }
-        camera.transform.position = Vector3.Lerp(camera.transform.position, transform.position + cameraOffset, Mathf.Min(3f * Time.deltaTime, 1f));
+        camera.transform.position = Vector3.Lerp(camera.transform.position, transform.position + cameraOffset, Mathf.Min(cameraFollowSpeed * Time.deltaTime, 1f));
     }
 
     private void OnItemChanged(ItemType itemType)
