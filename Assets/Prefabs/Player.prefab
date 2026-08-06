@@ -250,6 +250,7 @@ MonoBehaviour:
   bobAmplitude: 0.1
   tiltFrequency: 4
   maxTiltAngle: 10
+  tiltAxis: {x: 0, y: 0, z: 1}
   transitionSpeed: 10
 --- !u!1001 &3446390920823139023
 PrefabInstance:
@@ -382,7 +383,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2762211843412985140, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
       propertyPath: hitRadius
-      value: 0.25
+      value: 0.33
       objectReference: {fileID: 0}
     - target: {fileID: 2762211843412985140, guid: 509b0a502b77d43c2980aa9cb1dd5b5c, type: 3}
       propertyPath: throwDuration

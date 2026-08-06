@@ -267,7 +267,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 1.4
-  m_Radius: 0.25
+  m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -292,7 +292,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.25
+  m_Radius: 0.3
   m_Height: 1.4
   m_Direction: 1
   m_Center: {x: 0, y: -0.3, z: 0}
@@ -313,6 +313,7 @@ MonoBehaviour:
   bobAmplitude: 0.1
   tiltFrequency: 4
   maxTiltAngle: 10
+  tiltAxis: {x: 0, y: 0, z: 1}
   transitionSpeed: 10
 --- !u!114 &7659689758578309827
 MonoBehaviour:

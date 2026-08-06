@@ -167,7 +167,7 @@ public class Whip : MonoBehaviour
             }
             if (hit.name != "Player")
             {
-                pos = ProjectPointOnLineSegment(previousEndPosition, currentEndPos, hit.ClosestPoint(startPos)) - (hitDirection * 0.1f);
+                pos = ProjectPointOnLineSegment(previousEndPosition, currentEndPos, hit.ClosestPoint(startPos));
                 anyHit = true;
             }
         }

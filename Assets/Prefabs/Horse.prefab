@@ -619,6 +619,7 @@ MonoBehaviour:
   bobAmplitude: 0.1
   tiltFrequency: 4
   maxTiltAngle: 10
+  tiltAxis: {x: 1, y: 0, z: 0}
   transitionSpeed: 10
 --- !u!114 &7188772305412767326
 MonoBehaviour:

@@ -207,13 +207,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2
+  m_Height: 1.95
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -0.13, z: 0}
 --- !u!136 &3012192548096332907
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -234,9 +234,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 1.95
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -0.13, z: 0}
 --- !u!114 &4490106116342746559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,7 +289,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9ca2959e90ef9ca4ea39c8468e389155, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.034
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9ca2959e90ef9ca4ea39c8468e389155, type: 3}
       propertyPath: m_LocalRotation.w

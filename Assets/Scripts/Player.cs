@@ -140,7 +140,6 @@ public class Player : MonoBehaviour
         quiverShop.SetActive(false);
         bombShop.SetActive(false);
         bombBagShop.SetActive(false);
-        Spawn();
 
         // init controls
         Cursor.lockState = CursorLockMode.Locked;
@@ -156,6 +155,8 @@ public class Player : MonoBehaviour
 
         mapArea = MapArea.Town;
         TownMusic.start();
+
+        // Spawn();
 
         ammoBag.Add(ItemType.Gold, 99990);
         PickupItem(ItemType.Bow);
