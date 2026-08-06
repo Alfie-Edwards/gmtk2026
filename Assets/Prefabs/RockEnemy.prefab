@@ -111,7 +111,7 @@ CharacterController:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_LayerOverridePriority: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
@@ -161,6 +161,7 @@ MonoBehaviour:
   rockPrefab: {fileID: 8310796378712230136, guid: 6ec5fad187e119a4bbbca1e4b44228e1, type: 3}
   rockSpawnPoint: {fileID: 8474051109390354216}
   hasRock: 1
+  arenaFloor: {fileID: 0}
   groundTransform: {fileID: 0}
   burrowDepth: 2
   burrowMoveSpeed: 10
@@ -176,7 +177,7 @@ MonoBehaviour:
   cactusWaitTime: 2
   cactusStunDuration: 2
   detectionRadius: 4.5
-  cactusTransitionRadius: 6
+  cactusTransitionRadius: 5.5
   chargeSpeed: 6
   chargeTurnSpeed: 20
   initialTurnSpeed: 120

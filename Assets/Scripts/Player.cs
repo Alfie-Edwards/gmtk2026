@@ -157,7 +157,6 @@ public class Player : MonoBehaviour
         TownMusic.start();
 
         // Spawn();
-
         ammoBag.Add(ItemType.Gold, 99990);
         PickupItem(ItemType.Bow);
         PickupItem(ItemType.BombBag);
@@ -170,7 +169,6 @@ public class Player : MonoBehaviour
         if (controller != null) controller.enabled = false;
 
         transform.position = new Vector3(13.89f, 0.5f, -8.35f);
-        // transform.position = new Vector3(0f, -3f, 75f); // ending
         transform.rotation = Quaternion.Euler(0f, -180f, 0f);
         lookTarget = Quaternion.Euler(0f, -180f, 0f);
         camera.position = transform.position + cameraOffset;
@@ -406,7 +404,6 @@ public class Player : MonoBehaviour
             {
                 if (CanPickupItem(item.type, item.amount))
                 {
-                    Debug.Log(item.Age);
                     PickupItem(item.type, item.amount);
                     Destroy(item.gameObject);
                 }

@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using System;
+
 [RequireComponent(typeof(Enemy))]
 public class EnemyRock : MonoBehaviour
 {
@@ -9,7 +11,9 @@ public class EnemyRock : MonoBehaviour
     private GameObject activeRock;
     public bool hasRock = true;
 
-    [Header("Burrow Settings")]
+    [Header("Burrow & Collision Settings")]
+    [Tooltip("The Arena Floor layer.")]
+    public MeshCollider arenaFloor;
     [Tooltip("The transform representing the ground surface.")]
     public Transform groundTransform;
     [Tooltip("Distance below the ground transform when burrowed.")]
@@ -93,26 +97,16 @@ public class EnemyRock : MonoBehaviour
     {
         enemy = GetComponent<Enemy>();
         controller = GetComponent<CharacterController>();
+        currentState = State.Burrowed;
+        StartCoroutine(BurrowToDepthRoutine(burrowDepth));
 
         SpawnRock();
-        ForceBurrowInstant();
     }
 
     void Update()
     {
         if (enemy == null) return;
 
-        if (currentState is State.Burrowed or State.RespawningRock or State.Stunned)
-        {
-            if (controller != null && controller.enabled) controller.enabled = false;
-            
-            if (currentState != State.Stunned && currentState != State.RespawningRock)
-            {
-                SetEnemyY(GetGroundY() - burrowDepth);
-            }
-        }
-
-        // Check for contact damage when burrowed or moving subsurface with an active rock
         if (hasRock && (currentState == State.Burrowed || currentState == State.SubSurfaceMoving))
         {
             CheckBurrowContactDamage();
@@ -124,14 +118,47 @@ public class EnemyRock : MonoBehaviour
             
             if (activeBehaviorRoutine != null)
             {
+                Destroy(activeCactus);
                 StopCoroutine(activeBehaviorRoutine);
                 activeBehaviorRoutine = null;
             }
 
-            StartCoroutine(TransitionToCircleRunFromBrokenRock());
+            StartCoroutine(PerformCircleRunAndRespawnSequence());
         }
 
-        HandleBehavior();
+        if (currentState == State.Burrowed)
+        {
+            DisableFloorCollisionAndGravity(true, true);
+            if (activeBehaviorRoutine == null)
+            {
+                Transform playerTransform = GetPlayerTransform();
+                if (playerTransform != null)
+                {
+                    float sqrDist = (playerTransform.position - transform.position).sqrMagnitude;
+                    if (sqrDist <= detectionRadius * detectionRadius)
+                    {
+                        if (hasRock)
+                        {
+                            FindAnyObjectByType<HealthBar>()?.Show();
+                            activeBehaviorRoutine = StartCoroutine(PerformSubSurfaceMovesUntilFar());
+                        }
+                        else
+                        {
+                            activeBehaviorRoutine = StartCoroutine(PerformCircleRunAndRespawnSequence());
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    private void DisableFloorCollisionAndGravity(bool ignoreCollision, bool useZeroGravity)
+    {
+        Debug.Log($"Ignore collisions: {ignoreCollision}\nIgnore gravity: {useZeroGravity}");
+        if (useZeroGravity) enemy.verticalVelocity = 0f;
+        enemy.gravity = useZeroGravity ? 0f : 9.81f;
+        Physics.IgnoreCollision(controller, arenaFloor, ignoreCollision);
     }
 
     private void CheckBurrowContactDamage()
@@ -175,44 +202,28 @@ public class EnemyRock : MonoBehaviour
         }
     }
 
-    private System.Collections.IEnumerator TransitionToCircleRunFromBrokenRock()
+    private System.Collections.IEnumerator Animate(float start, float end, float speed, Action<float> action, Func<bool> predicate=null)
     {
-        currentState = State.Emerging;
-        if (controller != null) controller.enabled = false;
-
-        float targetY = GetGroundY();
-        while (Mathf.Abs((transform.position.y + enemyBaseOffset) - targetY) > 0.01f)
+        action(start);
+        float current = start;
+        while (Mathf.Abs(end - current) > 0.01f)
         {
-            float newY = Mathf.MoveTowards(transform.position.y + enemyBaseOffset, targetY, burrowMoveSpeed * Time.deltaTime);
-            SetEnemyY(newY);
+            if (predicate?.Invoke() ?? false)
+            {
+                yield break;
+            }
+            current = Mathf.MoveTowards(current, end, speed * Time.deltaTime);
+            action(current);
             yield return null;
         }
-        SetEnemyY(targetY);
-
-        activeBehaviorRoutine = StartCoroutine(PerformCircleRunAndRespawnSequence());
+        action(end);
     }
 
-    float GetGroundY()
+    void MoveEnemyToY(float targetFeetY)
     {
-        return groundTransform != null ? groundTransform.position.y : 0f;
-    }
-
-    Vector3 GetGroundCenterPosition()
-    {
-        if (groundTransform != null)
-        {
-            Vector3 pos = groundTransform.position;
-            pos.y = transform.position.y;
-            return pos;
-        }
-        return new Vector3(0f, transform.position.y, 0f);
-    }
-
-    void SetEnemyY(float targetY)
-    {
-        Vector3 pos = transform.position;
-        pos.y = targetY - enemyBaseOffset;
-        transform.position = pos;
+        float targetCenterY = targetFeetY - enemyBaseOffset;
+        float currentCenterY = transform.position.y;
+        controller.Move(new Vector3(0f, targetCenterY - currentCenterY, 0f));
     }
 
     void SpawnRock()
@@ -225,57 +236,11 @@ public class EnemyRock : MonoBehaviour
         }
     }
 
-    void ForceBurrowInstant()
-    {
-        if (controller != null) controller.enabled = false;
-        SetEnemyY(GetGroundY() - burrowDepth);
-    }
-
-    void HandleBehavior()
-    {
-        if (currentState == State.Normal)
-        {
-            if (hasRock)
-            {
-                currentState = State.Burrowed;
-            }
-            else
-            {
-                if (activeBehaviorRoutine == null)
-                {
-                    activeBehaviorRoutine = StartCoroutine(PerformCircleRunAndRespawnSequence());
-                }
-            }
-        }
-        else if (currentState == State.Burrowed)
-        {
-            if (activeBehaviorRoutine == null)
-            {
-                Transform playerTransform = GetPlayerTransform();
-                if (playerTransform != null)
-                {
-                    float sqrDist = (playerTransform.position - transform.position).sqrMagnitude;
-                    if (sqrDist <= detectionRadius * detectionRadius)
-                    {
-                        if (hasRock)
-                        {
-                            FindAnyObjectByType<HealthBar>()?.Show();
-                            activeBehaviorRoutine = StartCoroutine(PerformSubSurfaceMovesUntilFar());
-                        }
-                        else
-                        {
-                            activeBehaviorRoutine = StartCoroutine(PerformCircleRunAndRespawnSequence());
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private System.Collections.IEnumerator PerformSubSurfaceMovesUntilFar()
     {
+        Debug.Log("SUB SURFACE MOVES UNTIL FAR");
         currentState = State.Burrowed;
-        while (hasRock)
+        while (true)
         {
             Transform playerTransform = GetPlayerTransform();
             if (playerTransform == null) break;
@@ -286,7 +251,7 @@ public class EnemyRock : MonoBehaviour
                 break;
             }
 
-            while (hasRock)
+            while (true)
             {
                 playerTransform = GetPlayerTransform();
                 if (playerTransform == null) break;
@@ -313,35 +278,28 @@ public class EnemyRock : MonoBehaviour
 
                 yield return null;
             }
-
-            if (!hasRock) yield break;
-
             playerTransform = GetPlayerTransform();
             if (playerTransform != null && (playerTransform.position - transform.position).sqrMagnitude > cactusTransitionRadius * cactusTransitionRadius)
             {
                 break;
             }
 
-            yield return StartCoroutine(ExecuteSubSurfaceMoveRoutine(GetPlayerTransform()?.position ?? transform.position));
-            
-            if (!hasRock) yield break;
+            yield return ExecuteSubSurfaceMoveRoutine(GetPlayerTransform()?.position ?? transform.position);
         }
 
-        if (!hasRock) yield break;
-
         currentState = State.CactusMove;
-        activeBehaviorRoutine = StartCoroutine(PerformCactusSequenceWithCenterCheck());
-        yield break;
+        activeBehaviorRoutine = StartCoroutine(PerformCactusSequence());
     }
 
-    private System.Collections.IEnumerator PerformCactusSequenceWithCenterCheck()
+    private System.Collections.IEnumerator PerformCactusSequence()
     {
-        Vector3 centerPos = GetGroundCenterPosition();
+        Debug.Log("CACTUS SEQUENCE");
+        Vector3 centerPos = groundTransform.position;
         float distToCenter = Vector3.Distance(new Vector3(transform.position.x, 0f, transform.position.z), new Vector3(centerPos.x, 0f, centerPos.z));
 
         if (distToCenter > 3f)
         {
-            while (hasRock)
+            while (true)
             {
                 Vector3 toCenter = centerPos - transform.position;
                 toCenter.y = 0f;
@@ -358,11 +316,9 @@ public class EnemyRock : MonoBehaviour
                 yield return null;
             }
 
-            if (!hasRock) yield break;
-
-            while (hasRock && Vector3.Distance(new Vector3(transform.position.x, 0f, transform.position.z), new Vector3(centerPos.x, 0f, centerPos.z)) > 3f)
+            while (Vector3.Distance(new Vector3(transform.position.x, 0f, transform.position.z), new Vector3(centerPos.x, 0f, centerPos.z)) > 3f)
             {
-                centerPos = GetGroundCenterPosition();
+                centerPos = groundTransform.position;
                 Vector3 toCenter = centerPos - transform.position;
                 toCenter.y = 0f;
                 if (toCenter.sqrMagnitude > 0.01f)
@@ -371,9 +327,7 @@ public class EnemyRock : MonoBehaviour
                     transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, burrowTrackingTurnSpeed * Time.deltaTime);
                 }
 
-                yield return StartCoroutine(ExecuteSubSurfaceMoveRoutine(centerPos, true));
-
-                if (!hasRock) yield break;
+                yield return ExecuteSubSurfaceMoveRoutine(centerPos, true);
 
                 if (Vector3.Distance(new Vector3(transform.position.x, 0f, transform.position.z), new Vector3(centerPos.x, 0f, centerPos.z)) <= 3f)
                 {
@@ -382,32 +336,93 @@ public class EnemyRock : MonoBehaviour
             }
         }
 
-        if (!hasRock) yield break;
+        currentState = State.CactusMove;
+        DisableFloorCollisionAndGravity(true, true);
 
-        yield return StartCoroutine(PerformCactusSequence());
+        float cactusStartY = groundTransform.position.y - burrowDepth - cactusModelHeight - cactusBaseOffset;
+        float cactusTargetY = groundTransform.position.y - cactusBaseOffset;
+
+        if (cactusPrefab != null)
+        {
+            activeCactus = Instantiate(cactusPrefab, new Vector3(transform.position.x, cactusStartY, transform.position.z), Quaternion.identity);
+        }
+
+        yield return Animate(
+            cactusStartY, 
+            cactusTargetY, 
+            cactusRiseSpeed, 
+            currentCactusY => 
+            {
+                if (activeCactus != null)
+                {
+                    activeCactus.transform.position = new Vector3(transform.position.x, currentCactusY, transform.position.z);
+                }
+                MoveEnemyToY(currentCactusY + cactusModelHeight + cactusBaseOffset);
+            }, 
+            () => activeRock == null || activeCactus == null
+        );
+
+        if (activeCactus != null)
+        {
+            DisableFloorCollisionAndGravity(true, true);
+            float waitTimer = 0f;
+            while (waitTimer < cactusWaitTime)
+            {
+                if (activeRock == null)
+                {
+                    Destroy(activeCactus);
+                    activeBehaviorRoutine = null;
+                    yield break;
+                }
+                if (activeCactus == null) break;
+                waitTimer += Time.deltaTime;
+                yield return null;
+            }
+        }
+
+        if (activeCactus != null)
+        {
+            DisableFloorCollisionAndGravity(false, false);
+            yield return ExecuteJumpTowardsPlayerRoutine(true);
+        }
+        else
+        {
+            currentState = State.Stunned;
+
+            Debug.Log("FALLING TO STUN");
+            yield return BurrowToDepthRoutine(burrowDepth);
+
+            Debug.Log("STUNNED");
+            yield return new WaitForSeconds(cactusStunDuration);
+
+            Debug.Log("STUN FINNISHED");
+
+        }
+
+        currentState = State.Burrowed;
+        yield return BurrowToDepthRoutine(burrowDepth);
+        activeBehaviorRoutine = null;
     }
 
     private System.Collections.IEnumerator ExecuteSubSurfaceMoveRoutine(Vector3 targetPosition, bool moveTowardTargetPos = false)
     {
+        Debug.Log("SUB SURFACE MOVE SEQUENCE");
         currentState = State.SubSurfaceMoving;
-        if (controller != null) controller.enabled = false;
+        yield return BurrowToDepthRoutine(burrowDepth);
 
-        float floorY = GetGroundY();
-        float baseBurrowY = floorY - burrowDepth;
+        float baseBurrowY = groundTransform.position.y - burrowDepth;
         float peakRiseY = baseBurrowY + subSurfaceRiseHeight;
 
         float elapsed = 0f;
         while (elapsed < subSurfaceDuration)
         {
-            if (!hasRock) yield break;
-
             elapsed += Time.deltaTime;
             float t = elapsed / subSurfaceDuration;
 
             float heightCurveT;
             if (t <= peakRiseTime)
             {
-                heightCurveT = Mathf.Sin((t / peakRiseTime) * (Mathf.PI * 0.5f));
+                heightCurveT = Mathf.Sin(t * Mathf.PI * 0.5f / peakRiseTime);
             }
             else
             {
@@ -447,135 +462,21 @@ public class EnemyRock : MonoBehaviour
 
             Vector3 currentMoveDir = transform.forward;
             float currentSpeed = Mathf.Lerp(subSurfaceMaxSpeed, subSurfaceMinSpeed, heightProgress);
-            transform.position += currentMoveDir * currentSpeed * Time.deltaTime;
-
-            SetEnemyY(currentYEval);
-
+            
+            Vector3 translationDelta = currentMoveDir * currentSpeed * Time.deltaTime;
+            float targetCenterY = currentYEval - enemyBaseOffset;
+            translationDelta.y = targetCenterY - transform.position.y;
+            
+            controller.Move(translationDelta);
             yield return null;
         }
 
-        if (hasRock)
-        {
-            SetEnemyY(baseBurrowY);
-            currentState = State.Burrowed;
-        }
-    }
-
-    private System.Collections.IEnumerator PerformCactusSequence()
-    {
-        currentState = State.CactusMove;
-        if (controller != null) controller.enabled = false;
-
-        float floorY = GetGroundY();
-
-        float cactusStartY = floorY - burrowDepth - cactusModelHeight - cactusBaseOffset;
-        float cactusTargetY = floorY - cactusBaseOffset;
-
-        float enemyStartY = floorY - burrowDepth;
-        float enemyTargetY = floorY + cactusModelHeight;
-
-        if (cactusPrefab != null)
-        {
-            activeCactus = Instantiate(cactusPrefab, new Vector3(transform.position.x, cactusStartY, transform.position.z), Quaternion.identity);
-        }
-
-        float progress = 0f;
-        float totalDistance = cactusTargetY - cactusStartY;
-        
-        while (progress < totalDistance)
-        {
-            if (!hasRock)
-            {
-                if (activeCactus != null) Destroy(activeCactus);
-                yield break;
-            }
-
-            if (activeCactus == null) break;
-
-            float step = cactusRiseSpeed * Time.deltaTime;
-            progress += step;
-            float currentCactusY = Mathf.Min(cactusStartY + progress, cactusTargetY);
-            float currentEnemyY = Mathf.Min(enemyStartY + (progress * (enemyTargetY - enemyStartY) / totalDistance), enemyTargetY);
-
-            if (activeCactus != null)
-            {
-                activeCactus.transform.position = new Vector3(transform.position.x, currentCactusY, transform.position.z);
-            }
-            SetEnemyY(currentEnemyY);
-
-            yield return null;
-        }
-
-        if (activeCactus != null)
-        {
-            activeCactus.transform.position = new Vector3(transform.position.x, cactusTargetY, transform.position.z);
-            SetEnemyY(enemyTargetY);
-
-            float waitTimer = 0f;
-            while (waitTimer < cactusWaitTime)
-            {
-                if (!hasRock)
-                {
-                    if (activeCactus != null) Destroy(activeCactus);
-                    yield break;
-                }
-                if (activeCactus == null) break;
-                waitTimer += Time.deltaTime;
-                yield return null;
-            }
-        }
-
-        if (activeCactus != null)
-        {
-            if (controller != null) controller.enabled = true;
-            yield return StartCoroutine(ExecuteJumpTowardsPlayerRoutine(true));
-        }
-        else
-        {
-            hasRock = false;
-
-            currentState = State.Stunned;
-            float fallProgress = transform.position.y + enemyBaseOffset;
-            float targetFallY = floorY - burrowDepth;
-
-            while (Mathf.Abs(fallProgress - targetFallY) > 0.01f)
-            {
-                fallProgress = Mathf.MoveTowards(fallProgress, targetFallY, burrowMoveSpeed * Time.deltaTime);
-                SetEnemyY(fallProgress);
-                yield return null;
-            }
-            SetEnemyY(targetFallY);
-
-            float stunTimer = 0f;
-            while (stunTimer < cactusStunDuration)
-            {
-                stunTimer += Time.deltaTime;
-                yield return null;
-            }
-
-            currentState = State.Emerging;
-            if (controller != null) controller.enabled = false;
-
-            float targetY = GetGroundY();
-            while (Mathf.Abs((transform.position.y + enemyBaseOffset) - targetY) > 0.01f)
-            {
-                float newY = Mathf.MoveTowards(transform.position.y + enemyBaseOffset, targetY, burrowMoveSpeed * Time.deltaTime);
-                SetEnemyY(newY);
-                yield return null;
-            }
-            SetEnemyY(targetY);
-            if (controller != null) controller.enabled = true;
-
-            currentState = State.CircleRunning;
-            activeBehaviorRoutine = StartCoroutine(PerformCircleRunAndRespawnSequence());
-            yield break;
-        }
-
-        activeBehaviorRoutine = null;
+        currentState = State.Burrowed;
     }
 
     private System.Collections.IEnumerator ExecuteJumpTowardsPlayerRoutine(bool reburrowOnLand)
     {
+        Debug.Log("JUMP TOWARDS PLAYER");
         currentState = State.Jumping;
 
         Transform playerTransform = GetPlayerTransform();
@@ -595,42 +496,45 @@ public class EnemyRock : MonoBehaviour
 
         yield return new WaitForSeconds(0.05f);
 
-        while (controller != null && !controller.isGrounded)
+        while (!controller.isGrounded)
         {
-            if (!hasRock) yield break;
             controller.Move(jumpDirection * jumpForwardForce * Time.deltaTime);
             yield return null;
         }
 
-        if (reburrowOnLand && hasRock)
+        if (reburrowOnLand)
         {
-            yield return StartCoroutine(BurrowToDepthRoutine(burrowDepth));
+            yield return BurrowToDepthRoutine(burrowDepth);
             currentState = State.Burrowed;
         }
     }
 
     private System.Collections.IEnumerator BurrowToDepthRoutine(float depth)
     {
-        if (controller != null) controller.enabled = false;
-        float targetY = GetGroundY() - depth;
-        while (Mathf.Abs((transform.position.y + enemyBaseOffset) - targetY) > 0.01f)
-        {
-            float newY = Mathf.MoveTowards(transform.position.y + enemyBaseOffset, targetY, burrowMoveSpeed * Time.deltaTime);
-            SetEnemyY(newY);
-            yield return null;
-        }
-        SetEnemyY(targetY);
+        Debug.Log("BURROW");
+        DisableFloorCollisionAndGravity(true, true);
+
+        yield return Animate(
+            transform.position.y + enemyBaseOffset,
+            groundTransform.position.y - depth,
+            burrowMoveSpeed,
+            MoveEnemyToY
+        );
     }
 
     private System.Collections.IEnumerator PerformCircleRunAndRespawnSequence()
     {
-        currentState = State.CircleRunning;
-        if (controller != null) controller.enabled = true;
+        Debug.Log("CIRCLE RUN");
 
-        Vector3 centerPos = GetGroundCenterPosition();
+        currentState = State.Emerging;
+        yield return BurrowToDepthRoutine(groundTransform.position.y);
+        DisableFloorCollisionAndGravity(false, false);
+        currentState = State.CircleRunning;
+
+        Vector3 centerPos = groundTransform.position;
         while (true)
         {
-            centerPos = GetGroundCenterPosition();
+            centerPos = groundTransform.position;
             Vector3 currentPosFlat = new Vector3(transform.position.x, centerPos.y, transform.position.z);
             float distToCenter = Vector3.Distance(currentPosFlat, new Vector3(centerPos.x, centerPos.y, centerPos.z));
 
@@ -662,7 +566,7 @@ public class EnemyRock : MonoBehaviour
         {
             runTimer += Time.deltaTime;
 
-            centerPos = GetGroundCenterPosition();
+            centerPos = groundTransform.position;
             Transform playerTransform = GetPlayerTransform();
 
             Vector3 playerDir = Vector3.forward;
@@ -719,28 +623,27 @@ public class EnemyRock : MonoBehaviour
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, circleRunTurnSpeed * Time.deltaTime);
             }
 
-            if (controller != null)
-            {
-                controller.Move(transform.forward * circleRunSpeed * Time.deltaTime);
-            }
+            controller.Move(transform.forward * circleRunSpeed * Time.deltaTime);
 
             yield return null;
         }
 
-        if (controller != null) controller.enabled = false;
         currentState = State.Jumping;
+        DisableFloorCollisionAndGravity(true, false);
         
+        MoveEnemyToY(groundTransform.position.y);
+
         enemy.Jump(maxUpwardsImpulse * 0.4f);
         yield return new WaitForSeconds(0.2f);
 
         currentState = State.RespawningRock;
-        yield return StartCoroutine(BurrowToDepthRoutine(burrowDepth * 2f));
+        yield return BurrowToDepthRoutine(burrowDepth * 2f);
 
         SpawnRock();
 
         yield return new WaitForSeconds(1f);
 
-        yield return StartCoroutine(BurrowToDepthRoutine(burrowDepth));
+        yield return BurrowToDepthRoutine(burrowDepth);
         currentState = State.Burrowed;
         activeBehaviorRoutine = null;
     }

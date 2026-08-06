@@ -107,11 +107,7 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        if (controller.isGrounded && verticalVelocity <= 0)
-        {
-            verticalVelocity = -2f;
-        }
-        else
+        if (!controller.isGrounded)
         {
             verticalVelocity -= gravity * Time.deltaTime;
         }

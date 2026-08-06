@@ -58521,6 +58521,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 1665166357674558159}
     m_Modifications:
     - target: {fileID: -9119061285827014766, guid: 4ed204f209fca49aa89021cec00406e6, type: 3}
+      propertyPath: arenaFloor
+      value: 
+      objectReference: {fileID: 3535330866751328707}
+    - target: {fileID: -9119061285827014766, guid: 4ed204f209fca49aa89021cec00406e6, type: 3}
       propertyPath: arenaCenter
       value: 
       objectReference: {fileID: 5789863728382475407}
