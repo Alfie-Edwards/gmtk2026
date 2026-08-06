@@ -593,7 +593,7 @@ public class Player : MonoBehaviour
                 if (!dayNightCycle.isNight)
                 {
                     TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                    dayNightCycle.timeRemainingS += 20;
+                    dayNightCycle.timeRemainingS += 30;
                     WildernessMusic.getPlaybackState(out FMOD.Studio.PLAYBACK_STATE state);
                     if (state != FMOD.Studio.PLAYBACK_STATE.PLAYING)
                     {
