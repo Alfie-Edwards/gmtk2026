@@ -102,6 +102,15 @@ public class Bag : IEnumerable<BagItem>
         }
     }
 
+    public void Empty()
+    {
+        while (bag.Count > 0)
+        {
+            BagItem currentItem = bag[0];
+            Remove(currentItem.type, currentItem.count);
+        }
+    }
+
     public IEnumerator<BagItem> GetEnumerator() => bag.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => bag.GetEnumerator();
 }

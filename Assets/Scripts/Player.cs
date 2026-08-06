@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using FMODUnity;
 using FMOD.Studio;
 
@@ -156,11 +157,11 @@ public class Player : MonoBehaviour
         mapArea = MapArea.Town;
         TownMusic.start();
 
-        // Spawn();
-        ammoBag.Add(ItemType.Gold, 99990);
-        PickupItem(ItemType.Bow);
-        PickupItem(ItemType.BombBag);
-        PickupItem(ItemType.Pickaxe);
+        Spawn();
+        // ammoBag.Add(ItemType.Gold, 99990);
+        // PickupItem(ItemType.Bow);
+        // PickupItem(ItemType.BombBag);
+        // PickupItem(ItemType.Pickaxe);
     }
 
     void Spawn()
@@ -173,6 +174,7 @@ public class Player : MonoBehaviour
         lookTarget = Quaternion.Euler(0f, -180f, 0f);
         camera.position = transform.position + cameraOffset;
 
+        treasureBag.Empty();
         dayNightCycle.SetDay();
 
         // 3. Re-enable the CharacterController
@@ -182,6 +184,14 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (Keyboard.current.leftBracketKey.wasPressedThisFrame)
+        {
+            Spawn();
+        }
+        if (Keyboard.current.rightBracketKey.wasPressedThisFrame)
+        {
+            SceneManager.LoadScene("Overworld");
+        }
         actionUsed = false;
         Move();
         PickupItems();
@@ -583,7 +593,7 @@ public class Player : MonoBehaviour
                 if (!dayNightCycle.isNight)
                 {
                     TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                    dayNightCycle.timeRemainingS += 30;
+                    dayNightCycle.timeRemainingS += 20;
                     WildernessMusic.getPlaybackState(out FMOD.Studio.PLAYBACK_STATE state);
                     if (state != FMOD.Studio.PLAYBACK_STATE.PLAYING)
                     {
