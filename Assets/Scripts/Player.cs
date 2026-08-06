@@ -675,11 +675,11 @@ public class Player : MonoBehaviour
         // If it ends up zero (e.g. random vector was straight up/down), fallback to forward
         if (randomDirection == Vector3.zero)
         {
-            randomDirection = transform.forward;
+            randomDirection = -transform.forward;
         }
 
         // Calculate spawn position at the fixed distance away
-        Vector3 spawnPosition = transform.position + (randomDirection * 15f);
+        Vector3 spawnPosition = transform.position - (7f * transform.forward) + (randomDirection * 15f);
 
         // Optionally match the player's current Y level or keep the ghost's default
         spawnPosition.y = transform.position.y;
