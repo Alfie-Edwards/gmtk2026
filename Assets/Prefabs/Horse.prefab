@@ -615,10 +615,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ToyMovement
   visualModel: {fileID: 3310917443846941444}
-  bobFrequency: 8
+  bobFrequency: 6
   bobAmplitude: 0.1
-  tiltFrequency: 4
-  maxTiltAngle: 10
+  tiltFrequency: 3
+  maxTiltAngle: 8
   tiltAxis: {x: 1, y: 0, z: 0}
   transitionSpeed: 10
 --- !u!114 &7188772305412767326
