@@ -434,7 +434,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7771838979860769892, guid: ddaffc8dfb59a45b9b78f84c5f661ba1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.0157022
+      value: -6.015703
       objectReference: {fileID: 0}
     - target: {fileID: 7771838979860769892, guid: ddaffc8dfb59a45b9b78f84c5f661ba1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -442,7 +442,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7771838979860769892, guid: ddaffc8dfb59a45b9b78f84c5f661ba1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 21.888
+      value: 24.888
       objectReference: {fileID: 0}
     - target: {fileID: 7771838979860769892, guid: ddaffc8dfb59a45b9b78f84c5f661ba1, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2779,7 +2779,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 839326853cdfba045b0162a0e21b926d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DayNightCycle
-  startDayLengthS: 30
+  startDayLengthS: 60
   timerText: {fileID: 1960720808}
   sunLight: {fileID: 410087040}
   sunriseFadeCanvasGroup: {fileID: 0}

@@ -48,10 +48,11 @@ public class Whip : MonoBehaviour
         }
     }
 
-    public void Attack()
+    public void Attack(Vector3 direction)
     {
         if (isAttacking || rope == null || rope.endTransform == null || rope.startTransform == null) return;
-        StartCoroutine(PerformWhipAttack());
+        direction = Quaternion.FromToRotation(Vector3.forward, localThrowDirection) * direction;
+        StartCoroutine(PerformWhipAttack(direction));
     }
 
     public Vector3 GetCurrentEndPosition()
@@ -59,7 +60,7 @@ public class Whip : MonoBehaviour
         return (rope != null && rope.endTransform != null) ? rope.endTransform.position : transform.position;
     }
 
-    private IEnumerator PerformWhipAttack()
+    private IEnumerator PerformWhipAttack(Vector3 direction)
     {
         RuntimeManager.PlayOneShot("event:/SFX/Weapons/SFX_WhipCrack");
         isAttacking = true;
@@ -71,7 +72,7 @@ public class Whip : MonoBehaviour
         float elapsed = 0f;
 
         Vector3 WorldPeakPos() {
-            Vector3 peak = rope.startTransform.position + transform.TransformDirection(localThrowDirection.normalized * rope.ropeLength);
+            Vector3 peak = rope.startTransform.position + direction.normalized * rope.ropeLength;
             peak.y = rope.startTransform.position.y;
             return peak;
         }

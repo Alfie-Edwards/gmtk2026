@@ -182,6 +182,7 @@ MonoBehaviour:
   jumpAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   useAction: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   moveSpeed: 5
+  moveAcceleration: 40
   gravity: -20
   jumpHeight: 1
   itemPickupRadius: 1
@@ -194,7 +195,7 @@ MonoBehaviour:
   cameraAngle: 45
   cameraUpTilt: 10
   cameraZOffset: 10
-  cameraFollowSpeed: 3
+  cameraFollowSpeed: 1
   ghostPrefab: {fileID: 9125636384562115356, guid: 491def86a2ed640219eea5d3704fba73, type: 3}
   ghostSpawnsPerSecond: 3
   arrowShop: {fileID: 0}

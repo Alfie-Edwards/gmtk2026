@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
 
     [Header("Keyboard")]
     [SerializeField] public float moveSpeed = 5.0f;
+    [SerializeField] public float moveAcceleration = 10f;
     [SerializeField] public float gravity = -9.81f * 2.0f;
     [SerializeField] public float jumpHeight = 1.5f;
 
@@ -106,6 +107,7 @@ public class Player : MonoBehaviour
     private Bag ammoBag;
     private Bag treasureBag;
     private Vector3 knockbackVelocity;
+    private Vector3 move;
     public Vector3 cameraOffset {get; set; }
     private bool actionUsed;
     void Start()
@@ -180,6 +182,7 @@ public class Player : MonoBehaviour
         // 3. Re-enable the CharacterController
         if (controller != null) controller.enabled = true;
         whip.Reset();
+        move = Vector3.zero;
     }
 
     void Update()
@@ -360,10 +363,13 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
+        Vector3 delta = Vector3.zero;
+        Vector3 moveTarget = Vector3.zero;
         if (!disableControls)
         {
             Vector2 moveInput = moveAction.action.ReadValue<Vector2>();
-            Vector3 move = ((Vector3.forward * moveInput.y) + (Vector3.right * moveInput.x)) * moveSpeed;
+            moveTarget = ((Vector3.forward * moveInput.y) + (Vector3.right * moveInput.x)) * moveSpeed;
+            move = Vector3.MoveTowards(move, moveTarget, moveAcceleration * Time.deltaTime);
 
             if (jumpAction.action.WasPressedThisFrame() && controller.isGrounded)
             {
@@ -377,15 +383,24 @@ public class Player : MonoBehaviour
 
             knockbackVelocity = Vector3.Lerp(knockbackVelocity, Vector3.zero, knockbackDamping * Time.deltaTime);
 
+            Vector3 prevPos = transform.position;
             controller.Move((velocity + move + knockbackVelocity) * Time.deltaTime);
-
+            delta = transform.position - prevPos;
+            float xMove = delta.x / Time.deltaTime;
+            float zMove = delta.z / Time.deltaTime;
+            if (move.x > 0 && xMove < move.x) move.x = xMove < 0 ? 0 : xMove;
+            if (move.x < 0 && xMove > move.x) move.x = xMove > 0 ? 0 : xMove;
+            if (move.z > 0 && zMove < move.z) move.z = zMove < 0 ? 0 : zMove;
+            if (move.z < 0 && zMove > move.z) move.z = zMove > 0 ? 0 : zMove;
             if (move != Vector3.zero)
             {
                 lookTarget = Quaternion.LookRotation(move);
             }
             transform.rotation = Quaternion.Slerp(transform.rotation, lookTarget, Mathf.Min(16f * Time.deltaTime, 1f));
         }
-        camera.transform.position = Vector3.Lerp(camera.transform.position, transform.position + cameraOffset, Mathf.Min(cameraFollowSpeed * Time.deltaTime, 1f));
+        // Camera targets ahead of the player.
+        Vector3 cameraTarget = transform.position + cameraOffset + 0.25f * moveTarget;
+        camera.transform.position = Vector3.Lerp(camera.transform.position + delta, cameraTarget, cameraFollowSpeed * Time.deltaTime);
     }
 
     private void OnItemChanged(ItemType itemType)
@@ -705,20 +720,21 @@ public class Player : MonoBehaviour
         switch (type)
         {
             case ItemType.Whip:
-                whip.Attack();
+                whip.Attack(move == Vector3.zero ? transform.forward : move);
                 break;
             case ItemType.Bow:
                 if (ammoBag.Amount(ItemType.Arrow) > 0)
                 {
+                    
                     ammoBag.Remove(ItemType.Arrow);
-                    bow.Fire(transform.forward);
+                    bow.Fire(move == Vector3.zero ? transform.forward : move);
                 }
                 break;
             case ItemType.BombBag:
                 if (ammoBag.Amount(ItemType.Dynamite) > 0)
                 {
                     ammoBag.Remove(ItemType.Dynamite);
-                    bombBag.ThrowBomb(transform.forward);
+                    bombBag.ThrowBomb(move == Vector3.zero ? transform.forward : move);
                 }
                 break;
             case ItemType.Pickaxe:

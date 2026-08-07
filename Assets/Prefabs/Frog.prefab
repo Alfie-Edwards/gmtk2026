@@ -308,7 +308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a0c4412479e446fcbc3cfccc6b88633, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyFrog
-  detectionRadius: 12
+  detectionRadius: 8
   minJumpInterval: 0.25
   maxJumpInterval: 2
   jumpHeight: 1.75
