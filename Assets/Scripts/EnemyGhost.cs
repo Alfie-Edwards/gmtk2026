@@ -28,6 +28,7 @@ public class EnemyGhost : MonoBehaviour
     private bool isDashing = false;
     private bool isDashRoutineRunning = false;
     private Player cachedPlayer;
+    private CharacterController cc;
 
     private Player PlayerInstance
     {
@@ -43,6 +44,7 @@ public class EnemyGhost : MonoBehaviour
 
     void Start()
     {
+        cc = GetComponent<CharacterController>();
         SetAlpha(0f); // Start completely invisible
     }
 
@@ -87,8 +89,9 @@ public class EnemyGhost : MonoBehaviour
     void MoveTowardsPlayer(Vector3 playerPosition)
     {
         float step = moveSpeed * Time.deltaTime;
-        transform.position += (playerPosition - transform.position).normalized * step;
-        transform.position += Vector3.up * Mathf.Lerp(0, playerPosition.y - transform.position.y, Time.deltaTime);
+        Vector3 delta = (playerPosition - transform.position).normalized * step;
+        delta += Vector3.up * Mathf.Lerp(0, playerPosition.y - transform.position.y - delta.y, Time.deltaTime);
+        cc.Move(delta);
     }
 
     IEnumerator DashRoutine()
@@ -120,11 +123,10 @@ public class EnemyGhost : MonoBehaviour
                 // SmoothStep provides ease-in and ease-out curve
                 float smoothedT = Mathf.SmoothStep(0f, 1f, t);
 
-                transform.position = Vector3.Lerp(startPos, endPos, smoothedT);
+                Vector3 delta = Vector3.Lerp(startPos, endPos, smoothedT) - transform.position;
+                cc.Move(delta);
                 yield return null;
             }
-
-            transform.position = endPos;
             isDashing = false;
         }
 
