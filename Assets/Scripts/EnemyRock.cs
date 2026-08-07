@@ -155,7 +155,6 @@ public class EnemyRock : MonoBehaviour
 
     private void DisableFloorCollisionAndGravity(bool ignoreCollision, bool useZeroGravity)
     {
-        Debug.Log($"Ignore collisions: {ignoreCollision}\nIgnore gravity: {useZeroGravity}");
         if (useZeroGravity) enemy.verticalVelocity = 0f;
         enemy.gravity = useZeroGravity ? 0f : 9.81f;
         Physics.IgnoreCollision(controller, arenaFloor, ignoreCollision);

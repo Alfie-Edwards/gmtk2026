@@ -174,7 +174,6 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(13.89f, 0.5f, -8.35f);
         transform.rotation = Quaternion.Euler(0f, -180f, 0f);
         lookTarget = Quaternion.Euler(0f, -180f, 0f);
-        camera.position = transform.position + cameraOffset;
 
         treasureBag.Empty();
         dayNightCycle.SetDay();
