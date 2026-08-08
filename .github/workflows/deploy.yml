@@ -21,9 +21,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: Library
-          key: Library-build-WebGL
+          key: Library-build-WebGL-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
-            Library-build-
+            Library-build-WebGL-
             Library-
 
       - name: Build Unity WebGL Project
@@ -34,9 +34,11 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: WebGL
+          unityVersion: auto
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: build/WebGL
+          folder: build/WebGL/WebGL
           branch: gh-pages
+          clean: true
