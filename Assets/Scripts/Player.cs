@@ -160,6 +160,7 @@ public class Player : MonoBehaviour
         TownMusic.start();
 
         Spawn();
+        treasureBag.Add(ItemType.Gold, 400);
         // ammoBag.Add(ItemType.Gold, 99990);
         // PickupItem(ItemType.Bow);
         // PickupItem(ItemType.BombBag);
@@ -322,7 +323,7 @@ public class Player : MonoBehaviour
         {
             case MapArea.Town:
                 TownMusic.start();
-                StartCoroutine(treasureBag.EmptyInto(ammoBag, 10f));
+                StartCoroutine(treasureBag.EmptyInto(ammoBag, 40f));
                 WildernessMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 TenSecondMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 break;

@@ -366,6 +366,13 @@ public class DayNightCycle : MonoBehaviour
         }
         isNight = true;
         NightStart?.Invoke();
+        foreach (Item item in FindObjectsByType<Item>())
+        {
+            if (item.type == ItemType.Whisky)
+            {
+                Destroy(item.gameObject);
+            }
+        }
     }
 
     public void SetDay()

@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class BagItem {
     public ItemType type;
@@ -48,6 +49,7 @@ public class Bag : IEnumerable<BagItem>
 
     public void Add(ItemType type, int count = 1)
     {
+        if (count == 0) return;
         int i = 0;
         while (i < bag.Count && bag[i].type != type) ++i;
         if (i == bag.Count) bag.Add(new BagItem(type, 0));
@@ -58,6 +60,7 @@ public class Bag : IEnumerable<BagItem>
 
     public void Remove(ItemType type, int count = 1)
     {
+        if (count == 0) return;
         for (int i = 0; i != bag.Count; ++i)
         {
             if (bag[i].type == type)
@@ -78,27 +81,32 @@ public class Bag : IEnumerable<BagItem>
 
     public IEnumerator EmptyInto(Bag targetBag, float itemsPerSecond=5f)
     {
+        float maxMatchesPerSecond = 10f;
         if (targetBag == null || itemsPerSecond <= 0) yield break;
 
-        float delay = 1f / itemsPerSecond;
-        WaitForSeconds waitInstruction = new WaitForSeconds(delay);
+        float batchSize = itemsPerSecond > maxMatchesPerSecond ? itemsPerSecond / maxMatchesPerSecond : 1f;
+        float batchesPerSecond = MathF.Min(maxMatchesPerSecond, itemsPerSecond);
+        int elapsedBatches = 0;
+        float elapsed = 0;
 
-        while (bag.Count > 0)
+        while (bag.Where(x => x.count > 0).FirstOrDefault() is BagItem currentItem)
         {
-            BagItem currentItem = bag[0];
-
-            if (currentItem.count > 0)
+            elapsed += Time.deltaTime;
+            int targetBatches = Mathf.FloorToInt(elapsed * batchesPerSecond);
+            int numItemsToMove = Mathf.FloorToInt(targetBatches * batchSize) - Mathf.FloorToInt(elapsedBatches * batchSize);
+            if (numItemsToMove >= currentItem.count)
             {
-                Remove(currentItem.type, 1);
-                targetBag.Add(currentItem.type, 1);
-
-                yield return waitInstruction;
+                numItemsToMove = currentItem.count;
+                elapsedBatches = 0;
+                elapsed = 0;
             }
             else
             {
-                if (!bag.Contains(currentItem)) continue;
-                bag.RemoveAt(0);
+                elapsedBatches = targetBatches;
             }
+            Remove(currentItem.type, numItemsToMove);
+            targetBag.Add(currentItem.type, numItemsToMove);
+            yield return null;
         }
     }
 
