@@ -73,8 +73,12 @@ public class Arrow : MonoBehaviour
                 rb.isKinematic = false;
                 rb.useGravity = true;
                 rb.linearVelocity = Vector3.zero;
-                GetComponent<Item>().enabled = false;
+                GetComponent<Item>().enabled = true;
                 return;
+            }
+            else
+            {
+                GetComponent<Item>().enabled = false;
             }
         }
         else
