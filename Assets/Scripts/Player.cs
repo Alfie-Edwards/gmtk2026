@@ -365,10 +365,10 @@ public class Player : MonoBehaviour
     {
         Vector3 delta = Vector3.zero;
         Vector3 moveTarget = Vector3.zero;
+        Vector2 moveInput = moveAction.action.ReadValue<Vector2>();
+        moveTarget = ((Vector3.forward * moveInput.y) + (Vector3.right * moveInput.x)) * moveSpeed;
         if (!disableControls)
         {
-            Vector2 moveInput = moveAction.action.ReadValue<Vector2>();
-            moveTarget = ((Vector3.forward * moveInput.y) + (Vector3.right * moveInput.x)) * moveSpeed;
             move = Vector3.MoveTowards(move, moveTarget, moveAcceleration * Time.deltaTime);
 
             if (jumpAction.action.WasPressedThisFrame() && controller.isGrounded)
@@ -392,9 +392,9 @@ public class Player : MonoBehaviour
             if (move.x < 0 && xMove > move.x) move.x = xMove > 0 ? 0 : xMove;
             if (move.z > 0 && zMove < move.z) move.z = zMove < 0 ? 0 : zMove;
             if (move.z < 0 && zMove > move.z) move.z = zMove > 0 ? 0 : zMove;
-            if (move != Vector3.zero)
+            if (moveTarget != Vector3.zero)
             {
-                lookTarget = Quaternion.LookRotation(move);
+                lookTarget = Quaternion.LookRotation(moveTarget);
             }
             transform.rotation = Quaternion.Slerp(transform.rotation, lookTarget, Mathf.Min(16f * Time.deltaTime, 1f));
         }
