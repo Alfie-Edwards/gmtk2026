@@ -16,6 +16,7 @@ public class Horse : MonoBehaviour
     public float moveSpeed = 5f;
     public float jumpHeight = 2f;
     public float gravity = -9.81f;
+    [SerializeField] public float moveAcceleration = 12f;
 
     [Header("Riding & Proximity Detection")]
     public Transform mountPoint; // Define this in the Inspector where the player should sit
@@ -29,6 +30,7 @@ public class Horse : MonoBehaviour
     private Vector3 velocity;
     private Vector3 knockbackVelocity = Vector3.zero;
     private Quaternion lookTarget;
+    private Vector3 move;
     
     private bool isBeingRidden = false;
     private bool showingEndScreen = false;
@@ -44,6 +46,7 @@ public class Horse : MonoBehaviour
             controller = gameObject.AddComponent<CharacterController>();
         }
         lookTarget = transform.rotation;
+        move = Vector3.zero;
     }
 
     void Update()
@@ -69,7 +72,12 @@ public class Horse : MonoBehaviour
         }
 
         Vector2 moveInput = moveAction.action.ReadValue<Vector2>();
-        Vector3 move = ((Vector3.forward * moveInput.y) + (Vector3.right * moveInput.x)) * moveSpeed;
+        Vector3 moveTarget = ((Vector3.forward * moveInput.y) + (Vector3.right * moveInput.x)) * moveSpeed;
+        move = Vector3.MoveTowards(move, moveTarget, moveAcceleration * Time.deltaTime);
+
+        // make horse tokyo drift
+        float turnFactor = 1f - Mathf.Abs(Vector3.Dot(move.normalized, moveTarget.normalized));
+        move = Vector3.MoveTowards(move, move.normalized * moveSpeed, moveInput.magnitude * turnFactor * moveAcceleration * Time.deltaTime);
 
         if (jumpAction.action.WasPressedThisFrame() && controller.isGrounded)
         {
@@ -81,12 +89,22 @@ public class Horse : MonoBehaviour
             velocity += Vector3.up * gravity * Time.deltaTime;
         }
 
+        Vector3 prevPos = transform.position;
         controller.Move((velocity + move) * Time.deltaTime);
+        Vector3 delta = transform.position - prevPos;
+        float xMove = delta.x / Time.deltaTime;
+        float zMove = delta.z / Time.deltaTime;
+        if (move.x > 0 && xMove < move.x) move.x = xMove < 0 ? 0 : xMove;
+        if (move.x < 0 && xMove > move.x) move.x = xMove > 0 ? 0 : xMove;
+        if (move.z > 0 && zMove < move.z) move.z = zMove < 0 ? 0 : zMove;
+        if (move.z < 0 && zMove > move.z) move.z = zMove > 0 ? 0 : zMove;
 
-        if (move != Vector3.zero)
+        if (moveTarget != Vector3.zero)
         {
-            lookTarget = Quaternion.LookRotation(move);
+            lookTarget = Quaternion.LookRotation(moveTarget);
         }
+        // Tilt when jumping
+        lookTarget = Quaternion.Euler(controller.isGrounded ? 0f : velocity.y * -5f, lookTarget.eulerAngles.y, lookTarget.eulerAngles.z);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookTarget, Mathf.Min(4f * Time.deltaTime, 1f));
     }
 

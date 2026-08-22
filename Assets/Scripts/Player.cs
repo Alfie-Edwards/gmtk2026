@@ -108,6 +108,8 @@ public class Player : MonoBehaviour
     private Bag treasureBag;
     private Vector3 knockbackVelocity;
     private Vector3 move;
+    private Vector3 moveTarget;
+    private Vector3 prevPos;
     public Vector3 cameraOffset {get; set; }
     private bool actionUsed;
     void Start()
@@ -160,7 +162,7 @@ public class Player : MonoBehaviour
         TownMusic.start();
 
         Spawn();
-        treasureBag.Add(ItemType.Gold, 400);
+        // treasureBag.Add(ItemType.Gold, 400);
         // ammoBag.Add(ItemType.Gold, 99990);
         // PickupItem(ItemType.Bow);
         // PickupItem(ItemType.BombBag);
@@ -183,6 +185,8 @@ public class Player : MonoBehaviour
         if (controller != null) controller.enabled = true;
         whip.Reset();
         move = Vector3.zero;
+        moveTarget = Vector3.zero;
+        prevPos = transform.position;
     }
 
     void Update()
@@ -364,7 +368,6 @@ public class Player : MonoBehaviour
     private void Move()
     {
         Vector3 delta = Vector3.zero;
-        Vector3 moveTarget = Vector3.zero;
         Vector2 moveInput = moveAction.action.ReadValue<Vector2>();
         moveTarget = ((Vector3.forward * moveInput.y) + (Vector3.right * moveInput.x)) * moveSpeed;
         if (!disableControls)
@@ -383,7 +386,7 @@ public class Player : MonoBehaviour
 
             knockbackVelocity = Vector3.Lerp(knockbackVelocity, Vector3.zero, knockbackDamping * Time.deltaTime);
 
-            Vector3 prevPos = transform.position;
+            prevPos = transform.position;
             controller.Move((velocity + move + knockbackVelocity) * Time.deltaTime);
             delta = transform.position - prevPos;
             float xMove = delta.x / Time.deltaTime;
@@ -397,6 +400,11 @@ public class Player : MonoBehaviour
                 lookTarget = Quaternion.LookRotation(moveTarget);
             }
             transform.rotation = Quaternion.Slerp(transform.rotation, lookTarget, Mathf.Min(16f * Time.deltaTime, 1f));
+        }
+        else
+        {
+            delta = transform.position - prevPos;
+            prevPos = transform.position;
         }
         // Camera targets ahead of the player.
         Vector3 cameraTarget = transform.position + cameraOffset + 0.25f * moveTarget;
@@ -720,21 +728,21 @@ public class Player : MonoBehaviour
         switch (type)
         {
             case ItemType.Whip:
-                whip.Attack(move == Vector3.zero ? transform.forward : move);
+                whip.Attack(moveTarget == Vector3.zero ? transform.forward : moveTarget);
                 break;
             case ItemType.Bow:
                 if (ammoBag.Amount(ItemType.Arrow) > 0)
                 {
                     
                     ammoBag.Remove(ItemType.Arrow);
-                    bow.Fire(move == Vector3.zero ? transform.forward : move);
+                    bow.Fire(moveTarget == Vector3.zero ? transform.forward : moveTarget);
                 }
                 break;
             case ItemType.BombBag:
                 if (ammoBag.Amount(ItemType.Dynamite) > 0)
                 {
                     ammoBag.Remove(ItemType.Dynamite);
-                    bombBag.ThrowBomb(move == Vector3.zero ? transform.forward : move);
+                    bombBag.ThrowBomb(moveTarget == Vector3.zero ? transform.forward : moveTarget);
                 }
                 break;
             case ItemType.Pickaxe:
