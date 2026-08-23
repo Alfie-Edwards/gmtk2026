@@ -537,8 +537,7 @@ public class Player : MonoBehaviour
                     RuntimeManager.PlayOneShot("event:/SFX/Player/SFX_Purchase");
                     switch (closest.itemType) {
                         case ItemType.Seed:
-                            numSeeds += 1;
-                            closest.cost += 10 * numSeeds;
+                            closest.cost += 10 + 5 * numSeeds;
                             break;
 
                         case ItemType.Rooster:
@@ -654,10 +653,18 @@ public class Player : MonoBehaviour
                 List<PlantSpot> ungrown = FindObjectsByType<PlantSpot>()
                     .Where(x => !x.Growing)
                     .ToList();
+                numSeeds += 1;
                 if (ungrown.Count > 0)
                 {
                     int i = Random.Range(0, ungrown.Count);
                     ungrown[i].PlantSeed();
+                    ungrown[i].dropGold = 10;
+                    if (numSeeds % 6 == 0) ungrown[i].dropWhisky = 1;
+                    if (numSeeds > 4) ungrown[i].dropBigGold = 1;
+                    if (numSeeds == 7 || numSeeds == 8) ungrown[i].dropArrows = 1;
+                    if (numSeeds > 8) ungrown[i].dropBigGold = 2;
+                    if (numSeeds == 10 || numSeeds == 11) ungrown[i].dropDynamite = 1;
+                    if (numSeeds == 12) ungrown[i].dropBigGold = 10;
                     dayNightCycle.DayStart += ungrown[i].Sunrise;
                 }
                 break;

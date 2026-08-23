@@ -770,6 +770,10 @@ MonoBehaviour:
   seedling: {fileID: 425389646372303285}
   plant: {fileID: 4019103451693121867}
   goldPrefab: {fileID: 575649640322857749, guid: 447ae08732a2f564ab18fa5320338070, type: 3}
+  bigGoldPrefab: {fileID: 575649640322857749, guid: 36cfc354e13ba1d4f947b51d4da7fea3, type: 3}
+  arrowPrefab: {fileID: 8767786966827885196, guid: bee8e5277ed9f3f49a6aeebc6b716496, type: 3}
+  dynamitePrefab: {fileID: 8767786966827885196, guid: a54b437ff5b013d46a422bb06def65d3, type: 3}
+  whiskyPrefab: {fileID: 8767786966827885196, guid: 76a24074ab89094458eb7abc38c1b344, type: 3}
 --- !u!1 &3124637537372056764
 GameObject:
   m_ObjectHideFlags: 0
